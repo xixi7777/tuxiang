@@ -5,7 +5,7 @@
         </view>
 
         <view class="page-title">
-			<text>我的</text>
+			<text>我的11111</text>
 		</view>
 
         <view class="person-wrapper">
