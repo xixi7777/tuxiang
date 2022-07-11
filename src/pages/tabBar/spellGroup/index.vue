@@ -2,7 +2,7 @@
     <view class="app-container">
         <!-- <tab-bar :current="1"></tab-bar> -->
         <view class="bg-image">
-            <cover-image src="../../../static/images/spell_bg@2x.png"></cover-image>
+            <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/spell_bg.png"></cover-image>
         </view>
 
         <view class="spell-group">
@@ -31,20 +31,20 @@
                             <view class="grad">
                                 <text>立即抢位</text>
                                 <view class="grad-image">
-                                    <cover-image src="../../../static/images/qiangwei@2x.png"></cover-image>
+                                    <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/qiangwei.png"></cover-image>
                                 </view>
                             </view>
                             <view class="icon-share">
-                                <cover-image src="../../../static/images/icon/share@2x.png"></cover-image>
+                                <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/share.png"></cover-image>
                             </view>
                             <view class="icon-headset">
-                                <cover-image src="../../../static/images/icon/listen@2x.png"></cover-image>
+                                <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/listen.png"></cover-image>
                             </view>
                         </view>
                     </view>
                     <view class="right">
                         <view class="image">
-                            <cover-image src="../../../static/images/yunnan.png"></cover-image>
+                            <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png"></cover-image>
                         </view>
                     </view>
                 </view>
@@ -64,7 +64,7 @@ export default {
                     vipPrice: 580,
                     price: 120,
                     members: 15,
-                    url: require('../../../static/images/yunnan.png')
+                    url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png'
                 },
                 {
                     date: '7月9日',
@@ -73,7 +73,7 @@ export default {
                     vipPrice: 580,
                     price: 120,
                     members: 15,
-                    url: require('../../../static/images/yunnan.png')
+                    url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png'
                 },
                 {
                     date: '7月9日',
@@ -82,7 +82,7 @@ export default {
                     vipPrice: 580,
                     price: 120,
                     members: 15,
-                    url: require('../../../static/images/yunnan.png')
+                    url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png'
                 },
                 {
                     date: '7月9日',
@@ -91,7 +91,7 @@ export default {
                     vipPrice: 580,
                     price: 120,
                     members: 15,
-                    url: require('../../../static/images/yunnan.png')
+                    url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png'
                 },
                 {
                     date: '7月9日',
@@ -100,7 +100,7 @@ export default {
                     vipPrice: 580,
                     price: 120,
                     members: 15,
-                    url: require('../../../static/images/yunnan.png')
+                    url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png'
                 }
             ]
         }

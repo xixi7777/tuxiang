@@ -53,7 +53,7 @@
 				<text class="title">排行榜</text>
 				<view class="more">
 					<text>查看全部</text>
-					<image class="more-icon" src="../../../static/images/icon/more@3x.png"></image>
+					<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
 				</view>
 			</view>
 
@@ -76,7 +76,7 @@
 				<text class="title">热门推荐</text>
 				<view class="more">
 					<text>更多</text>
-					<image class="more-icon" src="../../../static/images/icon/more@3x.png"></image>
+					<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
 				</view>
 			</view>
 
@@ -108,47 +108,45 @@ export default {
 			keyword: null,
 			current: 0,
 			images: [
-				require('../../../static/images/banner@3x.png'),
-				require('../../../static/images/banner@3x.png'),
-				require('../../../static/images/banner@3x.png')
+				'//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/banner.png',
 			],
 			travels: [
-				{ name: '自由行', icon: require('../../../static/images/icon/independent@3x.png') },  
-				{ name: '跟团游', icon: require('../../../static/images/icon/group@3x.png') },
-				{ name: '一日游', icon: require('../../../static/images/icon/daily@3x.png') },
-				{ name: '飞机游', icon: require('../../../static/images/icon/plane@3x.png') }
+				{ name: '自由行', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/independent.png' },  
+				{ name: '跟团游', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/group.png' },
+				{ name: '一日游', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/daily.png' },
+				{ name: '飞机游', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/plane.png' }
 			],
 			recommends: [
-				{ name: '三亚3天两晚自由行', url: require('../../../static/images/list_1@3x.png'), price: '580', sale: '超值' },
-				{ name: '西安3天两晚自由行', url: require('../../../static/images/list_2@3x.png'), price: '580', sale: '七折' },
-				{ name: '上海3天两晚自由行', url: require('../../../static/images/list_1@3x.png'), price: '580', sale: '七折' }
+				{ name: '三亚3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '超值' },
+				{ name: '西安3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_2.png', price: '580', sale: '七折' },
+				{ name: '上海3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '七折' }
 			],
 			list: [
 				{
 					name: '洱海', 
-					url: require('../../../static/images/hot_1@3x.png'),
+					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
 					info: '一起去看海'
 				},
 				{
 					name: '大理', 
-					url: require('../../../static/images/hot_2@3x.png'),
+					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_2.png',
 					info: '一起去看海'
 				},
 				{
 					name: '洱海', 
-					url: require('../../../static/images/hot_1@3x.png'),
+					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
 					info: '一起去看海'
 				},
 				{
 					name: '大理', 
-					url: require('../../../static/images/hot_2@3x.png'),
+					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_2.png',
 					info: '一起去看海'
 				}
 			],
 			flowList: [],
 			footers: [
-				require('../../../static/images/foot_1@2x.png'),
-				require('../../../static/images/foot_2@2x.png')
+				'//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/foot_1.png',
+				'//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/foot_2.png'
 			]
 		}
 	},

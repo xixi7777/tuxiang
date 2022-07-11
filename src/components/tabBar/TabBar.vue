@@ -36,29 +36,29 @@ export default {
             list: [
                 {
                     pagePath: 'pages/tabBar/home/index',
-                    iconPath: '/static/images/icon/home@3x.png',
-                    selectedIconPath: '/static/images/icon/home_selected@3x.png',
+                    iconPath: '///mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/home.png',
+                    selectedIconPath: '///mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/home_selected.png',
                     text: '首页',
                     customIcon: false
                 },
                 {
                     pagePath: 'pages/tabBar/spellGroup/index',
-                    iconPath: '/static/images/icon/spell_group@3x.png',
-                    selectedIconPath: '/static/images/icon/spell_group_selected@3x.png',
+                    iconPath: '///mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/spell_group.png',
+                    selectedIconPath: '///mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/spell_group_selected.png',
                     text: '拼团',
                     customIcon: false
                 },
                 {
                     pagePath: 'pages/tabBar/teams/index',
-                    iconPath: '/static/images/icon/teams@3x.png',
-                    selectedIconPath: '/static/images/icon/teams_selected@3x.png',
+                    iconPath: '///mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/teams.png',
+                    selectedIconPath: '///mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/teams_selected.png',
                     text: '团队',
                     customIcon: false
                 },
                 {
                     pagePath: 'pages/tabBar/personal/index',
-                    iconPath: '/static/images/icon/me@3x.png',
-                    selectedIconPath: '/static/images/icon/me_selected@3x.png',
+                    iconPath: '///mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/me.png',
+                    selectedIconPath: '///mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/me_selected.png',
                     text: '我的',
                     customIcon: false
                 }

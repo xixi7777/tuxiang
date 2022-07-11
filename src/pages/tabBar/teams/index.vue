@@ -46,9 +46,9 @@ export default {
     data() {
         return {
             menus: [
-                { icon: require('../../../static/images/icon/wodetuandui@2x.png'), title: '我的团队' },
-                { icon: require('../../../static/images/icon/chuangjiantuandui@2x.png'), title: '创建团队' },
-                { icon: require('../../../static/images/icon/store@2x.png'), title: '逛商场' }
+                { icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/wodetuandui.png', title: '我的团队' },
+                { icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/chuangjiantuandui.png', title: '创建团队' },
+                { icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/store.png', title: '逛商场' }
             ]
         }
     }

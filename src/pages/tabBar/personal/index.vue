@@ -1,11 +1,11 @@
 <template>
     <view class="app-container">
         <view class="top-background">
-            <cover-image src="../../../static/images/metopbg@2x.png"></cover-image>
+            <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/metopbg.png"></cover-image>
         </view>
 
         <view class="page-title">
-			<text>我的11111</text>
+			<text>我的</text>
 		</view>
 
         <view class="person-wrapper">
@@ -15,7 +15,7 @@
                     <view class="leader">
                         <text>队长</text>
                         <view class="background">
-                            <cover-image src="../../../static/images/duizhang@2x.png"></cover-image>
+                            <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/duizhang.png"></cover-image>
                         </view>
                     </view>
                 </view>
@@ -25,14 +25,14 @@
                     <cover-image src="https://cdn.uviewui.com/uview/album/1.jpg"></cover-image>
                 </view>
                 <view class="fanhui">
-                    <cover-image src="../../../static/images/icon/fanhui@2x.png"></cover-image>
+                    <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fanhui.png"></cover-image>
                 </view>
             </view>
         </view>
 
         <view class="jifen-wrapper">
             <view class="bg-wrapper">
-                <cover-image src="../../../static/images/mejifenbg@2x.png"></cover-image>
+                <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/mejifenbg.png"></cover-image>
             </view>
             <view class="jifen">
                 <view><text>4696</text></view>
@@ -76,7 +76,7 @@
                     </view>
                     <view class="about-title"><text>{{ item.title }}</text></view>
                     <view class="go">
-                        <cover-image src="../../../static/images/icon/fanhui@2x.png"></cover-image>
+                        <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fanhui.png"></cover-image>
                     </view>
                 </view>
             </view>
@@ -88,21 +88,21 @@ export default {
     data() {
         return {
             orderTypes: [
-                { title: '全部', icon: require('../../../static/images/icon/dingdanorder-fill@2x.png') },
-                { title: '待支付', icon: require('../../../static/images/icon/qianbao@2x.png') },
-                { title: '待出行', icon: require('../../../static/images/icon/lvhangxiang@2x.png') },
-                { title: '取消', icon: require('../../../static/images/icon/daishouhuo @2x.png') },
-                { title: '退款', icon: require('../../../static/images/icon/tuikuanshouhou@2x.png') }
+                { title: '全部', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dingdanorder.png' },
+                { title: '待支付', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/qianbao.png' },
+                { title: '待出行', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/lvhangxiang.png' },
+                { title: '取消', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/daishouhuo.png' },
+                { title: '退款', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/tuikuanshouhou.png' }
             ],
             functions: [
-                { title: '积分明细', icon: require('../../../static/images/icon/jifenmingxi@2x.png') },
-                { title: '我的收藏', icon: require('../../../static/images/icon/wodeshoucang@2x.png') },
-                { title: '分享好友', icon: require('../../../static/images/icon/fenxiang@2x.png') }
+                { title: '积分明细', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/jifenmingxi.png' },
+                { title: '我的收藏', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/wodeshoucang.png' },
+                { title: '分享好友', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang.png' }
             ],
             about: [
-                { title: '关于我们', icon: require('../../../static/images/icon/guanyuwomen@2x.png') },
-                { title: '用户协议', icon: require('../../../static/images/icon/xieyi@2x.png') },
-                { title: '联系客服', icon: require('../../../static/images/icon/kefu@2x.png') }
+                { title: '关于我们', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/guanyuwomen.png' },
+                { title: '用户协议', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/xieyi.png' },
+                { title: '联系客服', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/kefu.png' }
             ]
         }
     }

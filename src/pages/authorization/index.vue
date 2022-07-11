@@ -1,7 +1,7 @@
 <template>
     <view class="app-container">
         <view class="app-top-background"></view>
-        <cover-image class="logo" src="/static/images/logo@2x.png"></cover-image>
+        <cover-image class="logo" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/logo.png"></cover-image>
 
         <u-button type="primary" class="button" @click="login">微信一键登录</u-button>
         <view class="radio">

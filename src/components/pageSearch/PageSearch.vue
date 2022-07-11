@@ -1,7 +1,7 @@
 <template>
     <view class="page-search">
         <view class="search-icon">
-            <cover-image src="../../static/images/icon/search@3x.png"></cover-image>
+            <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/search.png"></cover-image>
         </view>
         <input class="input"
         placeholder="请输入你想要的内容" />

@@ -2,7 +2,7 @@
 	<view class="content-box-item">
 		<view class="show-img">
 			<image :disabled="false" :controls='false' :autoplay='false' @click="goClass(item)"
-				:src="item.url+'?x-oss-process=video/snapshot,t_0,f_jpg'" mode="widthFix"></image>
+				:src="item.url"></image>
 		</view>
 		<view class="description">
 			<text class="title">{{item.name}}</text>
