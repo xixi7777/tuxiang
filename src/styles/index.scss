@@ -1,0 +1,48 @@
+@import '../uni.scss';
+
+* {
+    font-family: 'Source Han Sans CN';
+}
+
+.app-top-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 364px;
+    background: linear-gradient(180deg, #A1F5E2 0%, #EAF6F5 100%);
+    border-radius: 0px 0px 0px 50px;
+    z-index: -1;
+    &.home {
+        height: 460px;
+    }
+}
+
+.app-container {
+    padding: 30px;
+    position: relative;
+}
+.text-primary {
+    color: $uni-color-primary;
+}
+.text-error {
+    color: $uni-color-error;
+}
+.text-warning {
+    color: $uni-color-warning;
+}
+.text-success {
+    color: $uni-color-success;
+}
+.page-title {
+    font-size: 36px;
+    font-family: 'Source Han Sans CN';
+    font-weight: bold;
+    color: #0B6749;
+    margin-top: 67px;
+}
+.text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

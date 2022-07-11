@@ -17,6 +17,19 @@ module.exports = {
     require('autoprefixer')({
       remove: process.env.UNI_PLATFORM !== 'h5'
     }),
-    require('@dcloudio/vue-cli-plugin-uni/packages/postcss')
+    require('@dcloudio/vue-cli-plugin-uni/packages/postcss'),
+    require('postcss-px-to-viewport')({
+      unitToConvert: 'px',
+      viewportWidth: 750,
+      viewportHeight: 1969,
+      unitPrecision: 3,
+      propList: ["*"],
+      viewportUnit: "vw",
+      fontViewportUnit: "vw",
+      selectorBlackList: ['.ignore', '.hairlines'],
+      exclude: [/node_modules/],
+      minPixelValue: 1,
+      mediaQuery: false
+    })
   ]
 }
