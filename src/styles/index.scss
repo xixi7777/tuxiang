@@ -67,3 +67,20 @@
 .ml-5 {
     margin-left: 5px;
 }
+
+.flex-box {
+    display: flex;
+    align-items: center;
+    &.space-between {
+        justify-content: space-between;
+    }
+    &.center {
+        justify-content: center;
+    }
+}
+.p-h-20 {
+    padding: 0 20px;
+}
+.p-v-20 {
+    padding: 20px 0;
+}

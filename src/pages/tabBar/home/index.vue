@@ -62,11 +62,13 @@
 			<view class="scroll-list-wrapper">
 				<u-scroll-list :indicator="false">
 					<view v-for="item in recommends" class="scroll-item" :key="item.name">
+						<navigator :url="`/pages/productDetail/index?id=${item.id}`">
 						<view class="list-image">
 							<cover-image :src="item.url"></cover-image>
 						</view>
 						<view class="scroll-title"><text>{{ item.name }}</text></view>
 						<view><text class="price-code">￥</text><text class="price">{{ item.price }}</text><text class="sale">{{ item.sale }}</text></view>
+						</navigator>
 					</view>
 				</u-scroll-list>
 			</view>
@@ -121,9 +123,9 @@ export default {
 				{ name: '飞机游', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/plane.png' }
 			],
 			recommends: [
-				{ name: '三亚3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '超值' },
-				{ name: '西安3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_2.png', price: '580', sale: '七折' },
-				{ name: '上海3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '七折' }
+				{ id: 1, name: '三亚3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '超值' },
+				{ id: 2, name: '西安3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_2.png', price: '580', sale: '七折' },
+				{ id: 3, name: '上海3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '七折' }
 			],
 			list: [
 				{

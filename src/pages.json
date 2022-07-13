@@ -58,6 +58,14 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
 			}
+		},
+		{
+			"path": "pages/productDetail/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
 		}
 	],
 	"tabBar": {
