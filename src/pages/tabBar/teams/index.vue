@@ -23,10 +23,10 @@
         <view class="teams-group">
             <view class="team-item" v-for="(item, index) in 5" :key="index">
                 <view class="avatar">
-                    <cover-image src="https://cdn.uviewui.com/uview/album/1.jpg"></cover-image>
+                    <u-avatar src="https://cdn.uviewui.com/uview/album/1.jpg"></u-avatar>
                 </view>
-                <view class="name text-ellipsis"><text>烈性小喵队</text></view>
-                <view class="desc text-ellipsis"><text>徒步大舞台，有病吧你</text></view>
+                <view class="name text-ellipsis"><text>随便队</text></view>
+                <view class="desc text-ellipsis"><text>想咋滴咋滴</text></view>
                 <view class="member-num">5000</view>
                 <view class="members">团队人数</view>
                 <view class="date"><text>2022年10月24日</text></view>
@@ -111,7 +111,7 @@ export default {
         background: linear-gradient(335deg, rgba(255,255,255,0) 0%, #fff 100%);
         box-shadow: 0px 17px 23px 0px rgba(138,131,168,0.1);
         border-radius: 30px;
-        padding: 0 20px;
+        width: 48%;
         .avatar {
             width: 126px;
             height: 126px;
@@ -121,6 +121,12 @@ export default {
             margin: 0 auto;
             transform: translateY(-43px);
             overflow: hidden;
+            /deep/ .u-avatar,
+            /deep/ .u-avatar__image {
+                width: 126px !important;
+                height: 126px !important;
+                
+            }
         }
         .name {
             color: #2a2a2a;
@@ -149,7 +155,8 @@ export default {
             margin-top: 2px;
         }
         .date {
-            margin-top: 22px;
+            width: 85%;
+            margin: 22px auto auto;
             border-top: 1px dashed #d7d7d7;
             border-bottom: 1px dashed #d7d7d7;
             color: #C2BCBC;

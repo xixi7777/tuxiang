@@ -5,7 +5,7 @@
 }
 
 .app-top-background {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -45,4 +45,25 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.price-code {
+    line-height: 36px;
+    font-size: 34px;
+    font-weight: bold;
+    color: #17AA7D;
+}
+.price {
+    font-size: 46px;
+    font-weight: bold;
+    color: #17AA7D;
+    line-height: 53px;
+}
+.price-from {
+    font-size: 20px;
+    font-weight: 500;
+    color: #17AA7D;
+    line-height: 28px;
+}
+.ml-5 {
+    margin-left: 5px;
 }

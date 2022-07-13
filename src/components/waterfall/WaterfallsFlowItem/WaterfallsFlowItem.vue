@@ -2,7 +2,7 @@
 	<view class="content-box-item">
 		<view class="show-img">
 			<image :disabled="false" :controls='false' :autoplay='false' @click="goClass(item)"
-				:src="item.url"></image>
+				:src="item.url" mode="widthFix"></image>
 		</view>
 		<view class="description">
 			<text class="title">{{item.name}}</text>

@@ -1,9 +1,5 @@
 <template>
     <view class="app-container">
-        <view class="top-background">
-            <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/metopbg.png"></cover-image>
-        </view>
-
         <view class="page-title">
 			<text>我的</text>
 		</view>
@@ -11,29 +7,23 @@
         <view class="person-wrapper">
             <view class="left">
                 <view class="name text-ellipse"><text>Hi~, 我是茜茜</text></view>
-                <view class="team"><text>所属团队: 精神小伙队</text>
+                <view class="team"><text>所属团队: 随便队</text>
                     <view class="leader">
                         <text>队长</text>
-                        <view class="background">
-                            <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/duizhang.png"></cover-image>
-                        </view>
                     </view>
                 </view>
             </view>
             <view class="right">
-                <view class="avatar">
-                    <cover-image src="https://cdn.uviewui.com/uview/album/1.jpg"></cover-image>
+                <view class="me-avatar">
+                    <u-avatar src="//cdn.uviewui.com/uview/album/1.jpg"></u-avatar>
                 </view>
                 <view class="fanhui">
-                    <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fanhui.png"></cover-image>
+                    <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png"></cover-image>
                 </view>
             </view>
         </view>
 
         <view class="jifen-wrapper">
-            <view class="bg-wrapper">
-                <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/mejifenbg.png"></cover-image>
-            </view>
             <view class="jifen">
                 <view><text>4696</text></view>
                 <view><text>我的积分</text></view>
@@ -76,7 +66,7 @@
                     </view>
                     <view class="about-title"><text>{{ item.title }}</text></view>
                     <view class="go">
-                        <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fanhui.png"></cover-image>
+                        <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png"></cover-image>
                     </view>
                 </view>
             </view>
@@ -109,10 +99,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.wo-container {
-    background: linear-gradient(175deg, #FFFFFF 0%, #F8F8FA 100%);
-    margin: -30px;
-    padding: 30px;
+.app-container {
+    background-color: linear-gradient(175deg, #FFFFFF 0%, #F8F8FA 100%);
+    background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/metopbg.png);
+    background-size: 100% 500px;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 .top-background {
     height: 500px;
@@ -122,7 +114,6 @@ export default {
     right: 0;
     z-index: -1;
 }
-/deep/
 .person-wrapper {
     display: flex;
     margin-top: 55px;
@@ -152,12 +143,16 @@ export default {
             line-height: 50px;
             display: inline-block;
             margin-left: 4px;
+            background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/duizhang.png);
+            background-size: cover;
             .background {
                 position: absolute;
                 top: 4px;
                 left: 0;
                 height: 100%;
                 z-index: -1;
+                background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/duizhang.png);
+                background-size: cover;
             }
             text {
                 color: #fff;
@@ -172,11 +167,13 @@ export default {
         width: 176px;
         flex-direction: space-between;
         align-items: center;
-        .avatar {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            overflow: hidden;
+        .me-avatar {
+            /deep/ .u-avatar,
+            /deep/ .u-avatar__image {
+                width: 130px !important;
+                height: 130px !important;
+                
+            }
         }
         .fanhui {
             width: 26px;
@@ -192,13 +189,8 @@ export default {
     justify-content: center;
     align-items: center;
     display: flex;
-    .bg-wrapper {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 196px;
-        z-index: -1;
-    }
+    background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/mejifenbg.png);
+    background-size: cover;
     .jifen, .cishu {
         flex: 1;
         text-align: center;

@@ -1,10 +1,5 @@
 <template>
     <view class="app-container">
-        <!-- <tab-bar :current="1"></tab-bar> -->
-        <view class="bg-image">
-            <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/spell_bg.png"></cover-image>
-        </view>
-
         <view class="spell-group">
             <view class="spell-item" v-for="(item, index) in list" :key="index">
                 <view class="header">
@@ -30,9 +25,6 @@
                         <view class="item-footer">
                             <view class="grad">
                                 <text>立即抢位</text>
-                                <view class="grad-image">
-                                    <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/qiangwei.png"></cover-image>
-                                </view>
                             </view>
                             <view class="icon-share">
                                 <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/share.png"></cover-image>
@@ -108,13 +100,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .bg-image {
-        height: 596px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: -1;
+    .app-container {
+        background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/spell_bg.png);
+        background-size: 100% 596px;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
     }
     .spell-group {
         margin-top: 455px; 
@@ -221,6 +211,8 @@ export default {
                         border-radius: 34.5px;
                         overflow: hidden;
                         position: relative;
+                        background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/qiangwei.png);
+                        background-size: cover;
                         text {
                             position: absolute;
                             top: 0;
@@ -231,13 +223,6 @@ export default {
                             width: 100%;
                             text-align: center;
                             z-index: 2;
-                        }
-                        .grad-image {
-                            position: absolute;
-                            top: 0;
-                            right: 0;
-                            height: 100%;
-                            width: 100%;
                         }
                     }
                     .icon-share {

@@ -52,8 +52,10 @@
 			<view class="top">
 				<text class="title">排行榜</text>
 				<view class="more">
-					<text>查看全部</text>
-					<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
+					<navigator url="/pages/leaderboard/index">
+						<text>查看全部</text>
+						<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
+					</navigator>
 				</view>
 			</view>
 
@@ -75,8 +77,10 @@
 			<view class="top">
 				<text class="title">热门推荐</text>
 				<view class="more">
-					<text>更多</text>
-					<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
+					<navigator url="/pages/recommend/index">
+						<text>更多</text>
+						<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
+					</navigator>
 				</view>
 			</view>
 
@@ -133,13 +137,13 @@ export default {
 					info: '一起去看海'
 				},
 				{
-					name: '洱海', 
-					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
+					name: '大理', 
+					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_2.png',
 					info: '一起去看海'
 				},
 				{
-					name: '大理', 
-					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_2.png',
+					name: '洱海', 
+					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
 					info: '一起去看海'
 				}
 			],
