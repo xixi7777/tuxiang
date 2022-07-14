@@ -1,24 +1,20 @@
 <template>
     <view class="app-container">
-        <view class="back-icon">
-            <navigator url="/pages/tabBar/home/index" open-type="switchTab">
-                <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-left.png"></cover-image>
-            </navigator>
-        </view>
+        <top background-color="#000421" backIcon-color="#fff"/>
         <view class="biwan">
             <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/biwan.png"></cover-image>
         </view>
 
         <view class="hot-line">
             <view class="scroll-list-wrapper">
-                <u-scroll-list :indicator="false">
+                <scroll-view scroll-x="true" class="scroll">
                     <view class="hot-item" v-for="(item, index) in hotLines" :key="index">
                         <view class="hot-image">
-                            <cover-image :src="item"></cover-image>
+                            <image :src="item"></image>
                         </view>
                         <view class="item-footer"><text>热门路线</text></view>
                     </view>
-                </u-scroll-list>
+                </scroll-view>
             </view>
         </view>
 
@@ -53,52 +49,61 @@
     </view>
 </template>
 <script>
-    export default {
-        data() {
-            return {
-                hotLines: [
-                    '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-                    '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-                    '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-                    // '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-                    // '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-                    // '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png'
-                ]
-            }
+import Top from '@/components/top/Top'
+export default {
+    components: {
+        Top
+    },
+    data() {
+        return {
+            hotLines: [
+                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
+                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
+                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
+                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
+                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
+                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png'
+            ]
         }
     }
+}
 </script>
 <style lang="scss" scoped>
 .app-container {
     background: #000421;
     background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/paihangbang_bg.png);
-    background-position: 0 100px;
+    background-position: 0 150px;
     background-size: 100% 818px;
     background-repeat: no-repeat;
-}
-.back-icon {
-    margin-top: 70px;
-    width: 17px;
-    height: 30px;
 }
 .biwan {
     width: 578px;
     height: 347px;
-    margin: 100px auto 124px auto;
+    margin: 150px auto 124px auto;
 }
 .hot-line {
     margin-top: 124px;
+    .scroll {
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+    }
     .hot-item {
         width: 194px;
         height: 232px;
         border-radius: 20px;
         overflow: hidden;
+        display: inline-block;
         &:not(:first-child) {
             margin-left: 20px;
         }
         .hot-image {
             width: 100%;
             height: 163px;
+            image {
+                width: 100%;
+                height: 100%;
+            }
         }
         &:nth-child(4n) {
             background: #A3AEC6;

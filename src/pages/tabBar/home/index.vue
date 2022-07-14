@@ -52,7 +52,7 @@
 			<view class="top">
 				<text class="title">排行榜</text>
 				<view class="more">
-					<navigator url="/pages/leaderboard/index">
+					<navigator url="/pages/leaderboard/index" hover-class="navigator-hover-class">
 						<text>查看全部</text>
 						<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
 					</navigator>
@@ -60,17 +60,20 @@
 			</view>
 
 			<view class="scroll-list-wrapper">
-				<u-scroll-list :indicator="false">
+				
+				<scroll-view scroll-x="true" class="scroll">
+				<!-- <u-scroll-list :indicator="false"> -->
 					<view v-for="item in recommends" class="scroll-item" :key="item.name">
-						<navigator :url="`/pages/productDetail/index?id=${item.id}`">
 						<view class="list-image">
-							<cover-image :src="item.url"></cover-image>
+							<image :src="item.url"></image>
 						</view>
-						<view class="scroll-title"><text>{{ item.name }}</text></view>
-						<view><text class="price-code">￥</text><text class="price">{{ item.price }}</text><text class="sale">{{ item.sale }}</text></view>
+						<navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?id=${item.id}`">
+							<view class="scroll-title"><text>{{ item.name }}</text></view>
+							<view><text class="price-code">￥</text><text class="price">{{ item.price }}</text><text class="sale">{{ item.sale }}</text></view>
 						</navigator>
 					</view>
-				</u-scroll-list>
+				</scroll-view>
+				<!-- </u-scroll-list> -->
 			</view>
 		</view>
 
@@ -79,7 +82,7 @@
 			<view class="top">
 				<text class="title">热门推荐</text>
 				<view class="more">
-					<navigator url="/pages/recommend/index">
+					<navigator url="/pages/recommend/index" hover-class="navigator-hover-class">
 						<text>更多</text>
 						<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
 					</navigator>
@@ -262,18 +265,28 @@ export default {
 		}
 	}
 	.scroll-list-wrapper {
+		.scroll {
+			width: 100%;
+			overflow: hidden;
+			white-space: nowrap;
+		}
 		.scroll-item {
 			width: 302px;
 			height: 335px;
 			background: linear-gradient(-23deg, rgba(255,255,255,0) 0%, #FFF1F1 100%);
 			box-shadow: 0px 17px 23px 6px rgba(138,132,167,0.1);
 			border-radius: 20px;
+			display: inline-block;
 			&:not(:first-child) {
 				margin-left: 20px;
 			}
 			.list-image {
 				width: 302px;
 				height: 220px;
+				image {
+					height: 100%;
+					width: 100%;
+				}
 			}
 			.scroll-title {
 				margin-top: 18px;

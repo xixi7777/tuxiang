@@ -2,7 +2,7 @@
     <view class="app-container">
         <view class="app-top-background home"></view>
         <view class="page-title">
-            <navigator url="/pages/tabBar/home/index" open-type="switchTab">
+            <navigator open-type="navigateBack" delta="1" hover-class="navigator-hover-class">
                 <u-icon color="#006848" size="20" name="arrow-left" class="arrow-left"></u-icon>
             </navigator>
 		</view>
@@ -75,7 +75,7 @@ export default {
     display: flex;
     align-items: center;
     &>.title {
-        width: 144px;
+        // width: 144px;
         font-size: 36px;
         font-weight: 600;
         color: #17AA7D;

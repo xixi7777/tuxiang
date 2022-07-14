@@ -84,3 +84,10 @@
 .p-v-20 {
     padding: 20px 0;
 }
+navigator {
+    display: inline-block !important;
+}
+.navigator-hover-class {
+    background: transparent;
+    color: $uni-color-primary;
+}

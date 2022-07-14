@@ -1,12 +1,6 @@
 <template>
     <view class="detail-container">
-        <view class="header">
-            <navigator open-type="navigateBack" delta="1">
-                <u-icon color="#006848" size="20" name="arrow-left"></u-icon>
-            </navigator>
-            <view><text>商品详情</text></view>
-        </view>
-
+        <top title="商品详情" />
         <view class="photo-wrapper">
             <u-swiper
                 :list="swiper"
@@ -63,28 +57,32 @@
         <view class="exchange-wrapper">
             <view class="header flex-box space-between">
                 <view class="start-city"><text>济宁出发</text></view>
-                <view class="exchange-start flex-box">
+                <!-- <view class="exchange-start flex-box">
                     <text>切换出发地 (35个)</text>
-                    <u-icon name="arrow-right" size="10"></u-icon>
-                </view>
+                    <u-icon name="arrow-right" size="14" class="ml-20"></u-icon>
+                </view> -->
             </view>
             <view class="exchange-date__wrapper">
-                <view class="more-choose">更多班期</view>
+                <!-- <view class="more-choose">更多班期</view> -->
                 <view class="scroll-list-wrapper">
-                    <u-scroll-list>
-                        <view class="dates-item" v-for="(item, index) in dates" :key="index">
+                    <scroll-view scroll-x="true" class="scroll">
+                        <view :class="['dates-item', index === 0 && 'is-active']" v-for="(item, index) in dates" :key="index">
                             <text>{{ item.date }}</text>
                             <text>{{ item.weekday }}</text>
                             <text>￥{{ item.price }}起</text>
                         </view>
-                    </u-scroll-list>
+                    </scroll-view>
                 </view>
             </view>
         </view>
     </view>
 </template>
 <script>
+import Top from '@/components/top/Top'
 export default {
+    components: {
+        Top
+    },
     data() {
         return {
             currentNum: 0,
@@ -98,7 +96,10 @@ export default {
                 { date: '07-13', weekday: '周四', price: 1999 },
                 { date: '07-14', weekday: '周五', price: 1999 },
                 { date: '07-15', weekday: '周六', price: 1999 },
-                { date: '07-16', weekday: '周日', price: 1999 }
+                { date: '07-16', weekday: '周日', price: 1999 },
+                { date: '07-17', weekday: '周一', price: 1999 },
+                { date: '07-18', weekday: '周二', price: 1999 },
+                { date: '07-19', weekday: '周三', price: 1999 }
             ]
         }
     }
@@ -106,30 +107,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .detail-container {
-    &>.header {
-        background: linear-gradient(180deg, #A1F5E2 0%, #EAF6F5 100%);
-        padding: 88px 0 38px 0;
-        position: fixed;
-        top: 0;
-        left: 0;
-        text-align: center;
-        z-index: 9;
-        width: 100%;
-        /deep/ .u-icon {
-            position: absolute;
-            left: 30px;
-        }
-        text {
-            font-size: 36px;
-            font-weight: 500;
-            color: #333333;
-            line-height: 50px;
-            letter-spacing: 1px;
-        }
-    }
     .photo-wrapper {
         height: 434px;
-        margin-top: 176px;
+        margin-top: 190px;
         border-top: 1px solid transparent;
         .indicator-num {
             background-color: rgba(255, 255, 255, 0.5);
@@ -295,13 +275,49 @@ export default {
                 bottom: 0;
                 right: 0;
                 background: #fff;
-                width: 68px;
-                width: 22px;
+                width: 40px;
+                text-align: center;
                 font-size: 22px;
                 font-weight: 500;
                 color: #17AA7D;
                 line-height: 30px;
                 word-wrap: break-word;
+                z-index: 3;
+            }
+        }
+        .scroll-list-wrapper {
+            .scroll {
+                width: 100%;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+            .dates-item {
+                width: 160px;
+                background: rgba(0,0,0,.1);
+                border-radius: 20px;
+                opacity: 0.5;
+                text-align: center;
+                padding: 16px 0;
+                display: inline-block;
+                text {
+                    color: #000;
+                    font-size: 24px;
+                    line-height: 33px;
+                    display: block;
+                    &:last-child {
+                        font-size: 28px;
+                        line-height: 34px;
+                    }
+                }
+                &.is-active {
+                    background-color: #17AA7D;
+                    text {
+                        color: #fff;
+                    }
+                }
+                &:not(:first-child) {
+                    margin-left: 20px;
+                }
             }
         }
     }

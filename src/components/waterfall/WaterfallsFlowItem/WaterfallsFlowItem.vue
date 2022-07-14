@@ -32,7 +32,6 @@
 		border-radius: 14px;
 		overflow: hidden;
 		background-color: #fff;
-		box-shadow: 3px 3px 5px #f2f2f2, -3px -3px 5px #f2f2f2;
 
 		.show-img {
 			position: relative;
