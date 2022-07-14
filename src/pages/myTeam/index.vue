@@ -80,8 +80,8 @@
                   <view class="row-box">
                     <text>总人数</text>
                     <text>积分</text>
-                    <navigator url="/pages/ediInfo/index">
-                      <view class="info-edit"><text>信息编辑</text></view>
+                    <navigator url="/pages/editInfo/index">
+                      <view class="info-edit">信息编辑</view>
                     </navigator>
                   </view>
                 </view>
@@ -445,8 +445,8 @@ export default {
     padding: 18px;
     button {
       display: inline-block;
-      margin-right: 28px;
-      width: 180px;
+      margin-right: 25px;
+      width: 190px;
       height: 55px;
       line-height: 55px;
       border-radius: 32px;
