@@ -17,9 +17,11 @@
                 <view class="me-avatar">
                     <u-avatar src="//cdn.uviewui.com/uview/album/1.jpg"></u-avatar>
                 </view>
-                <view class="fanhui">
-                    <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png"></cover-image>
-                </view>
+                <navigator url="/pages/myTeam/index">
+                    <view class="fanhui">
+                        <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png"></cover-image>
+                    </view>
+                </navigator>
             </view>
         </view>
 
