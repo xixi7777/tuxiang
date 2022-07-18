@@ -4,26 +4,23 @@
     <view class="top-title">
       <view class="title-content">
         <!-- 返回 -->
-        <navigator open-type="navigateBack">
-          <u-icon
-            color="#006848"
-            name="arrow-left"
-            class="arrow-back"
-            size="20"
-          ></u-icon>
-        </navigator>
-        <view class="title"><text>我的团队</text></view>
+        <view class="arrow-back">
+          <navigator open-type="navigateBack">
+            <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
+          </navigator>
+        </view>
+        <text>我的团队</text>
       </view>
     </view>
-
     <!-- 顶部背景图 -->
-    <view class="app-top-background myteam">
-      <cover-image
-        src="https://mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_top_bg.png"
-      ></cover-image>
+    <view class="app-top-background">
+      <image
+        class="image"
+        src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_top_bg.png"
+      ></image>
     </view>
 
-    <!-- 顶部版块 -->
+    <!-- 顶部内容版块 -->
     <view class="top-wrapper">
       <!-- 团队信息 -->
       <view class="info">
@@ -35,16 +32,8 @@
           </view>
         </view>
         <view class="info-gender">
-          <view class="image">
-            <cover-image
-              src="https://mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/male.png"
-            ></cover-image
-          ></view>
-          <view class="image">
-            <cover-image
-              src="https://mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/female.png"
-            ></cover-image>
-          </view>
+          <view class="image-male image"> </view>
+          <view class="image-female image"> </view>
           <text>S码</text>
         </view>
 
@@ -53,9 +42,10 @@
           <u-row>
             <u-col :span="4.5">
               <view class="avatar">
-                <cover-image
+                <image
+                  class="image"
                   src="https://cdn.uviewui.com/uview/album/1.jpg"
-                ></cover-image>
+                ></image>
               </view>
             </u-col>
             <u-col :span="7.5">
@@ -102,12 +92,12 @@
       <view class="feature-wrapper">
         <u-row>
           <u-col :span="3" v-for="(item, index) in features" :key="item.name">
-            <view class="feature-item">
-              <view>
-                <cover-image class="icon-image" :src="item.icon"></cover-image>
+            <navigator :url="item.url">
+              <view class="feature-item">
+                <image class="icon-image" :src="item.icon"> </image>
+                <text>{{ item.name }}</text>
               </view>
-              <text>{{ item.name }}</text>
-            </view>
+            </navigator>
           </u-col>
         </u-row>
       </view>
@@ -116,15 +106,9 @@
     <!-- 活动列表 -->
     <view class="activity-group">
       <view class="activity-item" v-for="(item, index) in list" :key="index">
-        <cover-image
-          class="item-bg"
-          src="https://mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_bg.png"
-        ></cover-image>
         <view class="activity-content">
           <view class="left">
-            <view class="image">
-              <cover-image :src="item.url"></cover-image>
-            </view>
+            <image class="image" mode="scaleToFill" :src="item.url"></image>
           </view>
           <view class="right">
             <view class="title"
@@ -149,14 +133,14 @@
           <button>立即报名</button>
         </view>
         <view v-if="index != list.length - 1">
-          <cover-image
+          <image
             class="decor left-decor"
-            src="https://mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"
-          ></cover-image>
-          <cover-image
+            src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"
+          ></image>
+          <image
             class="decor right-decor"
-            src="https://mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"
-          ></cover-image>
+            src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"
+          ></image>
         </view>
       </view>
     </view>
@@ -169,43 +153,59 @@ export default {
     return {
       features: [
         {
-          name: "发起活动",
-          icon: "//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/activity.png",
+          name: '发起活动',
+          icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/activity.png',
+          url: '/pages/initiateActivity/index',
         },
         {
-          name: "排行榜",
-          icon: "//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/rankings.png",
+          name: '排行榜',
+          icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/rankings.png',
+          url: '/pages/leaderboard/index'
         },
         {
-          name: "成员列表",
-          icon: "//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/member.png",
+          name: '成员列表',
+          icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/member.png',
         },
         {
-          name: "服装商城",
-          icon: "//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/mall.png",
+          name: '服装商城',
+          icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/mall.png',
         },
       ],
       list: [
         {
-          date1: "2022.05.12 13:00",
-          date2: "2022.05.12 21:00",
-          name: "夏令营夜爬老君山",
-          place: "老君山",
-          url: "//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png",
+          date1: '2022.05.12 13:00',
+          date2: '2022.05.12 21:00',
+          name: '夏令营夜爬老君山',
+          place: '老君山',
+          url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
         },
         {
-          date1: "2022.05.12 13:00",
-          date2: "2022.05.12 21:00",
-          name: "夏令营夜爬老君山",
-          place: "老君山",
-          url: "//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png",
+          date1: '2022.05.12 13:00',
+          date2: '2022.05.12 21:00',
+          name: '夏令营夜爬老君山',
+          place: '老君山',
+          url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
         },
         {
-          date1: "2022.05.12 13:00",
-          date2: "2022.05.12 21:00",
-          name: "夏令营夜爬老君山",
-          place: "老君山",
-          url: "//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png",
+          date1: '2022.05.12 13:00',
+          date2: '2022.05.12 21:00',
+          name: '夏令营夜爬老君山',
+          place: '老君山',
+          url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
+        },
+        {
+          date1: '2022.05.12 13:00',
+          date2: '2022.05.12 21:00',
+          name: '夏令营夜爬老君山',
+          place: '老君山',
+          url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
+        },
+        {
+          date1: '2022.05.12 13:00',
+          date2: '2022.05.12 21:00',
+          name: '夏令营夜爬老君山',
+          place: '老君山',
+          url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
         },
       ],
     };
@@ -220,29 +220,33 @@ export default {
 }
 .app-top-background {
   height: 364px;
+  margin: 0 -30px;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
   z-index: -1;
+  .image {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
 }
 .top-title {
   position: fixed;
-  top: 60px;
-  width: 90%;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding: 70px 0 30px;
+  width: 100%;
   color: #006848;
   font-size: 36px;
+  background: linear-gradient(to right, #b9f7e8 50%, #eaf6f5 100%);
+  z-index: 1;
   .title-content {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    text-align: center;
   }
   .arrow-back {
-    font-size: 36px;
-  }
-  .title {
-    flex: 1;
-    text-align: center;
+    position: absolute;
+    left: 30px;
+    top: 70px;
   }
 }
 .top-wrapper {
@@ -295,7 +299,15 @@ export default {
       .image {
         width: 30px;
         height: 30px;
-        &:nth-child(2) {
+        overflow: hidden;
+        background-position: 0 0;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        &.image-male {
+          background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/male.png);
+        }
+        &.image-female {
+          background-image: url('//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/female.png');
           margin-left: 26px;
           margin-right: 58px;
         }
@@ -309,6 +321,11 @@ export default {
         border-radius: 50%;
         margin-right: 53px;
         overflow: hidden;
+        .image {
+          width: 190px;
+          height: 190px;
+          border-radius: 50%;
+        }
       }
       .data-box {
         position: relative;
@@ -365,14 +382,14 @@ export default {
     padding: 20px 50px;
     background: rgba(227, 234, 232, 0.22);
     .feature-item {
-      text-align: center;
-    }
-    .icon-image {
-      display: inline-block;
-      width: 30px;
-      height: 30px;
-      overflow: hidden;
-      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .icon-image {
+        width: 30px;
+        height: 30px;
+        margin-bottom: 10px;
+      }
     }
   }
 }
@@ -381,8 +398,10 @@ export default {
     position: relative;
     padding: 0 30px 75px;
     margin: 20px -23px 0;
-    background: url("https://mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_bg.png")
-      cover no-repeat;
+    background-image: url('//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_bg.png');
+    background-position: 0 0;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
     .item-bg {
       position: absolute;
       width: 100%;
@@ -415,6 +434,7 @@ export default {
         height: 224px;
         border-radius: 13px;
         background: #d8d8d8;
+        overflow: hidden;
       }
     }
     .right {
