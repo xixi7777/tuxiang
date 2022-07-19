@@ -69,7 +69,7 @@ export default {
                 },
                 {
                     date: '7月9日',
-                    name: '云南的第一场旅行',
+                    name: '云南的第一场旅行云南的第一场旅行云南的第一场旅行云南的第一场旅行',
                     registrationDate: '7月9日-8月15日',
                     vipPrice: 580,
                     price: 120,
@@ -148,11 +148,11 @@ export default {
             .left {
                 flex: 1;
                 .title {
+                    max-width: 300px;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     text {
-                        font-family: 'PingFangSC-Medium, PingFang SC';
                         font-size: 34px;
                         font-weight: 500;
                         color: #2a2a2a;

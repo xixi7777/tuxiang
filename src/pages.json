@@ -84,6 +84,14 @@
 			}
 		},
 		{
+			"path": "pages/mall/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
 			"path": "pages/initiateActivity/index",
 			"style": {
 				"navigationBarTitleText": "",

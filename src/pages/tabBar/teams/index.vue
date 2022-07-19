@@ -1,43 +1,41 @@
 <template>
   <view class="app-container">
-    <!-- <tab-bar :current="2"></tab-bar> -->
+        <!-- <tab-bar :current="2"></tab-bar> -->
     <view class="app-top-background home"></view>
     <view class="page-title">
       <text>团队</text>
     </view>
-    <search></search>
+  <search></search>
 
     <view class="menu-wrapper">
-      <u-row gutter="10">
-        <u-col span="4" v-for="(m, index) in menus" :key="index">
-          <navigator :url="item.url">
-            <view :class="['menu-item', `menu-item__${index + 1}`]">
-              <view class="icon-box">
-                <cover-image :src="m.icon"></cover-image>
-              </view>
-              <view
-                ><text>{{ m.title }}</text></view
-              >
-            </view>
-          </navigator>
-        </u-col>
-      </u-row>
+        <u-row gutter="10">
+            <u-col span="4" v-for="(m, index) in menus" :key="index">
+                <navigator :url="m.url" hover-class="navigator-hover-class">
+                    <view :class="['menu-item', `menu-item__${index+1}`]">
+                        <view class="icon-box">
+                            <cover-image :src="m.icon"></cover-image>
+                        </view>
+                        <view><text>{{ m.title }}</text></view>
+                    </view>
+                </navigator>
+            </u-col>
+        </u-row>
     </view>
 
     <view class="teams-group">
-      <view class="team-item" v-for="(item, index) in 5" :key="index">
-        <view class="avatar">
-          <u-avatar src="https://cdn.uviewui.com/uview/album/1.jpg"></u-avatar>
+        <view class="team-item" v-for="(item, index) in 5" :key="index">
+            <view class="avatar">
+                <u-avatar src="https://cdn.uviewui.com/uview/album/1.jpg"></u-avatar>
+            </view>
+            <view class="name text-ellipsis"><text>随便队</text></view>
+            <view class="desc text-ellipsis"><text>想咋滴咋滴</text></view>
+            <view class="member-num">5000</view>
+            <view class="members">团队人数</view>
+            <view class="date"><text>2022年10月24日</text></view>
+            <view class="button">
+                <u-button type="primary" shape="circle" text="申请加入"></u-button>
+            </view>
         </view>
-        <view class="name text-ellipsis"><text>随便队</text></view>
-        <view class="desc text-ellipsis"><text>想咋滴咋滴</text></view>
-        <view class="member-num">5000</view>
-        <view class="members">团队人数</view>
-        <view class="date"><text>2022年10月24日</text></view>
-        <view class="button">
-          <u-button type="primary" shape="circle" text="申请加入"></u-button>
-        </view>
-      </view>
     </view>
   </view>
 </template>
@@ -63,7 +61,7 @@ export default {
         {
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/store.png',
           title: '逛商场',
-          url: '',
+          url: '/pages/mall/index',
         },
       ],
     };
