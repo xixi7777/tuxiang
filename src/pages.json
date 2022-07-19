@@ -90,10 +90,25 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
 			}
-		}
-		,
+		},
 		{
 			"path": "pages/createTeam/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/signUpList/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/member/index",
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
@@ -118,12 +133,14 @@
 				"iconPath": "static/icon/spell_group@3x.png",
 				"selectedIconPath": "static/icon/spell_group_selected@3x.png",
 				"text": "拼团"
-			}, {
+			},
+			{
 				"pagePath": "pages/tabBar/teams/index",
 				"iconPath": "static/icon/teams@3x.png",
 				"selectedIconPath": "static/icon/teams_selected@3x.png",
 				"text": "团队"
-			}, {
+			},
+			{
 				"pagePath": "pages/tabBar/personal/index",
 				"iconPath": "static/icon/me@3x.png",
 				"selectedIconPath": "static/icon/me_selected@3x.png",
