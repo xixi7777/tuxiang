@@ -4,7 +4,7 @@
     <view class="top-title">
       <view class="title-content">
         <!-- 返回 -->
-        <navigator open-type="navigateBack">
+        <navigator open-type="navigateBack" hover-class="navigator-hover-class">
           <u-icon
             color="#006848"
             name="arrow-left"
