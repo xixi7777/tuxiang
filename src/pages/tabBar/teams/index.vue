@@ -10,12 +10,14 @@
         <view class="menu-wrapper">
             <u-row gutter="10">
                 <u-col span="4" v-for="(m, index) in menus" :key="index">
-                    <view :class="['menu-item', `menu-item__${index+1}`]">
-                        <view class="icon-box">
-                            <cover-image :src="m.icon"></cover-image>
+                    <navigator url="/pages/mall/index" hover-class="navigator-hover-class">
+                        <view :class="['menu-item', `menu-item__${index+1}`]">
+                            <view class="icon-box">
+                                <cover-image :src="m.icon"></cover-image>
+                            </view>
+                            <view><text>{{ m.title }}</text></view>
                         </view>
-                        <view><text>{{ m.title }}</text></view>
-                    </view>
+                    </navigator>
                 </u-col>
             </u-row>
         </view>

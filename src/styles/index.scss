@@ -45,6 +45,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    // display: block;
+    // width: 100%;
 }
 .price-code {
     line-height: 36px;
@@ -86,8 +88,26 @@
 }
 navigator {
     display: inline-block !important;
+    width: 100%;
 }
 .navigator-hover-class {
     background: transparent;
     color: $uni-color-primary;
+}
+.scroll {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+$grid-gap: 40px;
+
+.wf-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: $grid-gap;
+}
+
+.wf-item {
+    width: 326px;
 }

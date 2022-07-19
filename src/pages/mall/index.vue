@@ -1,13 +1,14 @@
 <template>
-	<view class="app-container">
-		<!-- <tab-bar :current="0"></tab-bar> -->
+    <view class="app-container">
         <view class="app-top-background home"></view>
 		<view class="page-title">
-			<text>旅游</text>
+            <navigator open-type="navigateBack" delta="1" hover-class="navigator-hover-class">
+                <u-icon color="#006848" size="20" name="arrow-left" class="arrow-left"></u-icon>
+            </navigator>
 		</view>
 		<search></search>
 
-		<!-- swiper -->
+        <!-- swiper -->
 		<view class="banner-wrapper">
 			<view class="swiper-container">
 				<u-swiper
@@ -33,65 +34,52 @@
 
 		<!-- trip example -->
 		<view class="travel-group">
-			<u-row>
-				<u-col :span="3" v-for="(item, index) in travels" :key="item.name">
-					<view class="travel-item">
-						<view class="image-list">
-							<view :class="['icon-wrapper', `icon-${index}`]">
-								<cover-image class="icon" :src="item.icon"></cover-image>
-							</view>
-						</view>
-						<text>{{ item.name }}</text>
-					</view>
-				</u-col>
-			</u-row>
+            <scroll-view scroll-x="true" class="scroll">
+                <view class="travel-item" v-for="(item, index) in travels" :key="item.name">
+                    <view class="image-list">
+                        <view :class="['icon-wrapper', `icon-${index}`]">
+                            <image mode="scaleToFill" class="icon" :src="item.icon"></image>
+                        </view>
+                    </view>
+                    <text>{{ item.name }}</text>
+                </view>
+            </scroll-view>
 		</view>
 
 		<!-- recommend -->
 		<view class="recommend">
 			<view class="top">
-				<text class="title">排行榜</text>
+				<text class="title">热门推荐</text>
 				<view class="more">
-					<navigator url="/pages/leaderboard/index" hover-class="navigator-hover-class">
+					<!-- <navigator url="/pages/leaderboard/index" hover-class="navigator-hover-class"> -->
 						<text>查看全部</text>
 						<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
-					</navigator>
+					<!-- </navigator> -->
 				</view>
 			</view>
 
 			<view class="scroll-list-wrapper">
-				
 				<scroll-view scroll-x="true" class="scroll">
-				<!-- <u-scroll-list :indicator="false"> -->
 					<view v-for="item in recommends" class="scroll-item" :key="item.name">
 						<view class="list-image">
 							<image :src="item.url"></image>
 						</view>
-						<navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?id=${item.id}`">
+						<!-- <navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?id=${item.id}`"> -->
 							<view class="scroll-title"><text>{{ item.name }}</text></view>
 							<view><text class="price-code">￥</text><text class="price">{{ item.price }}</text><text class="sale">{{ item.sale }}</text></view>
-						</navigator>
+						<!-- </navigator> -->
 					</view>
 				</scroll-view>
-				<!-- </u-scroll-list> -->
 			</view>
 		</view>
 
-		<!--  -->
 		<view class="recommend">
 			<view class="top">
-				<text class="title">热门推荐</text>
-				<view class="more">
-					<navigator url="/pages/recommend/index" hover-class="navigator-hover-class">
-						<text>更多</text>
-						<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
-					</navigator>
-				</view>
+				<text class="title">好物推荐</text>
 			</view>
 
 			<view class="flow-wrapper">
 				<view class="wf-page">
-					<!--    left    -->
 					<view>
 						<view id="left" v-if="leftList.length">
 							<view v-for="(item,index) in leftList" :key="index" class="wf-item" @tap="itemTap(item)">
@@ -100,7 +88,6 @@
 						</view>
 					</view>
 
-					<!--    right    -->
 					<view>
 						<view id="right" v-if="rightList.length">
 							<view v-for="(item,index) in rightList" :key="index" class="wf-item" @tap="itemTap(item)">
@@ -110,29 +97,16 @@
 					</view>
 				</view>
 			</view>
-
-			<view class="footer-wrapper">
-				<view class="list" v-for="(item, index) in footers" :key="index">
-					<view class="image">
-						<cover-image :src="item"></cover-image>
-					</view>
-				</view>
-			</view>
 		</view >
-	</view>
+    </view>
 </template>
-
 <script>
-import WaterfallsFlow from '@/components/waterfall/WaterfallsFlow/WaterfallsFlow';
-import WaterfallFlowItem from './comps/WaterfallFlowItem';
 import Search from '@/components/pageSearch/PageSearch'
-
-
-import { waterfallMixins } from '@/mixins/waterfallMixins';
+import WaterfallFlowItem from './comps/WaterfallFlowItem';
+import { waterfallMixins } from '@/mixins/waterfallMixins'
 export default {
 	mixins: [waterfallMixins],
 	components: {
-		WaterfallsFlow,
 		Search,
 		WaterfallFlowItem
 	},
@@ -141,45 +115,51 @@ export default {
 			keyword: null,
 			current: 0,
 			images: [
-				'//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/banner.png',
+				'https://img14.360buyimg.com/babel/jfs/t1/152451/38/24044/73060/62bd40a8E5b7825ff/acfcd4fe7d5d4e31.jpg.webp',
+				'https://img12.360buyimg.com/babel/jfs/t1/154351/20/24314/35881/62be5d11Edc8a9539/83dd22f9bae8c8db.jpg.webp',
+				'https://img11.360buyimg.com/babel/jfs/t1/207900/19/24249/58514/62be5e22Ec497ab55/ae8c8ae92228ce66.jpg.webp'
 			],
 			travels: [
-				{ name: '自由行', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/independent.png' },  
-				{ name: '跟团游', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/group.png' },
-				{ name: '一日游', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/daily.png' },
-				{ name: '飞机游', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/plane.png' }
+				{ name: '春夏', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/chunxia.png' },  
+				{ name: '秋冬', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/qiudong.png' },
+				{ name: 'Polo衫', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/polo.png' },
+				{ name: '冲锋衣', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/chongfengyi.png' },
+				{ name: '运动鞋', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/sportshose.png' }
 			],
 			recommends: [
-				{ id: 1, name: '三亚3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '超值' },
-				{ id: 2, name: '西安3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_2.png', price: '580', sale: '七折' },
-				{ id: 3, name: '上海3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '七折' }
+				{ id: 1, name: '卡帝乐鳄鱼(CARTELO)衬衫男 纯色休闲长袖衬衫舒适透气白衬衣男', url: 'https://img13.360buyimg.com/n7/jfs/t1/222205/9/5409/115034/61b1cfe2E998645d6/7a202d8b220c4c09.jpg.avif', price: '580', sale: '超值' },
+				{ id: 2, name: '法国CebrodzPOLO衫短袖翻领男设计感小众宽松高级感痞帅工装衬衫体恤', url: 'https://img12.360buyimg.com/n7/jfs/t1/203781/27/21412/100402/627cba57Ed59e658f/761b35624d93912c.jpg.avif', price: '580', sale: '七折' },
+				{ id: 3, name: 'GONES TOMMY琼思汤米联名男士短袖polo衫商务休闲体恤刺绣冰感衬衫t恤半袖', url: 'https://img10.360buyimg.com/n7/jfs/t1/75296/10/20620/83019/62d60265Ebf9a56b5/5cdd78b04f3e1d3f.jpg.avif', price: '580', sale: '七折' }
 			],
 			wfList: [
 				{
-					name: '洱海', 
-					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-					info: '一起去看海'
+					name: 'JOESRAW官方美式街头字母刺绣短袖polo衫男国潮男装联名POLO情侣装t恤男士潮', 
+					url: 'https://img13.360buyimg.com/n7/jfs/t1/203072/39/22169/167978/627b25aaE2ce6c677/5a476dc531c2de28.jpg.avif',
+					price: '629',
+					sale: '七折',
+                    count: 555
 				},
 				{
-					name: '大理', 
-					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_2.png',
-					info: '一起去看海'
+					name: '两三事梵高系列 沉默演绎 春装新款复古绣花翻领长', 
+                    url: 'https://img11.360buyimg.com/babel/s320x320_jfs/t1/11995/15/18090/239538/62d586e1Ef0bd0e1c/d1fb3ab790f70687.jpg!cc_320x320.webp',
+					price: '329',
+					sale: '七折',
+                    count: 50
 				},
 				{
-					name: '大理', 
-					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_2.png',
-					info: '一起去看海'
+					name: '森马风衣女短款卡其色宽松简约2022秋季新款气质时尚外套百搭复古 卡其5610',
+                    url: 'https://img10.360buyimg.com/n7/jfs/t1/58467/15/20157/200617/62c54b9bE33705fae/ee14010d650dad46.jpg.avif', 
+					price: '439',
+					sale: '七折',
+                    count: 199
 				},
 				{
-					name: '洱海', 
-					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-					info: '一起去看海'
+					name: '韩璐娇 卡其色风衣女中长款2022春秋新款女装韩版宽松气质显瘦英伦风长款过膝', 
+                    url: 'https://img11.360buyimg.com/n7/jfs/t1/192193/17/15730/321592/6103a9fdE99239adc/9083396ef313cbf7.jpg.avif',
+					price: '169',
+					sale: '七折',
+                    count: 99
 				}
-			],
-			flowList: [],
-			footers: [
-				'//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/foot_1.png',
-				'//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/foot_2.png'
 			]
 		}
 	},
@@ -236,25 +216,35 @@ export default {
 	/deep/
 	.travel-group {
 		margin-top: 36px;
-		text-align: center;
 		.travel-item {
-			text-align: center;
+            display: inline-block;
+            &:not(:first-child) {
+                margin-left: 80px;
+            }
 		}
 		.icon-wrapper {
-			width: 76px;
+			width: 85px;
 			margin: 0 auto;
 			margin-bottom: 14px;
+			height: 80px;
+			image {
+				width: 100%;
+				height: 100%;
+			}
 			&.icon-0 {
-				width: 57px;
+				width: 85px;
 			}
 			&.icon-1 {
-				width: 70px;
+				width: 68px;
 			}
 			&.icon-2 {
-				width: 62px;
+				width: 82px;
 			}
 			&.icon-3 {
-				width: 60px;
+				width: 78px;
+			}
+            &.icon-4 {
+				width: 70px;
 			}
 		}
 	}
@@ -289,11 +279,6 @@ export default {
 		}
 	}
 	.scroll-list-wrapper {
-		.scroll {
-			width: 100%;
-			overflow: hidden;
-			white-space: nowrap;
-		}
 		.scroll-item {
 			width: 302px;
 			height: 335px;
@@ -301,6 +286,7 @@ export default {
 			box-shadow: 0px 17px 23px 6px rgba(138,132,167,0.1);
 			border-radius: 20px;
 			display: inline-block;
+            overflow: hidden;
 			&:not(:first-child) {
 				margin-left: 20px;
 			}
@@ -312,7 +298,11 @@ export default {
 					width: 100%;
 				}
 			}
+            navigator {
+                width: 100%;
+            }
 			.scroll-title {
+                // width: 100%;
 				margin-top: 18px;
 				font-size: 30px;
 				color: #2A2A2A;
@@ -345,18 +335,6 @@ export default {
 				font-weight: 500;
 				font-size: 22px;
 			}
-		}
-	}
-	.footer-wrapper {
-		margin-top: 30px;
-		.list {
-			border-radius: 30px;
-			box-shadow: 0px 17px 37px 0px rgba(28,157,122,0.2);
-			background: rgba(255,255,255,0.5);
-			&:not(:first-child) {
-				margin-top: 30px;
-			}
-			padding: 20px;
 		}
 	}
 </style>
