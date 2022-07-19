@@ -3,27 +3,33 @@
     <top title="发起活动" />
 
     <view class="form-wrapper">
-      <scroll-view scroll-y="true" class="scroll-Y scroll-view">
-        <view class="form">
+      <view class="form">
+        <scroll-view
+          scroll-y="true"
+          show-scrollbar="true"
+          class="scroll-Y scroll-view"
+        >
           <u-form
             labelPosition="left"
-            :model="userInfo"
+            :model="activityInfo"
             :rules="rules"
             ref="form1"
-            labelWidth="90"
+            labelWidth="85"
           >
             <u-form-item
               label="活动名称"
+              prop="name"
               leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_activity_name.png"
             >
               <u-input
                 type="text"
-                v-model="activityInfo.name"
+                v-model="name"
                 placeholder="请输入活动名称"
               />
             </u-form-item>
             <u-form-item
               label="活动地点"
+              prop="place"
               leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_place.png"
             >
               <u-input
@@ -34,31 +40,34 @@
             </u-form-item>
             <u-form-item
               label="活动天数"
+              prop="days"
               leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_days.png"
             >
               <u-input
                 type="text"
-                v-model="place"
+                v-model="days"
                 placeholder="请输入活动天数"
               />
             </u-form-item>
             <u-form-item
               label="截止时间"
+              prop="end_time"
               leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_end_time.png"
             >
               <u-input
                 type="text"
-                v-model="place"
+                v-model="end_time"
                 placeholder="请输入截止时间"
               />
             </u-form-item>
             <u-form-item
               label="人数要求"
+              prop="member_num"
               leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_member_num.png"
             >
               <u-input
                 type="text"
-                v-model="place"
+                v-model="member_num"
                 placeholder="请输入人数要求"
               />
             </u-form-item>
@@ -66,19 +75,22 @@
               label="关联活动"
               leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_connected.png"
             >
-              <u-input type="text" v-model="place" placeholder=" ">
-                <template slot="suffix">
-                  <navigator>
-                    <image
-                      src="//mall-lyxcx/front_end/icon/arrow-right.png"
-                    ></image>
-                  </navigator>
-                </template>
-              </u-input>
+              <navigator>
+                <u-input
+                  type="text"
+                  disabled
+                  disabledColor="#ffffff"
+                  placeholder=" "
+                >
+                  <template slot="suffix">
+                    <u-icon name="arrow-right"></u-icon>
+                  </template>
+                </u-input>
+              </navigator>
             </u-form-item>
           </u-form>
-        </view>
-      </scroll-view>
+        </scroll-view>
+      </view>
 
       <button @click="submit" class="btn-submit">确定</button>
     </view>
@@ -97,15 +109,15 @@ export default {
         name: '',
         place: '',
         days: '',
-        endTime: '', //截止时间
-        memberNum: '',
+        end_time: '', //截止时间
+        member_num: '',
       },
       rules: {
         name: [
           {
             type: 'string',
             required: true,
-            message: '请输入',
+            message: '请输入活动名称',
             trigger: ['blur'],
           },
         ],
@@ -113,29 +125,29 @@ export default {
           {
             type: 'string',
             required: true,
-            message: '请输入',
+            message: '请输入活动地点',
             trigger: ['blur'],
           },
         ],
         days: [
           {
             required: true,
-            message: '请输入',
+            message: '请输入活动天数',
             trigger: ['blur'],
           },
         ],
-        endTime: [
+        end_time: [
           {
             type: 'string',
             required: true,
-            message: '请输入',
+            message: '请输入截止时间',
             trigger: ['blur'],
           },
         ],
-        memberNum: [
+        member_num: [
           {
             required: true,
-            message: '请输入',
+            message: '请输入人数要求',
             trigger: ['blur'],
           },
         ],
@@ -161,20 +173,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/deep/ .top {
+ padding: 70px 30px 60px 30px !important;
+  border-radius: 0px 0px 0px 50px;
+  .back-icon {
+    top: 70px !important;
+  }
+}
 .activity-container {
   position: fixed;
   width: 100%;
   height: 100%;
-  .bg {
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 175px;
-    background: linear-gradient(to bottom, #a1f5e2 0%, #eaf6f5 100%);
-    border-radius: 0px 0px 0px 50px;
-  }
   .form-wrapper {
     box-sizing: border-box;
     width: 100%;
@@ -184,6 +193,8 @@ export default {
       height: 830px;
     }
     .form {
+      position: relative;
+      z-index: 100;
       background: linear-gradient(
         335deg,
         rgba(255, 255, 255, 0) 0%,
