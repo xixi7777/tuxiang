@@ -5,15 +5,12 @@
     <view class="top-title">
       <view class="title-content">
         <!-- 返回 -->
-        <navigator open-type="navigateBack" hover-class="navigator-hover-class">
-          <u-icon
-            color="#006848"
-            name="arrow-left"
-            class="arrow-back"
-            size="20"
-          ></u-icon>
-        </navigator>
-        <view class="title"><text>信息编辑</text></view>
+        <view class="arrow-back">
+          <navigator open-type="navigateBack" hover-class="navigator-hover-class">
+            <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
+          </navigator>
+        </view>
+        <text>信息编辑</text>
       </view>
     </view>
     <view class="form-wrapper">
@@ -30,7 +27,11 @@
             prop="name"
             leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png"
           >
-            <u-input v-model="userInfo.name" placeholder="请输入真实姓名" />
+            <u-input
+              type="text"
+              v-model="userInfo.name"
+              placeholder="请输入真实姓名"
+            />
           </u-form-item>
 
           <u-form-item
@@ -38,7 +39,11 @@
             prop="phone"
             leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png"
           >
-            <u-input v-model="userInfo.phone" placeholder="请输入手机号" />
+            <u-input
+              type="number"
+              v-model="userInfo.phone"
+              placeholder="请输入手机号"
+            />
           </u-form-item>
 
           <u-form-item
@@ -46,18 +51,26 @@
             prop="gender"
             leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_gender.png"
           >
-            <u-input v-model="userInfo.gender" placeholder="请输入手机号" />
+            <u-input
+              type="text"
+              v-model="userInfo.gender"
+              placeholder="请输入性别"
+            />
           </u-form-item>
           <u-form-item
             label="尺码"
             prop="size"
             leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_size.png"
           >
-            <u-input v-model="userInfo.size" placeholder="请输入尺码" />
+            <u-input
+              type="text"
+              v-model="userInfo.size"
+              placeholder="请输入尺码"
+            />
           </u-form-item>
         </u-form>
       </view>
-      <view @click="submit" class="btn-submit">提交</view>
+      <button @click="submit" class="btn-submit">提交</button>
     </view>
   </view>
 </template>
@@ -67,91 +80,93 @@ export default {
   data() {
     return {
       userInfo: {
-        name: "",
-        phone: "",
-        gender: "",
-        size: "",
+        name: '',
+        phone: '',
+        gender: '',
+        size: '',
       },
       rules: {
         name: [
           {
-            type: "string",
+            type: 'string',
             required: true,
-            message: "请输入真实姓名",
-            trigger: ["blur"],
+            message: '请输入真实姓名',
+            trigger: ['blur'],
           },
         ],
         phone: [
           {
             required: true,
-            message: "请输入手机号",
-            trigger: ["change", "blur"],
+            message: '请输入手机号',
+            trigger: ['blur'],
           },
           {
-            // 自定义验证函数，见上说明
+            // 自定义验证函数
             validator: (rule, value, callback) => {
-              // 上面有说，返回true表示校验通过，返回false表示不通过
-              // uni.$u.test.mobile()就是返回true或者false的
+              // 返回true或者false的
               return uni.$u.test.mobile(value);
             },
-            message: "手机号码不正确",
-            // 触发器可以同时用blur和change
-            trigger: ["change", "blur"],
+            message: '手机号码不正确',
+            trigger: ['blur'],
           },
         ],
         gender: [
           {
             max: 1,
-            type: "string",
+            type: 'string',
             required: true,
-            message: "请输入性别",
-            trigger: ["blur"],
+            message: '请输入性别',
+            trigger: ['blur'],
           },
         ],
         size: [
           {
-            type: "string",
+            type: 'string',
             required: true,
-            message: "请输入尺码",
-            trigger: ["blur"],
+            message: '请输入尺码',
+            trigger: ['blur'],
           },
         ],
       },
     };
+  },
+  mounted(){
+    this.$refs.form1.setRules(this.rules);
   },
   methods: {
     submit() {
       this.$refs.form1
         .validate()
         .then((res) => {
-          uni.$u.toast("校验通过");
+          uni.$u.toast('校验通过');
         })
         .catch((errors) => {
-          uni.$u.toast("校验失败");
+          // uni.$u.toast("内容有误噢");
         });
     },
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .top-title {
   position: fixed;
-  top: 60px;
-  width: 90%;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding: 70px 0 30px;
+  width: 100%;
   color: #006848;
   font-size: 36px;
+  background: linear-gradient(180deg, #a1f5e2 0%, #eaf6f5 100%);
+  z-index: 1;
   .title-content {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-  // .arrow-back {
-  //   font-size: 30px;
-  // }
-  .title {
-    flex: 1;
     text-align: center;
+  }
+  .arrow-back {
+    position: absolute;
+    left: 30px;
+    top: 70px;
   }
 }
 .edit-container {
