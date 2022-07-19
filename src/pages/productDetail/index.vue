@@ -75,6 +75,8 @@
                 </view>
             </view>
         </view>
+
+        <view class="product-detail"></view>
     </view>
 </template>
 <script>
@@ -320,6 +322,9 @@ export default {
                 }
             }
         }
+    }
+    .product-detail {
+        margin-top: 30px;
     }
 }
 </style>
