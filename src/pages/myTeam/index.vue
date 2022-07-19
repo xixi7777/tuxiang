@@ -128,9 +128,15 @@
           </view>
         </view>
         <view class="btn-wrapper">
-          <button>邀请好友</button>
-          <button>报名列表</button>
-          <button>立即报名</button>
+          <view class="button">
+            <navigator url=""> 邀请好友 </navigator>
+          </view>
+          <view class="button">
+            <navigator url=""> 报名列表 </navigator>
+          </view>
+          <view class="button">
+            <navigator url=""> 立即报名 </navigator>
+          </view>
         </view>
         <view v-if="index != list.length - 1">
           <image
@@ -160,7 +166,7 @@ export default {
         {
           name: '排行榜',
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/rankings.png',
-          url: '/pages/leaderboard/index'
+          url: '/pages/leaderboard/index',
         },
         {
           name: '成员列表',
@@ -463,7 +469,7 @@ export default {
   .btn-wrapper {
     text-align: center;
     padding: 18px;
-    button {
+    .button {
       display: inline-block;
       margin-right: 25px;
       width: 190px;

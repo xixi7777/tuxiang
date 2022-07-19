@@ -82,6 +82,23 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
 			}
+		},
+		{
+			"path": "pages/initiateActivity/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		}
+		,
+		{
+			"path": "pages/createTeam/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
 		}
 	],
 	"tabBar": {
