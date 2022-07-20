@@ -5,7 +5,10 @@
       <view class="title-content">
         <!-- 返回 -->
         <view class="arrow-back">
-          <navigator open-type="navigateBack" hover-class="navigator-hover-class">
+          <navigator
+            open-type="navigateBack"
+            hover-class="navigator-hover-class"
+          >
             <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
           </navigator>
         </view>
@@ -132,7 +135,9 @@
             <navigator url=""> 邀请好友 </navigator>
           </view>
           <view class="button">
-            <navigator url=""> 报名列表 </navigator>
+            <navigator :url="`/pages/signUpList/index?id=${item.id}`">
+              报名列表
+            </navigator>
           </view>
           <view class="button">
             <navigator url=""> 立即报名 </navigator>
@@ -171,6 +176,7 @@ export default {
         {
           name: '成员列表',
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/member.png',
+          url: '/pages/member/index',
         },
         {
           name: '服装商城',
@@ -179,6 +185,7 @@ export default {
       ],
       list: [
         {
+          id: 1,
           date1: '2022.05.12 13:00',
           date2: '2022.05.12 21:00',
           name: '夏令营夜爬老君山',
@@ -186,6 +193,7 @@ export default {
           url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
         },
         {
+          id: 2,
           date1: '2022.05.12 13:00',
           date2: '2022.05.12 21:00',
           name: '夏令营夜爬老君山',
@@ -193,20 +201,7 @@ export default {
           url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
         },
         {
-          date1: '2022.05.12 13:00',
-          date2: '2022.05.12 21:00',
-          name: '夏令营夜爬老君山',
-          place: '老君山',
-          url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
-        },
-        {
-          date1: '2022.05.12 13:00',
-          date2: '2022.05.12 21:00',
-          name: '夏令营夜爬老君山',
-          place: '老君山',
-          url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
-        },
-        {
+          id: 3,
           date1: '2022.05.12 13:00',
           date2: '2022.05.12 21:00',
           name: '夏令营夜爬老君山',
