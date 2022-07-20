@@ -67,9 +67,11 @@
                 <view class="scroll-list-wrapper">
                     <scroll-view scroll-x="true" class="scroll">
                         <view :class="['dates-item', index === 0 && 'is-active']" v-for="(item, index) in dates" :key="index">
-                            <text>{{ item.date }}</text>
-                            <text>{{ item.weekday }}</text>
-                            <text>￥{{ item.price }}起</text>
+                            <navigator url="/pages/selectDate/index" hover-class="navigator-hover-class">
+                                <text>{{ item.date }}</text>
+                                <text>{{ item.weekday }}</text>
+                                <text>￥{{ item.price }}起</text>
+                            </navigator>
                         </view>
                     </scroll-view>
                 </view>

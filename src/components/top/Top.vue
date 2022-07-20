@@ -4,7 +4,7 @@
             <view class="back-icon">
                 <u-icon :color="backIconColor" size="20" name="arrow-left"></u-icon>
             </view>
-            <text class="title">{{ title }}</text>
+            <text class="title text-ellipsis">{{ title }}</text>
         </navigator>
     </view>
 </template>
@@ -39,6 +39,10 @@ export default {
         position: absolute;
         left: 30px;
         top: 100px;
+    }
+    .title {
+        display: inline-block;
+        max-width: 80%;
     }
 }
 </style>

@@ -98,10 +98,17 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
 			}
-		}
-		,
+		},
 		{
 			"path": "pages/createTeam/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/selectDate/index",
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
