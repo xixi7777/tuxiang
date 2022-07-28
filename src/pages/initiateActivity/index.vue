@@ -14,7 +14,7 @@
             :model="activityInfo"
             :rules="rules"
             ref="form1"
-            labelWidth="85"
+            labelWidth="100"
           >
             <u-form-item
               label="活动名称"
@@ -174,7 +174,7 @@ export default {
 
 <style lang="scss" scoped>
 /deep/ .top {
- padding: 70px 30px 60px 30px !important;
+  padding: 70px 30px 60px 30px !important;
   border-radius: 0px 0px 0px 50px;
   .back-icon {
     top: 70px !important;
@@ -203,6 +203,9 @@ export default {
       box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1);
       border-radius: 30px;
       padding: 30px 25px 40px;
+    }
+    /deep/ .u-input {
+      padding-left: 0 !important;
     }
     .btn-submit {
       position: absolute;

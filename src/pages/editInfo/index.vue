@@ -6,7 +6,7 @@
       <view class="title-content">
         <!-- 返回 -->
         <view class="arrow-back">
-          <navigator open-type="navigateBack" hover-class="navigator-hover-class">
+          <navigator open-type="navigateBack" delta="1"  hover-class="navigator-hover-class">
             <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
           </navigator>
         </view>
@@ -20,7 +20,7 @@
           :model="userInfo"
           :rules="rules"
           ref="form1"
-          labelWidth="85"
+          labelWidth="100"
         >
           <u-form-item
             label="真实姓名"
@@ -197,6 +197,9 @@ export default {
       box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1);
       border-radius: 30px;
       padding: 30px 25px 40px;
+    }
+    /deep/ .u-input{
+      padding-left: 0 !important;
     }
     .btn-submit {
       position: absolute;

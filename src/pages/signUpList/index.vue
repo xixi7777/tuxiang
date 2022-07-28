@@ -14,10 +14,10 @@
           <view class="left" v-if="index <= 2">
             <image class="image" :src="topImageUrl[index]" />
           </view>
-
           <view class="left" v-if="index > 2"
             ><text class="text">{{ index }}</text></view
           >
+
           <view class="center"
             ><text>{{ item.name }}</text></view
           >
@@ -130,6 +130,9 @@ export default {
     color: #000;
     margin-bottom: 25px;
     text-align: center;
+    .left {
+      width: 100px;
+    }
     .center {
       flex: 1;
     }
