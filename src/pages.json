@@ -3,14 +3,14 @@
 		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
 	},
 	"pages": [
-		// {
-		// 	"path": "pages/authorization/index",
-		// 	"style": {
-		// 		"navigationBarTitleText": "旅游",
-		// 		"navigationStyle": "custom",
-		// 		"enablePullDownRefresh": true
-		// 	}
-		// },
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "旅游",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
 		{
 			"path": "pages/tabBar/home/index",
 			"style": {
