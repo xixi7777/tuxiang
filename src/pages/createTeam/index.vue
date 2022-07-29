@@ -104,7 +104,7 @@
 
         <!-- 队伍简介 -->
         <view class="form">
-          <u-form labelPosition="top" labelWidth="85">
+          <u-form labelPosition="top" labelWidth="100">
             <u-form-item
               label="队伍简介"
               prop="phone"
@@ -121,7 +121,7 @@
 
         <!-- 进队要求 -->
         <view class="form">
-          <u-form labelPosition="top" labelWidth="85">
+          <u-form labelPosition="top" labelWidth="100">
             <u-form-item
               label="进队要求"
               prop="phone"
@@ -132,20 +132,26 @@
                 v-model="require"
                 iconPlacement="right"
               >
-                <u-radio
-                  v-for="(item, index) in radiolist1"
-                  :key="index"
-                  :label="item.name"
-                  :name="item.name"
-                  activeColor="#55C6A6"
-                  inactiveColor="#D8D8D8"
-                  backgroundColor="#D8D8D8"
-                  class="radio"
-                  :customStyle="{ marginBottom: '5px', marginTop: '5px' }"
-                  iconSize="13px"
-                  labelSize="13px"
-                >
-                </u-radio>
+                <template v-for="(item, index) in radiolist1">
+                  <u-radio
+                    :key="item.name"
+                    :label="item.name"
+                    :name="item.name"
+                    activeColor="#55C6A6"
+                    inactiveColor="#D8D8D8"
+                    backgroundColor="#D8D8D8"
+                    class="radio"
+                    :customStyle="{ marginBottom: '5px', marginTop: '5px' }"
+                    iconSize="13px"
+                    labelSize="13px"
+                  >
+                  </u-radio>
+                  <u-input
+                    v-if="item.name == '输入团队密码加入'"
+                    type="password"
+                    placeholder="请输入密码"
+                  ></u-input>
+                </template>
               </u-radio-group>
             </u-form-item>
           </u-form>
@@ -328,6 +334,10 @@ export default {
       border-radius: 30px;
       padding: 30px 25px 40px;
       margin-bottom: 30px;
+    }
+
+    /deep/ .u-input {
+      padding-left: 0 !important;
     }
     .btn-submit {
       position: absolute;

@@ -5,10 +5,7 @@
       <view class="title-content">
         <!-- 返回 -->
         <view class="arrow-back">
-          <navigator
-            open-type="navigateBack"
-            hover-class="navigator-hover-class"
-          >
+          <navigator open-type="navigateBack" hover-class="navigator-hover-class">
             <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
           </navigator>
         </view>
@@ -17,10 +14,7 @@
     </view>
     <!-- 顶部背景图 -->
     <view class="app-top-background">
-      <image
-        class="image"
-        src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_top_bg.png"
-      ></image>
+      <image class="image" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_top_bg.png"></image>
     </view>
 
     <!-- 顶部内容版块 -->
@@ -45,10 +39,7 @@
           <u-row>
             <u-col :span="4.5">
               <view class="avatar">
-                <image
-                  class="image"
-                  src="https://cdn.uviewui.com/uview/album/1.jpg"
-                ></image>
+                <image class="image" src="https://cdn.uviewui.com/uview/album/1.jpg"></image>
               </view>
             </u-col>
             <u-col :span="7.5">
@@ -85,9 +76,7 @@
 
         <!-- 简介 -->
         <view class="info-introduce">
-          <text
-            >河南省洛阳栾川老君山·鸡冠洞旅游区由老君山景区和鸡冠洞景区组成</text
-          >
+          <text>河南省洛阳栾川老君山·鸡冠洞旅游区由老君山景区和鸡冠洞景区组成</text>
         </view>
       </view>
 
@@ -114,13 +103,8 @@
             <image class="image" mode="scaleToFill" :src="item.url"></image>
           </view>
           <view class="right">
-            <view class="title"
-              ><text>{{ item.name }}</text></view
-            >
-            <view class="place"
-              ><text>活动地点：</text
-              ><text class="place-name">{{ item.place }}</text></view
-            >
+            <view class="title"><text>{{ item.name }}</text></view>
+            <view class="place"><text>活动地点：</text><text class="place-name">{{ item.place }}</text></view>
             <view class="date-box">
               <view>活动时间：</view>
               <view class="date">
@@ -144,14 +128,10 @@
           </view>
         </view>
         <view v-if="index != list.length - 1">
-          <image
-            class="decor left-decor"
-            src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"
-          ></image>
-          <image
-            class="decor right-decor"
-            src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"
-          ></image>
+          <image class="decor left-decor"
+            src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
+          <image class="decor right-decor"
+            src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
         </view>
       </view>
     </view>
@@ -181,6 +161,7 @@ export default {
         {
           name: '服装商城',
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/mall.png',
+          url: '/pages/mall/index',
         },
       ],
       list: [
@@ -219,17 +200,20 @@ export default {
   font-size: 28px;
   color: #a7afaf;
 }
+
 .app-top-background {
   height: 364px;
   margin: 0 -30px;
   position: absolute;
   z-index: -1;
+
   .image {
     width: 100%;
     height: 100%;
     overflow: hidden;
   }
 }
+
 .top-title {
   position: fixed;
   left: 0;
@@ -241,35 +225,42 @@ export default {
   font-size: 36px;
   background: linear-gradient(to right, #b9f7e8 50%, #eaf6f5 100%);
   z-index: 1;
+
   .title-content {
     text-align: center;
   }
+
   .arrow-back {
     position: absolute;
     left: 30px;
     top: 70px;
   }
 }
+
 .top-wrapper {
   width: 690px;
-  height: 658px;
+  // height: 658px;
   border-radius: 20px;
   box-sizing: border-box;
   background: rgba(255, 255, 255, 0.68);
   box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1);
   margin-top: 250px;
   overflow: hidden;
+
   .info {
     padding: 50px 40px 20px 50px;
+
     .info-name {
       display: flex;
       flex-direction: space-between;
+
       .name {
         flex: 1;
         font-size: 38px;
         font-weight: bold;
         color: #2a2a2a;
       }
+
       .team-btn {
         button {
           display: inline-block;
@@ -282,10 +273,12 @@ export default {
           text-align: center;
           border-radius: 39px;
           border: 1px solid #ffffff;
+
           &:nth-child(1) {
             background: rgba(255, 81, 42, 0.8);
             box-shadow: 0px 7px 25px 0px #ffcc94;
           }
+
           &:nth-child(2) {
             background: rgba(163, 158, 153, 0.8);
             box-shadow: 0px 7px 25px 0px #b3b1ac;
@@ -294,9 +287,12 @@ export default {
         }
       }
     }
+
     .info-gender {
       display: flex;
       flex-direction: row;
+      align-items: center;
+
       .image {
         width: 30px;
         height: 30px;
@@ -304,9 +300,11 @@ export default {
         background-position: 0 0;
         background-size: 100% 100%;
         background-repeat: no-repeat;
+
         &.image-male {
           background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/male.png);
         }
+
         &.image-female {
           background-image: url('//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/female.png');
           margin-left: 26px;
@@ -314,38 +312,47 @@ export default {
         }
       }
     }
+
     .info-avatar {
       margin-top: 18px;
+
       .avatar {
         width: 190px;
         height: 190px;
         border-radius: 50%;
         margin-right: 53px;
         overflow: hidden;
+
         .image {
           width: 190px;
           height: 190px;
           border-radius: 50%;
         }
       }
+
       .data-box {
         position: relative;
       }
+
       .row-box {
         line-height: 40px;
+
         &:last-child {
           margin-top: 10px;
         }
+
         text {
           display: inline-block;
           width: 30%;
           text-align: center;
         }
+
         .num {
           font-size: 36px;
           font-weight: bold;
           color: #17aa7d;
         }
+
         .info-edit {
           position: absolute;
           top: 50%;
@@ -363,14 +370,17 @@ export default {
           border-radius: 100px 0px 0px 100px;
         }
       }
+
       .name {
         color: #2a2a2a;
         font-weight: 600;
       }
+
       .role {
         margin: 10px 0 40px;
       }
     }
+
     .info-introduce {
       font-size: 26px;
       color: #a5a6ae;
@@ -378,14 +388,17 @@ export default {
       line-height: 42px;
     }
   }
+
   .feature-wrapper {
     height: 125px;
     padding: 20px 50px;
     background: rgba(227, 234, 232, 0.22);
+
     .feature-item {
       display: flex;
       flex-direction: column;
       align-items: center;
+
       .icon-image {
         width: 30px;
         height: 30px;
@@ -394,6 +407,7 @@ export default {
     }
   }
 }
+
 .activity-group {
   .activity-item {
     position: relative;
@@ -403,6 +417,7 @@ export default {
     background-position: 0 0;
     background-size: 100% 100%;
     background-repeat: no-repeat;
+
     .item-bg {
       position: absolute;
       width: 100%;
@@ -411,25 +426,31 @@ export default {
       top: 0;
       z-index: -1;
     }
+
     .decor {
       position: absolute;
       width: 18px;
       height: 108px;
       bottom: -15px;
+
       &.left-decor {
         left: 35px;
       }
+
       &.right-decor {
         right: 35px;
       }
     }
   }
+
   .activity-content {
     display: flex;
     flex-direction: row;
     padding: 36px 40px 55px 30px;
+
     .left {
       margin-right: 25px;
+
       .image {
         width: 224px;
         height: 224px;
@@ -438,32 +459,39 @@ export default {
         overflow: hidden;
       }
     }
+
     .right {
       font-size: 28px;
       color: #a7afaf;
+
       .title {
         color: #2a2a2a;
         font-size: 34px;
         font-weight: 600;
         margin-bottom: 30px;
       }
+
       .place-name {
         color: #2a2a2a;
       }
+
       .date-box {
         margin-top: 15px;
         display: flex;
         flex-direction: row;
         white-space: nowrap;
+
         .date {
           white-space: nowrap;
         }
       }
     }
   }
+
   .btn-wrapper {
     text-align: center;
     padding: 18px;
+
     .button {
       display: inline-block;
       margin-right: 25px;
@@ -473,12 +501,15 @@ export default {
       border-radius: 32px;
       font-size: 30px;
       color: #fff;
+
       &:nth-child(1) {
         background: #17aa7d;
       }
+
       &:nth-child(2) {
         background: #74b9fd;
       }
+
       &:nth-child(3) {
         background: #f8ab52;
         margin-right: 0;
