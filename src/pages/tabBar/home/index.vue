@@ -62,18 +62,16 @@
 			<view class="scroll-list-wrapper">
 				
 				<scroll-view scroll-x="true" class="scroll">
-				<!-- <u-scroll-list :indicator="false"> -->
-					<view v-for="item in recommends" class="scroll-item" :key="item.name">
+					<view v-for="item in recommends" class="scroll-item" :key="item.cpbh">
 						<view class="list-image">
-							<image :src="item.url"></image>
+							<image :src="item.cpzt"></image>
 						</view>
-						<navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?id=${item.id}`">
-							<view class="scroll-title"><text>{{ item.name }}</text></view>
-							<view><text class="price-code">￥</text><text class="price">{{ item.price }}</text><text class="sale">{{ item.sale }}</text></view>
+						<navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?id=${item.cpbh}`">
+							<view class="scroll-title"><text>{{ item.cpmc }}</text></view>
+							<view><text class="price-code">￥</text><text class="price">1180</text><text class="sale">七折</text></view>
 						</navigator>
 					</view>
 				</scroll-view>
-				<!-- </u-scroll-list> -->
 			</view>
 		</view>
 
@@ -123,7 +121,6 @@
 </template>
 
 <script>
-import WaterfallsFlow from '@/components/waterfall/WaterfallsFlow/WaterfallsFlow';
 import WaterfallFlowItem from './comps/WaterfallFlowItem';
 import Search from '@/components/pageSearch/PageSearch'
 
@@ -132,7 +129,6 @@ import { waterfallMixins } from '@/mixins/waterfallMixins';
 export default {
 	mixins: [waterfallMixins],
 	components: {
-		WaterfallsFlow,
 		Search,
 		WaterfallFlowItem
 	},
@@ -150,9 +146,9 @@ export default {
 				{ name: '飞机游', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/plane.png' }
 			],
 			recommends: [
-				{ id: 1, name: '三亚3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '超值' },
-				{ id: 2, name: '西安3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_2.png', price: '580', sale: '七折' },
-				{ id: 3, name: '上海3天两晚自由行', url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '七折' }
+				{ cpbh: 1, cpmc: '三亚3天两晚自由行', cpzt: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '超值' },
+				{ cpbh: 2, cpmc: '西安3天两晚自由行', cpzt: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_2.png', price: '580', sale: '七折' },
+				{ cpbh: 3, cpmc: '上海3天两晚自由行', cpzt: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '七折' }
 			],
 			wfList: [
 				{
@@ -188,9 +184,6 @@ export default {
 	methods: {
 		swiperChange({current}) {
 			this.current = current
-		},
-		goClass() {
-
 		}
 	}
 }

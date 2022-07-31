@@ -23,15 +23,15 @@
     </view>
 
     <view class="teams-group">
-        <view class="team-item" v-for="(item, index) in 5" :key="index">
+        <view class="team-item" v-for="(item, index) in teams" :key="index">
             <view class="avatar">
-                <u-avatar src="https://cdn.uviewui.com/uview/album/1.jpg"></u-avatar>
+                <u-avatar :src="item.logo"></u-avatar>
             </view>
-            <view class="name text-ellipsis"><text>随便队</text></view>
-            <view class="desc text-ellipsis"><text>想咋滴咋滴</text></view>
-            <view class="member-num">5000</view>
+            <view class="name text-ellipsis"><text>{{ item.title }}</text></view>
+            <view class="desc text-ellipsis"><text>{{ item.note }}</text></view>
+            <view class="member-num">{{ item.zrs }}</view>
             <view class="members">团队人数</view>
-            <view class="date"><text>2022年10月24日</text></view>
+            <view class="date"><text>{{ moment(item.createTime).format('YYYY年MM月DD日') }}</text></view>
             <view class="button">
                 <u-button type="primary" shape="circle" text="申请加入"></u-button>
             </view>
@@ -41,6 +41,7 @@
 </template>
 <script>
 import Search from '@/components/pageSearch/PageSearch';
+import moment from 'moment'
 export default {
   components: {
     Search,
@@ -64,8 +65,41 @@ export default {
           url: '/pages/mall/index',
         },
       ],
-    };
+      teams: [],
+      total: 0,
+      query: {
+        pageNum: 1,
+        pageSize: 10,
+        title: '',
+        dzxm: '',
+        dzsjh: ''
+      }
+    }
   },
+  onLoad() {
+    this.getTeams()
+  },
+  onReachBottom() {
+    if (this.teams.length === this.total) {
+      return
+    }
+    this.query.pageNum++
+    this.getTeams()
+  },
+  methods: {
+    moment,
+    resetQuery() {
+      this.query.pageNum = 1
+      this.getTeams()
+    },
+    getTeams() {
+      this.$api.teamList(this.query).then(res => {
+        console.log(res)
+        this.teams = res.rows
+        this.total = res.total
+      })
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -5,7 +5,7 @@ export default class Request {
 		var url = param.url,
 			method = param.method,
 			header = {
-				'content-type': 'application/json',
+				'content-type': 'multipart/form-data',
 				...param.header
 			},
 			data = param.data || {},
@@ -13,7 +13,7 @@ export default class Request {
 		const requestUrl = `${config.httpUrl}${url}`;
 
 		if (!hideLoading) {
-			uni.showLoading({ title: '加载中...' })
+			uni.showLoading({ title: '加载中...', mask: true })
 		}
 
 		return new Promise((resolve, reject) => {
@@ -23,16 +23,17 @@ export default class Request {
 				method,
 				header,
 				success: res => {
-					if (res.code && res.code === 200) {
+					console.log(res)
+					if (res.data.code === 200) {
 						resolve(res.data)
 					} else {
-						if (res.code && (res.code === 401 || res.code === 403)) {
+						if (res.data.code && (res.data.code === 401 || res.data.code === 403)) {
 							uni.showToast({
 								icon: 'none',
 								title: '登录身份已过期，请重新登录'
 							})
 							uni.removeStorageSync('userinfo')
-							uni.removeStorageSync('token')
+							uni.removeStorageSync('openid')
 							setTimeout(() => {
 								uni.reLaunch({
 									url: '/pages/login/index'
