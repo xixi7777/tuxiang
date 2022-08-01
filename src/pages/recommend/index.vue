@@ -24,33 +24,38 @@
         </view>
 
         <view class="list-wrapper">
-            <view class="list-item" v-for="(item, index) in 5" :key="index">
-                <view class="left">
-                    <text class="top-left">重庆出发</text>
-                    <text class="bottom">多日游玩</text>
-                    <view class="image">
-                        <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_2.png"></cover-image>
-                    </view>
-                </view>
-                <view class="right">
-                    <view class="desc">
-                        <view class="desc-title">
-                            <text>云南的第一场旅行·七日游无购 物·纯玩云南的第一场旅行·七日游无购 物·纯玩</text>
-                        </view>
-                        <view class="price-wrapper">
-                            <text class="price-code">￥</text>
-                            <text class="price">520</text>
-                            <text class="price-from ml-5">起</text>
-                        </view>
-                        <view class="desc-footer">
-                            <view class="footer-icon">
-                                <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dianpu.png"></u-icon>
-                                <text>西部风情</text>
+            <view v-for="item in list" :key="item.cpbh">
+                <navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?id=${item.cpbh}`">
+                    <view class="list-item">
+                        <view class="left">
+                            <text class="top-left" v-if="item.cfd">{{ item.cfd }}出发</text>
+                            <text class="bottom" v-if="item.ywts">多日游玩</text>
+                            <view class="image">
+                                <cover-image v-if="item.cpzt" :src="item.cpzt"></cover-image>
+                                <cover-image v-else src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_2.png"></cover-image>
                             </view>
-                            <view><text class="sold-text">已售9999</text></view>
+                        </view>
+                        <view class="right">
+                            <view class="desc">
+                                <view class="desc-title">
+                                    <text>{{ item.cpmc }}</text>
+                                </view>
+                                <view class="price-wrapper">
+                                    <text class="price-code">￥</text>
+                                    <text class="price">{{ item.price || 0 }}</text>
+                                    <text class="price-from ml-5">起</text>
+                                </view>
+                                <view class="desc-footer">
+                                    <view class="footer-icon">
+                                        <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dianpu.png"></u-icon>
+                                        <text>{{ item.gys_dictLabel }}</text>
+                                    </view>
+                                    <view><text class="sold-text">已售{{ item.stock || 0 }}</text></view>
+                                </view>
+                            </view>
                         </view>
                     </view>
-                </view>
+                </navigator>
             </view>
         </view>
     </view>
@@ -61,6 +66,21 @@ import Search from '@/components/pageSearch/PageSearch'
 export default {
     components: {
         Search
+    },
+    data() {
+        return {
+            list: []
+        }
+    },
+    onLoad() {
+        this.getProductList()
+    },
+    methods: {
+        getProductList() {
+			this.$api.selectProductListVo().then(res => {
+				this.list = res.data
+			})
+		}
     }
 }
 </script>

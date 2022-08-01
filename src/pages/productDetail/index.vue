@@ -19,11 +19,11 @@
                 <view><u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/info.png" size="20"></u-icon></view>
             </view>
             <view class="product-name p-h-20">
-                <text>天天发班+暑期钜惠·云南昆明大理丽江6天5晚跟团游 国际五星+海景酒店(玉龙雪山大索道+敞篷吉普洱海旅拍+洱海游船+赠丽水金沙)</text>
+                <text>{{ product.cpmc }}</text>
             </view>
             <view class="consult p-h-20 flex-box">
                 <view class="consult-item"><text>咨询下单赠红包</text></view>
-                <view class="consult-item"><text>动车返回昆明</text></view>
+                <view class="consult-item"><text>动车返回{{ product.cfd }}</text></view>
             </view>
             <u-line dashed color="#D7D7D7"></u-line>
             <view class="service flex-box p-h-20">
@@ -89,6 +89,14 @@ export default {
     },
     data() {
         return {
+            product: {}
+        }
+    },
+    onLoad(option) {
+        this.getProductDetail(option.id)
+    },
+    data() {
+        return {
             currentNum: 0,
             swiper: [
                 '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/foot_1.png',
@@ -105,6 +113,13 @@ export default {
                 { date: '07-18', weekday: '周二', price: 1999 },
                 { date: '07-19', weekday: '周三', price: 1999 }
             ]
+        }
+    },
+    methods: {
+        getProductDetail(cpbh) {
+            this.$api.selectProductVo({ cpbh }).then(res => {
+                this.product = res.data
+            })
         }
     }
 }

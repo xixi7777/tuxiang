@@ -6,7 +6,7 @@
 
         <view class="person-wrapper">
             <view class="left">
-                <view class="name text-ellipse"><text>Hi~, 我是茜茜</text></view>
+                <view class="name text-ellipse"><text>Hi~, 我是{{ userinfo.nickName }}</text></view>
                 <view class="team"><text>所属团队: 随便队</text>
                     <view class="leader">
                         <text>队长</text>
@@ -15,7 +15,7 @@
             </view>
             <view class="right">
                 <view class="me-avatar">
-                    <u-avatar src="//cdn.uviewui.com/uview/album/1.jpg"></u-avatar>
+                    <u-avatar :src="userinfo.imageUrl"></u-avatar>
                 </view>
                 <navigator url="/pages/myTeam/index" hover-class="navigator-hover-class">
                     <view class="fanhui">
@@ -28,11 +28,11 @@
 
         <view class="jifen-wrapper">
             <view class="jifen">
-                <view><text>4696</text></view>
+                <view><text>{{ userinfo.integral }}</text></view>
                 <view><text>我的积分</text></view>
             </view>
             <view class="cishu">
-                <view><text>4696</text></view>
+                <view><text>{{ userinfo.orderNum || 0 }}</text></view>
                 <view><text>旅行次数</text></view>
             </view>
         </view>
@@ -83,6 +83,7 @@
 export default {
     data() {
         return {
+            userinfo: {},
             orderTypes: [
                 { title: '全部', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dingdanorder.png', url: '/pages/myOrders/index' },
                 { title: '待支付', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/qianbao.png', url: '/pages/myOrders/index?' },
@@ -100,6 +101,18 @@ export default {
                 { title: '用户协议', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/xieyi.png' },
                 { title: '联系客服', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/kefu.png' }
             ]
+        }
+    },
+    onLoad() {
+        // this.userinfo = uni.getStorageSync('userinfo')
+        this.getUserInfo()
+    },
+    methods: {
+        getUserInfo() {
+            const openid = uni.getStorageSync('openid')
+            this.$api.getMallUser({ openid }).then(res => {
+                this.userinfo = res.data
+            })
         }
     }
 }

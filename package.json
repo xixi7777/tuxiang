@@ -69,6 +69,8 @@
     "@vue/shared": "^3.0.0",
     "core-js": "^3.6.5",
     "flyio": "^0.6.2",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
     "node-sass": "^4.14.0",
     "postcss-px-to-viewport": "^1.1.1",
     "regenerator-runtime": "^0.12.1",
