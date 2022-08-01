@@ -134,7 +134,10 @@
                         <text class="satisfy">非常满意</text>
                     </view>
                     <view class="">
-                        <view class="appraise-item" v-for="(item, index) in appraise" :key="index">{{ item }}</view>
+                        <view :class="['appraise-item', { 'active': index < 3 }]" v-for="(item, index) in appraise"
+                            :key="index">{{
+                                    item
+                            }}</view>
                     </view>
                 </view>
             </view>
@@ -159,7 +162,7 @@ export default {
 
 <style lang="scss" scoped>
 .orders-detail-container {
-    padding: 155px 0 120px;
+    padding: 155px 0;
     position: relative;
     z-index: 9;
 }
@@ -237,10 +240,14 @@ export default {
 
     .detail-item {
         position: relative;
-        padding: 20px 30px 75px;
+        padding: 30px 30px 75px;
         margin-bottom: 40px;
         background: linear-gradient(335deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);
         box-shadow: 0px 0px 23px 0px rgba(138, 131, 168, 0.1000);
+
+        &:not(:first-child) {
+            padding-top: 72px;
+        }
 
         .pre-img {
             width: 40px;
@@ -255,16 +262,17 @@ export default {
 
         .decor {
             position: absolute;
+            z-index: 9;
             width: 18px;
             height: 108px;
-            bottom: 0px;
+            bottom: -74px;
 
             &.left-decor {
-                left: 25px;
+                left: 20px;
             }
 
             &.right-decor {
-                right: 25px;
+                right: 10px;
             }
         }
     }
@@ -286,6 +294,7 @@ export default {
         .go-detail-txt {
             font-size: 24px;
             font-weight: 500;
+            color: #999;
         }
 
         .go-detail-img {
@@ -308,32 +317,40 @@ export default {
 .appraise {
     .appraise-txt {
         font-size: 26px;
+        color: #666;
+        margin-bottom: 40px;
 
         .ordinary {
-            margin: 0 67px 0 282px;
+            margin: 0 65px 0 270px;
         }
     }
 
     .appraise-item {
+        display: inline-block;
         width: 45px;
         height: 45px;
-        margin-right: 15px;
-        background-image: url('//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/orders_like.png');
+        line-height: 60px;
+        margin-right: 17px;
+        background-image: url('//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_like.png');
         background-position: 0 0;
         background-size: 100% 100%;
         background-repeat: no-repeat;
         text-align: center;
         font-size: 20px;
         color: #fff;
+
+        &.active {
+            background-image: url('//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_like_active.png');
+        }
     }
 }
 
 .bottom-btn {
     position: fixed;
+    z-index: 10;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 120px;
     background: #FFFFFF;
     box-shadow: 0px -6px 10px 0px rgba(0, 0, 0, 0.0600);
     padding: 15px 30px;
