@@ -211,5 +211,13 @@ export default {
                 'content-type': 'application/json'
             }
         })
+    },
+    // 上传文件
+    uploadFile: data => {
+        return request({
+            url: '/file/upload/uploadFile',
+            method: 'POST',
+            data
+        })
     }
 }

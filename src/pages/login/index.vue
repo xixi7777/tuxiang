@@ -14,7 +14,6 @@
             </radio-group>
             <button @click="login" ref="getUserInfo" style="opacity: 0; width: 0, height: 1px;"></button>
         </view>
-        <u-toast ref="uToast"></u-toast>
 
         <u-modal
 			title="绑定手机号"
@@ -122,7 +121,6 @@ export default {
             })
         },
         editUserInfo(openid, userInfo) {
-            console.log(userInfo)
             this.$api.editUserVo({
                 openid,
                 nickName: userInfo.nickName,
@@ -132,11 +130,7 @@ export default {
         },
         login() {
             if (!this.checked) {
-                this.$refs.uToast.show({
-                    type: 'default',
-                    title: '',
-                    message: "请先阅读并勾选用户协议",
-                })
+                uni.$u.toast('请先阅读并勾选用户协议')
                 return
             }
             const p1 = this.silentLogin()
@@ -199,7 +193,6 @@ export default {
             position: relative;
         }
     }
-    /deep/
     .phone-button {
         height: 80px;
         line-height: 80px;

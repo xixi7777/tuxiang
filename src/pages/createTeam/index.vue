@@ -3,126 +3,201 @@
     <top title="创建团队" />
 
     <view class="form-wrapper">
-      <!-- upload -->
-      <view class="form upload-avatar">
-        <text class="text">上传头像</text>
-        <u-upload :fileList="fileList1" @afterRead="afterRead" @delete="deletePic" name="avatar"
-          :previewFullImage="true" width="690" height="250">
-          <image class="image" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/upload_avatar.png"
-            mode="widthFix"></image>
-        </u-upload>
-      </view>
+        <!-- upload -->
+        <view class="form upload-avatar" @click="uploadImage">
+            <image class="image" :src="avatarUrl" mode="scaleToFill"></image>
+          <text class="text">上传头像</text>
+          <!-- <u-upload
+            :fileList="fileList"
+            @afterRead="afterRead"
+            @delete="deletePic"
+            name="avatar"
+            :previewFullImage="true"
+            width="690"
+            height="250"
+            :maxCount="1"
+          >
+            <image
+              v-if="!fileList.length"
+              class="image"
+              src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/upload_avatar.png"
+              mode="widthFix"
+            ></image>
+          </u-upload> -->
+        </view>
 
-      <!-- 队伍名称等基本信息 -->
-      <view class="form">
-        <u-form labelPosition="left" :model="teamInfo" :rules="rules" ref="form1" labelWidth="85">
-          <u-form-item label="队伍名称" prop="name"
-            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_team_name.png">
-            <u-input type="text" v-model="name" placeholder="请输入队伍名称" />
-          </u-form-item>
-          <u-form-item label="队长姓名" prop="leader"
-            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_team_leader.png">
-            <u-input type="text" v-model="leader" placeholder="请输入队长姓名" />
-          </u-form-item>
-          <u-form-item label="所在地区" prop="region"
-            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_place.png">
-            <u-input disabled disabledColor="#ffffff" placeholder="请选择" @click="
-  showRegion = true;
-hideKeyboard();
-textRegion();
-            ">
-              <template slot="suffix">
-                <u-icon name="arrow-right" color="#595757;"></u-icon>
-              </template>
-            </u-input>
-          </u-form-item>
-          <u-form-item label="手机号" prop="phone"
-            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png">
-            <u-input type="number" v-model="userInfo.phone" placeholder="请输入手机号" />
-          </u-form-item>
+          <u-form
+            labelPosition="left"
+            :model="teamInfo"
+            :rules="rules"
+            ref="uForm"
+            labelWidth="85"
+          >
+          <!-- 队伍名称等基本信息 -->
+          <view class="form">
+              <u-form-item
+                label="队伍名称"
+                prop="title"
+                leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_team_name.png"
+              >
+                <u-input
+                  type="text"
+                  v-model="teamInfo.title"
+                  placeholder="请输入队伍名称"
+                />
+              </u-form-item>
+              <u-form-item
+                label="队长姓名"
+                prop="dzid"
+                leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_team_leader.png"
+              >
+                <u-input
+                  type="text"
+                  v-model="teamInfo.dzid"
+                  placeholder="请输入队长姓名"
+                />
+              </u-form-item>
+              <u-form-item
+                label="所在地区"
+                prop="szdq"
+                leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_place.png"
+              >
+                <u-input
+                v-model="teamInfo.szdq"
+                  placeholder="请填写所在地区">
+                  <!-- <template slot="suffix"> -->
+                    <!-- <u-icon name="arrow-right" color="#595757;"></u-icon> -->
+                  <!-- </template> -->
+                </u-input>
+              </u-form-item>
+              <u-form-item
+                label="手机号"
+                prop="dzsjh"
+                leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png"
+              >
+                <u-input
+                  type="number"
+                  v-model="teamInfo.dzsjh"
+                  placeholder="请输入手机号"
+                />
+              </u-form-item>
+          </view>
+
+          <!-- 队伍简介 -->
+          <view class="form block-label__form">
+              <u-form-item
+                label="队伍简介"
+                prop="note"
+                leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dingdanorder.png"
+              >
+                <u-textarea
+                  class="intro"
+                  v-model="teamInfo.note"
+                  placeholder="请输入队伍简介"
+                ></u-textarea>
+              </u-form-item>
+            <!-- </u-form> -->
+          </view>
+
+          <!-- 进队要求 -->
+          <view class="form block-label__form">
+              <u-form-item
+                label="进队要求"
+                prop="jdyq"
+                leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dingdanorder.png"
+              >
+                <u-radio-group
+                  placement="column"
+                  v-model="teamInfo.jdyq"
+                  iconPlacement="right"
+                  @change="radioChange"
+                >
+                  <view v-for="item in joinTeamTypes" :key="item.name">
+                    <u-radio
+                      :label="item.label"
+                      :name="item.name"
+                      activeColor="#55C6A6"
+                      inactiveColor="#D8D8D8"
+                      backgroundColor="#D8D8D8"
+                      class="radio"
+                      :customStyle="{ marginBottom: '5px', marginTop: '5px' }"
+                      iconSize="13px"
+                      labelSize="13px"
+                    >
+                    </u-radio>
+                    <template v-if="item.name == 1 && teamInfo.jdyq === 1">
+                      <u-input
+                        type="password"
+                        v-model="teamInfo.mima"
+                        placeholder="请输入密码"
+                        @input="pwdInput"
+                      ></u-input>
+                      <text v-if="showError" class="pwd-error">请填写进队密码</text>
+                    </template>
+                  </view>
+                </u-radio-group>
+              </u-form-item>
+          </view>
         </u-form>
-
-        <u-action-sheet :show="showRegion" :actions="actions" title="请选择所在地区" @close="showRegion = false"
-          @select="regionSelect">
-        </u-action-sheet>
-      </view>
-
-      <!-- 队伍简介 -->
-      <view class="form">
-        <u-form labelPosition="top" labelWidth="100">
-          <u-form-item label="队伍简介" prop="phone"
-            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dingdanorder.png">
-            <u-textarea class="intro" v-model="intro" placeholder="请输入队伍简介"></u-textarea>
-          </u-form-item>
-        </u-form>
-      </view>
-
-      <!-- 进队要求 -->
-      <view class="form">
-        <u-form labelPosition="top" labelWidth="100">
-          <u-form-item label="进队要求" prop="phone"
-            leftIcon="https://mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_team_require.png">
-            <u-radio-group placement="column" v-model="require" iconPlacement="right">
-              <template v-for="(item, index) in radiolist1">
-                <u-radio :key="index" :label="item.name" :name="item.name" activeColor="#55C6A6" inactiveColor="#D8D8D8"
-                  backgroundColor="#D8D8D8" class="radio" :customStyle="{ marginBottom: '5px', marginTop: '5px' }"
-                  iconSize="13px" labelSize="13px">
-                </u-radio>
-                <u-input v-if="item.name == '输入团队密码加入'" type="password" placeholder="请输入密码"></u-input>
-              </template>
-            </u-radio-group>
-          </u-form-item>
-        </u-form>
-      </view>
-
-      <view class="btn-box">
-        <button @click="submit" class="btn-submit">提交申请</button>
-      </view>
+      <button @click="submit" class="btn-submit">提交申请</button>
     </view>
   </view>
 </template>
 
 <script>
 import Top from '@/components/top/Top';
+import { httpUrl } from '@/utils/config'
 export default {
   components: {
-    Top,
+    Top
   },
   data() {
     return {
-      fileList1: [],
-      showRegion: false,
+      fileList: [],
+      avatarUrl: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/upload_avatar.png',
+      showError: false,
       teamInfo: {
-        name: '',
-        leader: '',
-        region: '',
-        phone: '',
+        logo: '',
+        title: '',
+        note: '',
+        dzid: '',
+        dzsjh: '',
+        szdq: '',
+        jdyq: 0,
+        mima: '',
+        remark: ''
       },
-      intro: '', //队伍简介
-      radiolist1: [
+      joinTeamTypes: [
         {
-          name: '任何人可加入',
-          disabled: false,
+          label: '任何人可加入',
+          name: 0
         },
         {
-          name: '输入团队密码加入',
-          disabled: false,
+          label: '输入团队密码加入',
+          name: 1
         },
         {
-          name: '仅限团队邀请加入。',
-          disabled: false,
+          label: '仅限团队邀请加入',
+          name: 2
         },
       ],
       rules: {
-        name: [
+        logo: [
+          {
+            required: true,
+            message: '请上传团队logo',
+            trigger: ['blur']
+          }
+        ],
+        title: [
           {
             type: 'string',
             required: true,
-            message: '请输入队伍名称',
+            message: '请输入团队名称',
             trigger: ['blur'],
           },
         ],
-        leader: [
+        dzid: [
           {
             type: 'string',
             required: true,
@@ -130,53 +205,50 @@ export default {
             trigger: ['blur'],
           },
         ],
-        region: [
+        szdq: [
           {
             required: true,
-            message: '请选择地区',
+            message: '请填写所在地区',
             trigger: ['blur'],
           },
         ],
-        phone: [
+        dzsjh: [
           {
             required: true,
             message: '请输入手机号',
             trigger: ['blur'],
           },
           {
-            // 自定义验证函数
             validator: (rule, value, callback) => {
-              // 返回true或者false的
               return uni.$u.test.mobile(value);
             },
             message: '手机号码不正确',
-            trigger: ['blur'],
+            trigger: ['input'],
           },
         ],
-      },
-      actions: ['深圳', '厦门', '上海', '拉萨'],
+        mima: [
+          {
+            required: false,
+            message: '请输入进队密码',
+            trigger: ['blur']
+          }
+        ]
+      }
     };
-  },
-  mounted() {
-    this.$refs.form1.setRules(this.rules);
-  },
-  /**
-* 监听页面滑动事件
-*/
-  onPageScroll: function (res) {
-    uni.$emit('onPageScroll', res.scrollTop);
   },
   methods: {
     // 删除图片
     deletePic(event) {
-      this[`fileList${event.name}`].splice(event.index, 1);
-    }, // 新增图片
+      this.fileList.splice(event.index, 1);
+    }, 
+    // 新增图片
     async afterRead(event) {
+      console.log(event)
       // 当设置 mutiple 为 true 时, file 为数组格式，否则为对象格式
       let lists = [].concat(event.file);
-      let fileListLen = this[`fileList${event.name}`].length;
+      let fileListLen = this.fileList.length;
       lists.map((item) => {
-        this[`fileList${event.name}`].push({
+        this.fileList.push({
           ...item,
           status: 'uploading',
           message: '上传中',
@@ -184,8 +256,9 @@ export default {
       });
       for (let i = 0; i < lists.length; i++) {
         const result = await this.uploadFilePromise(lists[i].url);
-        let item = this[`fileList${event.name}`][fileListLen];
-        this[`fileList${event.name}`].splice(
+        console.log(result)
+        let item = this.fileList[fileListLen];
+        this.fileList.splice(
           fileListLen,
           1,
           Object.assign(item, {
@@ -200,7 +273,7 @@ export default {
     uploadFilePromise(url) {
       return new Promise((resolve, reject) => {
         let a = uni.uploadFile({
-          url: 'http://192.168.2.21:7001/upload', // 仅为示例，非真实的接口地址
+          url: `${httpUrl}/file/upload/uploadFile`, // 仅为示例，非真实的接口地址
           filePath: url,
           name: 'file',
           formData: {
@@ -214,15 +287,61 @@ export default {
         });
       });
     },
-    //选择所在地区
-    regionSelect(e) {
-      this.model1.teamInfo.region = e.name;
-      this.$refs.form1.validateField('teamInfo.region');
+    uploadImage() {
+      uni.chooseImage({
+        count: 1,
+        sizeType: ["compressed"],
+        sourceType: ["album"],
+        success: res => {
+          var filePath = res.tempFilePaths[0];
+          uni.uploadFile({
+              url: `${httpUrl}/file/upload/uploadFile`,
+              filePath,
+              name: 'file',
+              formData: {
+                  'user': 'test'
+              },
+              success: uploadFileRes => {
+                  console.log(uploadFileRes.data);
+              },
+              fail: err => {
+                console.log(err)
+              }
+          });
+        },
+        fail: error => {
+          console.log(error)
+        }
+      })
     },
-    textRegion() {
-      console.log(11111111);
-      console.log(this.showRegion);
+    radioChange(name) {
+      this.teamInfo.jdyq = name
+      if (name !== 1) {
+        this.teamInfo.mima = ''
+        this.showError = false
+      }
+      if (name === 1) {
+        this.rules.mima[0].required = true
+      } else {
+        this.rules.mima[0].required = false
+      }
     },
+    pwdInput(value) {
+      this.teamInfo.mima = value.trim()
+      if (this.teamInfo.mima !== '') this.showError = false
+    },
+    // 提交申请
+    submit() {
+      this.$refs.uForm.validate().then(res => {
+        if (this.teamInfo.jdyq === 1 && this.teamInfo.mima == '') {
+          this.showError = true
+          return
+        }
+        this.$u.toast('success')
+      }).catch(err => {
+        this.$u.toast('请完善信息')
+      })
+    }
   },
 };
 </script>
@@ -230,12 +349,12 @@ export default {
 <style lang="scss" scope>
 /deep/ .top {
   // padding: 70px 30px 60px 30px !important;
-  border-radius: 0px 0px 0px 50px;
-  transform: translateZ(1px);
+  // border-radius: 0px 0px 0px 50px;
+  // transform: translateZ(1px);
 
-  .back-icon {
-    top: 70px !important;
-  }
+  // .back-icon {
+  //   top: 70px !important;
+  // }
 }
 
 .team-container {
@@ -289,10 +408,10 @@ export default {
 
   .upload-avatar {
     padding: 75px 40px 50px;
-
-    /deep/ .u-upload {
-      flex-direction: row !important;
-    }
+    display: flex;
+    // /deep/ .u-upload {
+    //   flex-direction: row !important;
+    // }
 
     .image {
       width: 125px;
@@ -306,6 +425,22 @@ export default {
       transform: translateY(-50%);
       font-size: 36px;
       color: #080808;
+    }
+  }
+}
+.pwd-error {
+  color: #f56c6c;
+  font-size: 24px;
+}
+.block-label__form {
+  /deep/ .u-form-item__body {
+    display: block !important;
+    .u-form-item__body__left {
+      width: 100% !important;
+      margin-bottom: 20px !important;
+    }
+    .u-form-item__body__right__message {
+      margin-left: 0 !important;
     }
   }
 }
