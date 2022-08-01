@@ -6,7 +6,7 @@
       <view class="title-content">
         <!-- 返回 -->
         <view class="arrow-back">
-          <navigator open-type="navigateBack" delta="1"  hover-class="navigator-hover-class">
+          <navigator open-type="navigateBack" delta="1" hover-class="navigator-hover-class">
             <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
           </navigator>
         </view>
@@ -15,58 +15,24 @@
     </view>
     <view class="form-wrapper">
       <view class="form">
-        <u-form
-          labelPosition="left"
-          :model="userInfo"
-          :rules="rules"
-          ref="form1"
-          labelWidth="100"
-        >
-          <u-form-item
-            label="真实姓名"
-            prop="name"
-            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png"
-          >
-            <u-input
-              type="text"
-              v-model="userInfo.name"
-              placeholder="请输入真实姓名"
-            />
+        <u-form labelPosition="left" :model="userInfo" :rules="rules" ref="form1" labelWidth="100">
+          <u-form-item label="真实姓名" prop="name"
+            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png">
+            <u-input type="text" v-model="userInfo.name" placeholder="请输入真实姓名" />
           </u-form-item>
 
-          <u-form-item
-            label="手机号"
-            prop="phone"
-            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png"
-          >
-            <u-input
-              type="number"
-              v-model="userInfo.phone"
-              placeholder="请输入手机号"
-            />
+          <u-form-item label="手机号" prop="phone"
+            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png">
+            <u-input type="number" v-model="userInfo.phone" placeholder="请输入手机号" />
           </u-form-item>
 
-          <u-form-item
-            label="性别"
-            prop="gender"
-            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_gender.png"
-          >
-            <u-input
-              type="text"
-              v-model="userInfo.gender"
-              placeholder="请输入性别"
-            />
+          <u-form-item label="性别" prop="gender"
+            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_gender.png">
+            <u-input type="text" v-model="userInfo.gender" placeholder="请输入性别" />
           </u-form-item>
-          <u-form-item
-            label="尺码"
-            prop="size"
-            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_size.png"
-          >
-            <u-input
-              type="text"
-              v-model="userInfo.size"
-              placeholder="请输入尺码"
-            />
+          <u-form-item label="尺码" prop="size"
+            leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_size.png">
+            <u-input type="text" v-model="userInfo.size" placeholder="请输入尺码" />
           </u-form-item>
         </u-form>
       </view>
@@ -130,7 +96,7 @@ export default {
       },
     };
   },
-  mounted(){
+  mounted() {
     this.$refs.form1.setRules(this.rules);
   },
   methods: {
@@ -160,19 +126,23 @@ export default {
   font-size: 36px;
   background: linear-gradient(180deg, #a1f5e2 0%, #eaf6f5 100%);
   z-index: 1;
+
   .title-content {
     text-align: center;
   }
+
   .arrow-back {
     position: absolute;
-    left: 30px;
+    left: 15px;
     top: 70px;
   }
 }
+
 .edit-container {
   position: fixed;
   width: 100%;
   height: 100%;
+
   .bg {
     position: absolute;
     z-index: -1;
@@ -183,24 +153,26 @@ export default {
     background: linear-gradient(to bottom, #a1f5e2 0%, #eaf6f5 100%);
     border-radius: 0px 0px 0px 50px;
   }
+
   .form-wrapper {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
     padding: 155px 30px 50px;
+
     .form {
-      background: linear-gradient(
-        335deg,
-        rgba(255, 255, 255, 0) 0%,
-        #ffffff 100%
-      );
+      background: linear-gradient(335deg,
+          rgba(255, 255, 255, 0) 0%,
+          #ffffff 100%);
       box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1);
       border-radius: 30px;
       padding: 30px 25px 40px;
     }
-    /deep/ .u-input{
+
+    /deep/ .u-input {
       padding-left: 0 !important;
     }
+
     .btn-submit {
       position: absolute;
       bottom: 50px;

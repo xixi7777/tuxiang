@@ -1,5 +1,7 @@
 <template>
     <view class="orders-container">
+        <!-- 顶部背景色块 -->
+        <view class="top-background"> </view>
         <!-- 页面标题栏 -->
         <view class="top-title">
             <view class="title-content">
@@ -12,16 +14,13 @@
                 <text>我的订单</text>
             </view>
         </view>
-        <!-- 顶部背景色块 -->
-        <view class="top-background"> </view>
+
 
         <view class="tabs-status">
-            <!-- <u-sticky> -->
             <u-tabs :list="listTabs" @click="click" lineWidth="30" lineColor="#17AA7D" :activeStyle="{
                 fontWeight: 'bold',
                 transform: 'scale(1.05)'
             }"></u-tabs>
-            <!-- </u-sticky> -->
         </view>
 
         <view class="order-wrapper">
@@ -31,7 +30,8 @@
                     <view class="desc">预约商品订单，请点击查看</view>
                 </view>
                 <view class="right">
-                    <view class="arrow-right"></view>
+                    <image class="img" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow_r.png">
+                    </image>
                 </view>
             </view>
             <view class="order-list">
@@ -46,26 +46,28 @@
                         </view>
                         <view class="right"><text>{{ item.status }}</text></view>
                     </view>
-                    <view class="info-box">
-                        <view class="left">
-                            <image class="img" mode="scaleToFill" :src="item.url"></image>
-                        </view>
-                        <view class="right">
-                            <view class="title-box">
-                                <view class="title">
-                                    <text>{{ item.title }}</text>
+                    <navigator url="/pages/ordersDetail/index">
+                        <view class="info-box">
+                            <view class="left">
+                                <image class="img" mode="scaleToFill" :src="item.url"></image>
+                            </view>
+                            <view class="right">
+                                <view class="title-box">
+                                    <view class="title">
+                                        <text>{{ item.title }}</text>
+                                    </view>
+                                    <view class="num-box">
+                                        <view class="price"> <text>{{ '￥' + item.price }}</text></view>
+                                        <view class="num"><text>× {{ item.num }}</text></view>
+                                    </view>
                                 </view>
-                                <view class="num-box">
-                                    <view class="price"> <text>{{ '￥' + item.price }}</text></view>
-                                    <view class="num"><text>× {{ item.num }}</text></view>
+                                <view class="detail">
+                                    <view>{{ item.desc }}</view>
+                                    <view><text>出行日期：{{ item.date }}</text></view>
                                 </view>
                             </view>
-                            <view class="detail">
-                                <view>{{ item.desc }}</view>
-                                <view><text>出行日期：{{ item.date }}</text></view>
-                            </view>
                         </view>
-                    </view>
+                    </navigator>
                     <view class="price-box">
                         <text class="total-price">总价{{ '￥' + item.totalPrice }}</text>
                         <text>实付款<text class="pay-price">{{ '￥' + item.payPrice }}</text></text>
@@ -74,6 +76,8 @@
                         <button class="btn">取消订单</button>
                     </view>
                 </view>
+
+
             </view>
         </view>
 
@@ -226,6 +230,7 @@ export default {
     }
 
     .right {
+        position: relative;
         width: 48px;
         height: 48px;
         background: rgba(216, 216, 216, 0);
@@ -233,14 +238,13 @@ export default {
         border-radius: 50%;
         text-align: center;
 
-        .arrow-right {
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            border-top: 2px solid #17AA7D;
-            border-right: 2px solid #17AA7D;
-            transform: rotate(45deg);
-            margin: 5px 0;
+        .img {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
     }
 }
@@ -263,8 +267,9 @@ export default {
         }
 
         .img {
-            height: 20px;
-            width: auto;
+            height: 22px;
+            width: 12px;
+            margin-left: 20px;
         }
 
         .right {

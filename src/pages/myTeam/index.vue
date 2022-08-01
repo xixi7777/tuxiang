@@ -302,7 +302,7 @@ export default {
         background-repeat: no-repeat;
 
         &.image-male {
-          background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/male.png);
+          background-image: url('//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/male.png');
         }
 
         &.image-female {
