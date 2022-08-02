@@ -11,7 +11,7 @@
 		<view class="banner-wrapper">
 			<view class="swiper-container">
 				<u-swiper
-				:list="images"
+				:list="slide"
 				:current="current"
 				radius="10"
 				:autoplay="false"
@@ -24,7 +24,7 @@
 		<view class="cus-indicator">
 			<view
 				class="cus-indicator__dot"
-				v-for="(item, index) in images"
+				v-for="(item, index) in slide"
 				:key="index"
 				:class="[index === current && 'cus-indicator__dot--active']"
 			>
@@ -33,18 +33,18 @@
 
 		<!-- trip example -->
 		<view class="travel-group">
-			<u-row>
-				<u-col :span="3" v-for="(item, index) in travels" :key="item.name">
-					<view class="travel-item">
+			<scroll-view scroll-x="true" class="scroll">
+                <view class="travel-item" v-for="(item, index) in nav" :key="index">
+                    <navigator hover-class="navigator-hover-class" :url="item.url">
 						<view class="image-list">
-							<view :class="['icon-wrapper', `icon-${index}`]">
-								<cover-image class="icon" :src="item.icon"></cover-image>
+							<view class="icon-wrapper">
+								<image lazy-load mode="heightFix" class="icon" :src="item.image"></image>
 							</view>
 						</view>
 						<text>{{ item.name }}</text>
-					</view>
-				</u-col>
-			</u-row>
+					</navigator>
+                </view>
+            </scroll-view>
 		</view>
 
 		<!-- recommend -->
@@ -60,15 +60,14 @@
 			</view>
 
 			<view class="scroll-list-wrapper">
-				
 				<scroll-view scroll-x="true" class="scroll">
-					<view v-for="item in recommends" class="scroll-item" :key="item.cpbh">
+					<view v-for="item in rankproduct" class="scroll-item" :key="item.name">
 						<view class="list-image">
-							<image :src="item.cpzt"></image>
+							<image lazy-load :src="item.image"></image>
 						</view>
-						<navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?id=${item.cpbh}`">
-							<view class="scroll-title"><text>{{ item.cpmc }}</text></view>
-							<view><text class="price-code">￥</text><text class="price">1180</text><text class="sale">七折</text></view>
+						<navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?${item.url}`">
+							<view class="scroll-title"><text>{{ item.name }}</text></view>
+							<view class="price-wrapper"><text class="price-code">￥</text><text class="price">1180</text><text class="sale">七折</text></view>
 						</navigator>
 					</view>
 				</scroll-view>
@@ -82,7 +81,7 @@
 				<view class="more">
 					<navigator url="/pages/recommend/index" hover-class="navigator-hover-class">
 						<text>更多</text>
-						<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
+						<image lazy-load class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
 					</navigator>
 				</view>
 			</view>
@@ -126,6 +125,7 @@ import Search from '@/components/pageSearch/PageSearch'
 
 
 import { waterfallMixins } from '@/mixins/waterfallMixins';
+import _ from 'lodash'
 export default {
 	mixins: [waterfallMixins],
 	components: {
@@ -136,54 +136,48 @@ export default {
 		return {
 			keyword: null,
 			current: 0,
-			images: [
-				'//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/banner.png',
-			],
-			travels: [
-				{ name: '自由行', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/independent.png' },  
-				{ name: '跟团游', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/group.png' },
-				{ name: '一日游', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/daily.png' },
-				{ name: '飞机游', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/plane.png' }
-			],
-			recommends: [
-				{ cpbh: 1, cpmc: '三亚3天两晚自由行', cpzt: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '超值' },
-				{ cpbh: 2, cpmc: '西安3天两晚自由行', cpzt: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_2.png', price: '580', sale: '七折' },
-				{ cpbh: 3, cpmc: '上海3天两晚自由行', cpzt: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_1.png', price: '580', sale: '七折' }
-			],
-			wfList: [
-				{
-					name: '洱海', 
-					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-					info: '一起去看海'
-				},
-				{
-					name: '大理', 
-					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_2.png',
-					info: '一起去看海'
-				},
-				{
-					name: '大理', 
-					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_2.png',
-					info: '一起去看海'
-				},
-				{
-					name: '洱海', 
-					url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-					info: '一起去看海'
-				}
-			],
+			wfList: [],
 			flowList: [],
 			footers: [
 				'//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/foot_1.png',
 				'//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/foot_2.png'
-			]
+			],
+			homeInfo: {}
 		}
 	},
 	onLoad() {
+		this.getConfig()
+	},
+	computed: {
+		slide() {
+			const slide = _.get(this.homeInfo, ['slide']) || []
+			return slide.map(item => item.image)
+		},
+		nav() {
+			return _.get(this.homeInfo, ['nav']) || []
+		},
+		rank() {
+			return _.get(this.homeInfo, ['rank']) || []
+		},
+		rankproduct() {
+			return _.get(this.homeInfo, ['rankproduct']) || []
+		},
+		hot() {
+			return _.get(this.homeInfo, ['hot']) || []
+		}
 	},
 	methods: {
 		swiperChange({current}) {
 			this.current = current
+		},
+		getConfig() {
+			this.$api.getConfigCache({
+				key: 'mall.system.bannl'
+			}).then(res => {
+				const keyValue = res.data['mall.system.bannl'].keyValue
+				this.homeInfo = JSON.parse(keyValue)
+				this.wfList = _.get(this.homeInfo, ['hotproduct']) || []
+			})
 		}
 	}
 }
@@ -229,25 +223,25 @@ export default {
 	/deep/
 	.travel-group {
 		margin-top: 36px;
-		text-align: center;
+		padding: 0 20px;
 		.travel-item {
-			text-align: center;
+            display: inline-block;
+            &:not(:first-child) {
+                margin-left: 80px;
+            }
 		}
 		.icon-wrapper {
 			width: 76px;
 			margin: 0 auto;
 			margin-bottom: 14px;
-			&.icon-0 {
-				width: 57px;
-			}
-			&.icon-1 {
-				width: 70px;
-			}
-			&.icon-2 {
-				width: 62px;
-			}
-			&.icon-3 {
-				width: 60px;
+			height: 80px;
+			position: relative;
+			image {
+				height: 100%;
+				position: absolute;
+				bottom: 0;
+				left: 50%;
+				transform: translateX(-50%);
 			}
 		}
 	}
@@ -289,7 +283,6 @@ export default {
 		}
 		.scroll-item {
 			width: 302px;
-			height: 335px;
 			background: linear-gradient(-23deg, rgba(255,255,255,0) 0%, #FFF1F1 100%);
 			box-shadow: 0px 17px 23px 6px rgba(138,132,167,0.1);
 			border-radius: 20px;

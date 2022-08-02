@@ -3,28 +3,28 @@
         <top title="商品详情" />
         <view class="photo-wrapper">
             <u-swiper
-                :list="swiper"
+                :list="images"
                 @change="e => currentNum = e.current"
                 :autoplay="false"
                 >
                     <view slot="indicator" class="indicator-num">
-                        <text class="indicator-num__text">{{ currentNum + 1 }}/{{ swiper.length }}</text>
+                        <text class="indicator-num__text">{{ currentNum + 1 }}/{{ images.length }}</text>
                     </view>
             </u-swiper>
         </view>
 
         <view class="desc-wrapper">
             <view class="desc-header flex-box p-h-20">
-                <view><text>￥1600-1800</text></view>
+                <view><text>￥{{ product.price }}</text></view>
                 <view><u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/info.png" size="20"></u-icon></view>
             </view>
             <view class="product-name p-h-20">
                 <text>{{ product.cpmc }}</text>
             </view>
-            <view class="consult p-h-20 flex-box">
+            <!-- <view class="consult p-h-20 flex-box">
                 <view class="consult-item"><text>咨询下单赠红包</text></view>
-                <view class="consult-item"><text>动车返回{{ product.cfd }}</text></view>
-            </view>
+                <view class="consult-item"><text>动车返回{{ product.cfd_dictLabel }}</text></view>
+            </view> -->
             <u-line dashed color="#D7D7D7"></u-line>
             <view class="service flex-box p-h-20">
                 <view class="service-title"><text>服务</text></view>
@@ -63,14 +63,16 @@
                 </view> -->
             </view>
             <view class="exchange-date__wrapper">
-                <!-- <view class="more-choose">更多班期</view> -->
+                <view class="more-choose">
+                    <navigator :url="`/pages/selectDate/index?cpbh=${product.cpbh}`" hover-class="navigator-hover-class">更多班期</navigator>
+                </view>
                 <view class="scroll-list-wrapper">
                     <scroll-view scroll-x="true" class="scroll">
                         <view :class="['dates-item', index === 0 && 'is-active']" v-for="(item, index) in dates" :key="index">
-                            <navigator url="/pages/selectDate/index" hover-class="navigator-hover-class">
+                            <navigator :url="`/pages/selectDate/index?cpbh=${product.cpbh}`" hover-class="navigator-hover-class">
                                 <text>{{ item.date }}</text>
                                 <text>{{ item.weekday }}</text>
-                                <text>￥{{ item.price }}起</text>
+                                <text>￥{{ item.price }}</text>
                             </navigator>
                         </view>
                     </scroll-view>
@@ -78,32 +80,39 @@
             </view>
         </view>
 
-        <view class="product-detail"></view>
+        <view class="product-detail">
+            <view v-html="product.cpms"></view>
+        </view>
+
+        <view class="fixed-button">
+            <view class="operation">
+                <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/kefu.png"></image>
+                <text>客服</text>
+            </view>
+            <view class="operation">
+                <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang_detail.png"></image>
+                <text>分享</text>
+            </view>
+            <view class="button-wrapper">
+                <u-button type="primary" shape="circle" @click="toSelectDate">立即购买</u-button>
+            </view>
+        </view>
     </view>
 </template>
 <script>
 import Top from '@/components/top/Top'
+import _ from 'lodash'
 export default {
     components: {
         Top
     },
-    data() {
-        return {
-            product: {}
-        }
-    },
     onLoad(option) {
-        this.getProductDetail(option.id)
+        this.getProductDetail(option.cpbh)
     },
     data() {
         return {
+            product: {},
             currentNum: 0,
-            swiper: [
-                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/foot_1.png',
-                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/foot_2.png',
-                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_2.png',
-            ],
             dates: [
                 { date: '07-13', weekday: '周四', price: 1999 },
                 { date: '07-14', weekday: '周五', price: 1999 },
@@ -115,7 +124,18 @@ export default {
             ]
         }
     },
+    computed: {
+        images() {
+            const images = _.get(this.product, ['cpzt']) || ''
+            return images.split(',')
+        }
+    },
     methods: {
+        toSelectDate() {
+            uni.navigateTo({
+                url: `/pages/selectDate/index?cpbh=${this.product.cpbh}`
+            })
+        },
         getProductDetail(cpbh) {
             this.$api.selectProductVo({ cpbh }).then(res => {
                 this.product = res.data
@@ -126,6 +146,47 @@ export default {
 </script>
 <style lang="scss" scoped>
 .detail-container {
+    padding-bottom: 120px;
+    .fixed-button {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        padding: 0 30px;
+        height: 120px;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0px -6px 10px 0px rgba(0,0,0,0.0600);
+        background: #FFFFFF;
+        z-index: 999;
+        .button-wrapper {
+            width: 65%;
+            /deep/
+            .u-button {
+                height: 90px;
+                font-size: 32px;
+            }
+        }
+        .operation {
+            width: 80px;
+            text-align: center;
+            image {
+                width: 40px;
+                height: 40px;
+                display: block;
+                margin: 0 auto;
+            }
+            text {
+                display: block;
+                text-align: center;
+                font-size: 24px;
+                font-weight: 400;
+                color: #000000;
+                line-height: 33px;
+            }
+        }
+    }
     .photo-wrapper {
         height: 434px;
         margin-top: 190px;
@@ -179,6 +240,7 @@ export default {
         }
         .product-name {
             margin-top: 24px;
+            margin-bottom: 46px;
             overflow: hidden; 
             text-overflow: ellipsis;
             display: -webkit-box; 
@@ -342,6 +404,8 @@ export default {
     }
     .product-detail {
         margin-top: 30px;
+        background-color: #3cacc4;
+        padding: 30px;
     }
 }
 </style>

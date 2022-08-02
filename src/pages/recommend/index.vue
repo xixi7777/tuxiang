@@ -25,10 +25,10 @@
 
         <view class="list-wrapper">
             <view v-for="item in list" :key="item.cpbh">
-                <navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?id=${item.cpbh}`">
+                <navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?cpbh=${item.cpbh}`">
                     <view class="list-item">
                         <view class="left">
-                            <text class="top-left" v-if="item.cfd">{{ item.cfd }}出发</text>
+                            <text class="top-left" v-if="item.cfd">{{ item.cfd_dictLabel }}出发</text>
                             <text class="bottom" v-if="item.ywts">多日游玩</text>
                             <view class="image">
                                 <cover-image v-if="item.cpzt" :src="item.cpzt"></cover-image>
@@ -43,7 +43,7 @@
                                 <view class="price-wrapper">
                                     <text class="price-code">￥</text>
                                     <text class="price">{{ item.price || 0 }}</text>
-                                    <text class="price-from ml-5">起</text>
+                                    <!-- <text class="price-from ml-5">起</text> -->
                                 </view>
                                 <view class="desc-footer">
                                     <view class="footer-icon">

@@ -45,7 +45,10 @@ export default {
         return request({
             url: '/wechat/user/getConfigCache',
             method: 'POST',
-            data
+            data,
+            header: {
+                'content-type': 'application/x-www-form-urlencoded'
+            }
         })
     },
     // 编辑用户

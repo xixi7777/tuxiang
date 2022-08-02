@@ -51,6 +51,7 @@
 </template>
 <script>
 import Top from '@/components/top/Top'
+import { cpuUsage } from 'process'
 export default {
     components: {
         Top
@@ -62,7 +63,19 @@ export default {
                 { title: '玩乐项目', list: [{ id: 1, name: '水上餐厅+赠灯影戏' }, { id: 2, name: '升级蜀风雅韵川剧晚会' }] },
                 { title: '交通车型', list: [{ id: 1, name: '【舒适型】空调旅游车' }, { id: 2, name: '【豪华型】宽体头等舱' }, { id: 3, name: 'C6人VIP团商务车' }] }
             ],
-            personTypes: ['成人', '儿童', '老人', '残疾人']
+            personTypes: ['成人', '儿童']
+        }
+    },
+    onLoad(option) {
+        const { cpbh } = option
+        this.getProductSku(cpbh)
+    },
+    methods: {
+        getProductSku(cpbh) {
+            this.$api.selectProductSkuggVo({ cpbh })
+            .then(res => {
+                console.log(res)
+            })
         }
     }
 }
