@@ -1,30 +1,41 @@
 <template>
     <view class="app-container">
-        <top title="【真纯玩+川剧晚会】" />
+        <top :title="`【${name}】`" />
 
         <view class="product">
             <view class="image">
                 <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_2.png" />
             </view>
             <view>
-                <view class="product-title text-ellipsis"><text>【真纯玩+川剧晚会】</text></view>
+                <view class="product-title text-ellipsis"><text>{{ `【${name}】` }}</text></view>
                 <view class="product-price">
-                    <text>￥ 5895</text>
+                    <text>￥ {{ price }}</text>
                 </view>
             </view>
         </view>
 
         <view class="project-group">
-            <view class="project-group__item" v-for="(p, index) in projects" :key="index">
-                <view class="project-title"><text>{{ p.title }}</text></view>
+            <view class="project-group__item" v-for="p in skuggList" :key="p.id">
+                <view class="project-title"><text>{{ p.ggmc }}</text></view>
                 <view class="project-list">
-                    <text :class="[item.id === 2 && 'is-active']" v-for="item in p.list" :key="item.id">{{ item.name }}</text>
+                    <text @click="changeSkugg(p, c)" :class="[skuSelected[p.id] == c.id && 'is-active']" v-for="c in p.childList" :key="c.id">{{ c.ggmc }}</text>
                 </view>
             </view>
         </view>
 
         <view class="calendar-wrapper">
+            <view class="months-wrapper">
+                <scroll-view scroll-x="true" class="scroll">
+                    <view @click="selectMonth(m)" :class="['month-item', m == currentMonth && 'is-selected']" v-for="(m, i) in months" :key="i">
+                        <text>{{ m }}</text>
+                        <text class="line"></text>
+                    </view>
+                </scroll-view>
+            </view>
 
+            <view class="calendar-content">
+
+            </view>
         </view>
 
         <view class="person-type">
@@ -34,15 +45,16 @@
         <view class="quantity-wrapper">
             <view><text>购买数量</text></view>
             <view class="quantity-input">
-                <u-input shape="circle" type="number">
-                    <view slot="prefix"><u-icon name="minus"></u-icon></view>
-                    <view slot="suffix"><u-icon name="plus"></u-icon></view>
-                </u-input>
+                <NumberInput v-model="count" />
+                <!-- <u-input shape="circle" type="number" v-model="count">
+                    <view slot="prefix" @click="decrease"><u-icon name="minus"></u-icon></view>
+                    <view slot="suffix" @click="increase"><u-icon name="plus"></u-icon></view>
+                </u-input> -->
             </view>
         </view>
 
         <view class="fixed-button">
-            <view class="price-wrapper"><text>￥ 5895</text></view>
+            <view class="price-wrapper"><text>￥ {{ price }}</text></view>
             <view class="button-wrapper">
                 <u-button type="primary" shape="circle">立即购买</u-button>
             </view>
@@ -51,31 +63,129 @@
 </template>
 <script>
 import Top from '@/components/top/Top'
-import { cpuUsage } from 'process'
+import NumberInput from '@/components/numberInput/NumberInput'
+import _ from 'lodash'
+import moment from 'moment'
 export default {
     components: {
-        Top
+        Top,
+        NumberInput
     },
     data() {
         return {
-            projects: [
-                { title: '套餐类型', list: [{ id: 1, name: '都青纯玩一日游含门票' }] },
-                { title: '玩乐项目', list: [{ id: 1, name: '水上餐厅+赠灯影戏' }, { id: 2, name: '升级蜀风雅韵川剧晚会' }] },
-                { title: '交通车型', list: [{ id: 1, name: '【舒适型】空调旅游车' }, { id: 2, name: '【豪华型】宽体头等舱' }, { id: 3, name: 'C6人VIP团商务车' }] }
-            ],
-            personTypes: ['成人', '儿童']
+            currentMonth: '',
+            defaultSkubh: '',
+            personTypes: ['成人', '儿童'],
+            skuggList: [],
+            count: 0,
+            price: 0,
+            skuSelected: {},
+            months: [],
+            productStockParam: {
+                cpbh: '',
+                skubh: '',
+                beginDate: '',
+                endDate: ''
+            }
         }
     },
     onLoad(option) {
-        const { cpbh } = option
+        const { cpbh, skubh } = option
+        this.defaultSkubh = skubh || ''
         this.getProductSku(cpbh)
+        // this.getProductDetail(cpbh)
+        this.productStockParam = {
+            ...this.productStockParam,
+            skubh: this.defaultSkubh,
+            cpbh
+        }
+        this.setMonths()
+    },
+    computed: {
+        name() {
+            let s = []
+            this.skuggList.forEach(item => {
+                item.childList.forEach(child => {
+                    if (Object.values(this.skuSelected).includes(child.id)) {
+                        s.push(child.ggmc)
+                    }
+                })
+            })
+            return s.join('+')
+        }
     },
     methods: {
+        selectMonth(month) {
+            this.currentMonth = month
+        },
+        setMonths() {
+            const nowMonth = moment().month()
+            this.currentMonth = `${nowMonth+1}月`
+            this.months.push(this.currentMonth)
+            for (let i = 1, j = 0; i < 12; i++) {
+                if (nowMonth+i+1 >= 13) {
+                    const monthStr = `${moment().year()+1}年${j+1}月`
+                    const nextYearMonth = j === 0 ? monthStr.substring(2): `${j+1}月`
+                    this.months.push(nextYearMonth)
+                    j++
+                } else {
+                    this.months.push(`${nowMonth+i+1}月`)
+                }
+            }
+        },
+        changeSkugg(p, c) {
+            if (!this.skuSelected[p.id] || this.skuSelected[p.id] !== c.id) {
+                this.skuSelected[p.id] = c.id
+            }
+            else if (this.skuSelected[p.id] == c.id) {
+                this.skuSelected[p.id] = ''
+            }
+            if (Object.values(this.skuSelected).every(Boolean)) {
+                this.productStockParam.skubh = Object.values(this.skuSelected).join('_')
+            }
+        },
+        setSkuParentId() {
+            this.skuggList.forEach(item => {
+                this.$set(this.skuSelected, item.id, '')
+            })
+        },
         getProductSku(cpbh) {
             this.$api.selectProductSkuggVo({ cpbh })
             .then(res => {
-                console.log(res)
+                this.skuggList = res.data.skuggList
+                this.setSkuParentId()
             })
+        },
+        getProductDetail(cpbh) {
+            this.$api.selectProductVo({ cpbh }).then(res => {
+                this.product = res.data
+            })
+        },
+        selectProductStock: _.debounce(function() {
+            this.$api.selectProductStock(this.productStockParam).then(res => {
+
+            })
+        }, 300),
+        increase() {
+            console.log('increase')
+            if (this.count < this.product.stock) {
+                this.count++  
+            }
+        },
+        decrease() {
+            console.log('decrease')
+            if (this.count > 0) {
+                this.count--
+            }
+        },
+    },
+    watch: {
+        productStockParam: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                this.selectProductStock()
+            }
         }
     }
 }
@@ -93,6 +203,7 @@ export default {
     justify-content: space-between;
     box-shadow: 0px -6px 10px 0px rgba(0,0,0,0.0600);
     background: #FFFFFF;
+    z-index: 99;
     .price-wrapper {
         flex: 1;
         text {
@@ -179,6 +290,35 @@ export default {
     margin-top: 45px;
     padding-bottom: 54px;
     border-bottom: 1px dashed #d7d7d7;
+
+    .month-item {
+        display: inline-block;
+        font-size: 30px;
+        font-weight: 500;
+        color: #333333;
+        line-height: 35px;
+        height: 45px;
+        position: relative;
+        &:not(:first-child) {
+            margin-left: 74px;
+        }
+        .line {
+            display: none;
+        }
+        &.is-selected {
+            color: #17AA7D;
+            .line {
+                display: block;
+                position: absolute;
+                height: 8px;
+                background-color: #17AA7D;
+                border-radius: 4px;
+                bottom: 0;
+                left: 5px;
+                right: 5px;
+            }
+        }
+    }
 }
 .person-type {
     margin-top: 40px;
@@ -209,22 +349,6 @@ export default {
     }
     .quantity-input {
         width: 272px;
-        /deep/
-        .u-input {
-            border: 1px solid #d7d7d7;
-            padding: 0 30px !important;
-            .u-input__content__field-wrapper {
-                padding: 10px;
-                border-left: 1px solid #d7d7d7;
-                border-right: 1px solid #d7d7d7;
-            }
-            .u-input__content__prefix-icon {
-                margin-right: 20px;
-            }
-            .u-input__content__subfix-icon {
-                margin-left: 20px;
-            }
-        }
     }
 }
 .app-container {

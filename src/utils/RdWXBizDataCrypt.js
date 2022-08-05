@@ -1,5 +1,5 @@
-import Crypto from 'crypto-js'
-const fun = require('../utils/util')
+var Crypto = require('./cryptojs/cryptojs.js').Crypto
+const fun = require('./utils')
 
 function RdWXBizDataCrypt(appId, sessionKey) {
     this.appId = appId

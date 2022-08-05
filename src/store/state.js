@@ -1,3 +1,4 @@
 export default {
-    currentTab: 0
+    currentTab: 0,
+    appid: ''
 }

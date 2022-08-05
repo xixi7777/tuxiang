@@ -56,7 +56,7 @@
 
         <view class="exchange-wrapper">
             <view class="header flex-box space-between">
-                <view class="start-city"><text>济宁出发</text></view>
+                <view class="start-city"><text>{{ product.cfd_dictLabel }}出发</text></view>
                 <!-- <view class="exchange-start flex-box">
                     <text>切换出发地 (35个)</text>
                     <u-icon name="arrow-right" size="14" class="ml-20"></u-icon>
@@ -68,11 +68,12 @@
                 </view>
                 <view class="scroll-list-wrapper">
                     <scroll-view scroll-x="true" class="scroll">
-                        <view :class="['dates-item', index === 0 && 'is-active']" v-for="(item, index) in dates" :key="index">
-                            <navigator :url="`/pages/selectDate/index?cpbh=${product.cpbh}`" hover-class="navigator-hover-class">
-                                <text>{{ item.date }}</text>
-                                <text>{{ item.weekday }}</text>
-                                <text>￥{{ item.price }}</text>
+                        <view :class="['dates-item', index === 0 && 'is-active']" v-for="(item, index) in skuList" :key="index">
+                            <navigator :url="`/pages/selectDate/index?cpbh=${product.cpbh}&skubh=${item.skubh}`" hover-class="navigator-hover-class">
+                                <text>{{ moment(item.kcrq).format('MM-DD') }}</text>
+                                <text>{{ weekdays[moment(item.kcrq).isoWeekday()] }}</text>
+                                <text>￥{{ item.crj }}</text>
+                                <text>余位: {{ item.stock }}</text>
                             </navigator>
                         </view>
                     </scroll-view>
@@ -102,6 +103,7 @@
 <script>
 import Top from '@/components/top/Top'
 import _ from 'lodash'
+import moment from 'moment'
 export default {
     components: {
         Top
@@ -113,15 +115,16 @@ export default {
         return {
             product: {},
             currentNum: 0,
-            dates: [
-                { date: '07-13', weekday: '周四', price: 1999 },
-                { date: '07-14', weekday: '周五', price: 1999 },
-                { date: '07-15', weekday: '周六', price: 1999 },
-                { date: '07-16', weekday: '周日', price: 1999 },
-                { date: '07-17', weekday: '周一', price: 1999 },
-                { date: '07-18', weekday: '周二', price: 1999 },
-                { date: '07-19', weekday: '周三', price: 1999 }
-            ]
+            skuList: [],
+            weekdays: {
+                1: '周一',
+                2: '周二',
+                3: '周三',
+                4: '周四',
+                5: '周五',
+                6: '周六',
+                7: '周日'
+            }
         }
     },
     computed: {
@@ -131,6 +134,7 @@ export default {
         }
     },
     methods: {
+        moment,
         toSelectDate() {
             uni.navigateTo({
                 url: `/pages/selectDate/index?cpbh=${this.product.cpbh}`
@@ -139,8 +143,19 @@ export default {
         getProductDetail(cpbh) {
             this.$api.selectProductVo({ cpbh }).then(res => {
                 this.product = res.data
+                this.getDefaultSku(res.data.cpbh, res.skubh)
             })
-        }
+        },
+        getDefaultSku(cpbh, skubh) {
+            this.$api.selectProductStock({ 
+                    cpbh, 
+                    skubh,
+                    beginDate: '2022-07-11',
+                    endDate: '2022-07-20'
+                }).then(res => {
+                this.skuList = res.data
+            })
+        } 
     }
 }
 </script>
@@ -330,10 +345,11 @@ export default {
         }
     }
     .exchange-wrapper {
-        margin: 30px;
+        margin: 0 30px;
         background: #FFFFFF;
         border-radius: 20px;
         padding: 30px;
+        margin-top: -30px;
         box-shadow: 0px 0px 23px 0px rgba(147,147,147,0.2000);
         .start-city {
             font-size: 32px;
@@ -361,7 +377,7 @@ export default {
                 font-size: 22px;
                 font-weight: 500;
                 color: #17AA7D;
-                line-height: 30px;
+                line-height: 40px;
                 word-wrap: break-word;
                 z-index: 3;
             }

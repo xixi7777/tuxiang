@@ -1,3 +1,4 @@
 export default {
-    currentTab: state => state.currentTab
+    currentTab: state => state.currentTab,
+    appid: state => state.appid
 }

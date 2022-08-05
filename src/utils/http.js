@@ -23,7 +23,6 @@ export default class Request {
 				method,
 				header,
 				success: res => {
-					console.log(res)
 					if (res.data.code === 200) {
 						resolve(res.data)
 					} else {
@@ -49,7 +48,6 @@ export default class Request {
 					}
 				},
 				fail: err => {
-					console.log(err)
 					uni.showToast({
 						title: `${err.data.msg}`,
 						icon: 'none'

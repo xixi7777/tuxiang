@@ -34,7 +34,7 @@
     </view>
 </template>
 <script>
-import Request from "@/utils/api.js";
+const WXBizDataCrypt = require('../../utils/RdWXBizDataCrypt.js')
 export default {
     data() {
         return {
@@ -42,10 +42,12 @@ export default {
             show: false,
             userInfo: {},
             openid: '',
-            jsCode: ''
+            jsCode: '',
+            appid: ''
         }
     },
     onLoad() {
+        this.getAppBaseInfo()
         const openid = uni.getStorageSync('openid')
         if (openid) {
             uni.reLaunch({
@@ -54,12 +56,16 @@ export default {
         }
     },
     methods: {
+        getAppBaseInfo() {
+            const appData = uni.getAppBaseInfo()
+            this.appid = appData.host.appId
+        },
         showGetPhoneModal() {
             this.show = true
         },
         getPhoneNumber(e) {
-            const { detail } = e
-            if (!detail.code) {
+            const { detail: { code, encryptedData, iv } } = e
+            if (!code) {
                 // this.show = false
                 this.$refs.uToast.show({
                     type: 'default',
@@ -71,9 +77,15 @@ export default {
             let p3 = this.userLogin(this.jsCode)
 
             p3.then(loginRes => {
-                uni.setStorageSync('openid', loginRes.openid);
+                const { sessionKey, openid } = loginRes.data
+
+                uni.setStorageSync('openid', openid);
                 uni.setStorageSync('userinfo', this.userInfo);
-                this.editUserInfo(loginRes.openid, this.userInfo)
+
+                const pc = new WXBizDataCrypt(this.appid, sessionKey)
+                const decryptedData = pc.decryptData(encryptedData , iv)
+
+                this.editUserInfo(openid, this.userInfo, decryptedData.phoneNumber)
                 uni.reLaunch({
                     url: '/pages/tabBar/home/index'
                 });
@@ -90,6 +102,7 @@ export default {
                     lang: 'zh_CN',
                     desc: '获取你的昵称、头像、地区及性别',
                     success: (res) => {
+                        console.log(res)
                         resolve(res)
                     },
                     fail: (err) => {
@@ -103,6 +116,7 @@ export default {
             return new Promise((resolve, reject) => {
                 uni.login({
                     success: (res) => {
+                        console.log(res)
                         resolve(res.code)
                     },
                     fail: (err) => {
@@ -120,12 +134,14 @@ export default {
                 })
             })
         },
-        editUserInfo(openid, userInfo) {
+        editUserInfo(openid, userInfo, phone) {
+            console.log(userInfo)
             this.$api.editUserVo({
                 openid,
                 nickName: userInfo.nickName,
                 imageUrl: userInfo.avatarUrl,
-                xb: userInfo.gender
+                xb: userInfo.gender === 1 ? '男' : userInfo.gender === 2 ? '女' : '未知',
+                phone
             }).then(res => {})
         },
         login() {
@@ -141,29 +157,21 @@ export default {
             }).then(code => {
                 return new Promise((resolve, reject) => {
                     p2.then(res => {
+                        const { userInfo } = res
                         resolve({
                             code,
-                            userInfo: res.userInfo
+                            userInfo
                         })
                     }).catch(err => {
                         reject(err)
                     })
                 })
             }).then(res => {
-                this.jsCode = res.code
-                this.userInfo = res.userInfo
-                // this.showGetPhoneModal()
-
-                let p3 = this.userLogin(this.jsCode)
-
-                p3.then(loginRes => {
-                    uni.setStorageSync('openid', loginRes.data.openid);
-                    uni.setStorageSync('userinfo', this.userInfo);
-                    this.editUserInfo(loginRes.data.openid, this.userInfo)
-                    uni.reLaunch({
-                        url: '/pages/tabBar/home/index'
-                    });
-                })
+                const { code, userInfo } = res
+                
+                this.jsCode = code
+                this.userInfo = userInfo
+                this.showGetPhoneModal()
             })
         }
     }

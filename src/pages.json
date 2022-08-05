@@ -154,7 +154,7 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
 			}
-		},
+		}
 	],
 	"tabBar": {
 		"color": "#000",
