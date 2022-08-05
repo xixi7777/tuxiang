@@ -12,6 +12,14 @@
 			}
 		},
 		{
+			"path": "pages/contact/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
 			"path": "pages/tabBar/home/index",
 			"style": {
 				"navigationBarTitleText": "旅游",
