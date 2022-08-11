@@ -1,10 +1,10 @@
 <template>
-    <view class="top" :style="{ background: backgroundColor }">
+    <view :class="['top', textLeft && 'text-left']" :style="{ background: backgroundColor }">
         <navigator open-type="navigateBack" delta="1" hover-class="navigator-hover-class">
             <view class="back-icon">
                 <u-icon :color="backIconColor" size="20" name="arrow-left"></u-icon>
             </view>
-            <text class="title text-ellipsis">{{ title }}</text>
+            <text class="title text-ellipsis" v-if="title" style="line-height: 20px">{{ title }}</text>
         </navigator>
     </view>
 </template>
@@ -22,6 +22,10 @@ export default {
         title: {
             type: String,
             default: ''
+        },
+        textLeft: {
+            type: Boolean,
+            default: false
         }
     }
 }
@@ -43,6 +47,12 @@ export default {
     .title {
         display: inline-block;
         max-width: 80%;
+    }
+    &.text-left {
+        text-align: left;
+        .title {
+            margin-left: 60px;
+        }
     }
 }
 </style>

@@ -25,7 +25,7 @@
 
         <view class="list-wrapper">
             <view v-for="item in list" :key="item.cpbh">
-                <navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?cpbh=${item.cpbh}`">
+                <navigator hover-class="navigator-hover-class" :url="`/productPages/pages/productDetail/index?cpbh=${item.cpbh}`">
                     <view class="list-item">
                         <view class="left">
                             <text class="top-left" v-if="item.cfd">{{ item.cfd_dictLabel }}出发</text>

@@ -18,7 +18,7 @@
         <u-modal
 			title="绑定手机号"
 			:show="show"
-			content="请先绑定手机号再进行此操作"
+			content="我们需要您的手机号码进行用户绑定"
 			closeOnClickOverlay
 			showCancelButton
 		>
@@ -48,12 +48,6 @@ export default {
     },
     onLoad() {
         this.getAppBaseInfo()
-        const openid = uni.getStorageSync('openid')
-        if (openid) {
-            uni.reLaunch({
-                url: '/pages/tabBar/home/index'
-            });
-        }
     },
     methods: {
         getAppBaseInfo() {
@@ -67,11 +61,7 @@ export default {
             const { detail: { code, encryptedData, iv } } = e
             if (!code) {
                 // this.show = false
-                this.$refs.uToast.show({
-                    type: 'default',
-                    title: '',
-                    message: '请绑定手机号码',
-                })
+                uni.$u.toast('请绑定手机号码')
                 return
             }
             let p3 = this.userLogin(this.jsCode)
@@ -102,7 +92,6 @@ export default {
                     lang: 'zh_CN',
                     desc: '获取你的昵称、头像、地区及性别',
                     success: (res) => {
-                        console.log(res)
                         resolve(res)
                     },
                     fail: (err) => {
@@ -116,7 +105,6 @@ export default {
             return new Promise((resolve, reject) => {
                 uni.login({
                     success: (res) => {
-                        console.log(res)
                         resolve(res.code)
                     },
                     fail: (err) => {
@@ -135,7 +123,6 @@ export default {
             })
         },
         editUserInfo(openid, userInfo, phone) {
-            console.log(userInfo)
             this.$api.editUserVo({
                 openid,
                 nickName: userInfo.nickName,

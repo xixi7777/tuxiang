@@ -1,5 +1,5 @@
 <template>
-    <view class="detail-container">
+    <view class="detail-container" v-if="product.cpmc">
         <top title="商品详情" />
         <view class="photo-wrapper">
             <u-swiper
@@ -64,12 +64,12 @@
             </view>
             <view class="exchange-date__wrapper">
                 <view class="more-choose">
-                    <navigator :url="`/pages/selectDate/index?cpbh=${product.cpbh}`" hover-class="navigator-hover-class">更多班期</navigator>
+                    <navigator :url="`/productPages/pages/selectDate/index?product=${JSON.stringify(product)}`" hover-class="navigator-hover-class">更多班期</navigator>
                 </view>
                 <view class="scroll-list-wrapper">
                     <scroll-view scroll-x="true" class="scroll">
-                        <view :class="['dates-item', index === 0 && 'is-active']" v-for="(item, index) in skuList" :key="index">
-                            <navigator :url="`/pages/selectDate/index?cpbh=${product.cpbh}&skubh=${item.skubh}`" hover-class="navigator-hover-class">
+                        <view :class="['dates-item', isSelected(item) && 'is-active']" v-for="(item, index) in skuList" :key="index">
+                            <navigator :url="`/productPages/pages/selectDate/index?skubh=${item.skubh}&kcrq=${item.kcrq}`" hover-class="navigator-hover-class">
                                 <text>{{ moment(item.kcrq).format('MM-DD') }}</text>
                                 <text>{{ weekdays[moment(item.kcrq).isoWeekday()] }}</text>
                                 <text>￥{{ item.crj }}</text>
@@ -104,6 +104,7 @@
 import Top from '@/components/top/Top'
 import _ from 'lodash'
 import moment from 'moment'
+import { mapMutations  } from 'vuex'
 export default {
     components: {
         Top
@@ -134,15 +135,20 @@ export default {
         }
     },
     methods: {
+        ...mapMutations(['setOrderProduct']),
         moment,
+        isSelected(item) {
+            return moment().format('YYYY-MM-DD') == item.kcrq
+        },
         toSelectDate() {
             uni.navigateTo({
-                url: `/pages/selectDate/index?cpbh=${this.product.cpbh}`
+                url: `/productPages/pages/selectDate/index`
             })
         },
         getProductDetail(cpbh) {
             this.$api.selectProductVo({ cpbh }).then(res => {
                 this.product = res.data
+                this.setOrderProduct(this.product)
                 this.getDefaultSku(res.data.cpbh, res.skubh)
             })
         },
@@ -151,11 +157,16 @@ export default {
                     cpbh, 
                     skubh,
                     beginDate: '2022-07-11',
-                    endDate: '2022-07-20'
+                    endDate: '2023-07-20'
                 }).then(res => {
-                this.skuList = res.data
+                    this.skuList = this.sortSkuByDate(res.data)
             })
-        } 
+        },
+        sortSkuByDate(list) {
+            return list.sort((a, b) => {
+                return Date.parse(a.kcrq.replace(/-/g, '/')) - Date.parse(b.kcrq.replace(/-/g, '/'))
+            })
+        }
     }
 }
 </script>

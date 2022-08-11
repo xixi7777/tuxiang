@@ -45,12 +45,11 @@
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png">
                         </image>
                     </view>
-                    <view class="item-line">
+                    <view class="item-line" v-for="(item, index) in cxrList" :key="index">
                         <image class="pre-img"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png"></image>
                         <text class="key">出行人</text>
-                        <text class="value text-ellipsis">王学良</text>
-                        <view class="add">+</view>
+                        <text class="value text-ellipsis">{{ item.xm }}</text>
                     </view>
                     <view>
                         <image class="decor left-decor"
@@ -66,27 +65,27 @@
                         <image class="pre-img"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png"></image>
                         <text class="key">联系人</text>
-                        <text class="value">王大锤</text>
+                        <text class="value">{{ orderDetail.lxrxm }}</text>
                     </view>
                     <view class="item-line">
                         <image class="pre-img"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png">
                         </image>
                         <text class="key">手机号</text>
-                        <text class="value">86 *******0555</text>
+                        <text class="value">86 {{ orderDetail.lxrdh }}</text>
                     </view>
                     <view class="item-line">
                         <image class="pre-img"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png">
                         </image>
                         <text class="key">身份证</text>
-                        <text class="value">11************2430</text>
+                        <text class="value">{{ orderDetail.zjhm || '' }}</text>
                     </view>
                     <view class="item-line">
                         <image class="pre-img"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_date.png"></image>
                         <text class="key">出行时间</text>
-                        <text class="value">2022.1.1～2022.1.5</text>
+                        <text class="value">{{ orderDetail.cxrq }}</text>
                     </view>
                     <view>
                         <image class="decor left-decor"
@@ -109,7 +108,7 @@
                         <image class="pre-img"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_no.png"></image>
                         <text class="key">订单号</text>
-                        <text class="value">21616142022062331801</text>
+                        <text class="value">{{ orderDetail.ddbh }}</text>
                     </view>
                     <view class="item-line">
                         <image class="pre-img"
@@ -117,44 +116,58 @@
                         <text class="key">时间</text>
                         <text class="value">2022.06.23 22:40:39</text>
                     </view>
-                    <view>
+                    <!-- <view>
                         <image class="decor left-decor"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
                         <image class="decor right-decor"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
-                    </view>
-                </view>
-
-                <!-- 评价 -->
-                <view class="detail-item appraise">
-                    <view class="item-line"><text class="item-title">您愿意推荐朋友们使用某某预订旅游产品吗？</text></view>
-                    <view class="appraise-txt">
-                        <text class="no-satisfy">非常不满意</text>
-                        <text class="ordinary">一般</text>
-                        <text class="satisfy">非常满意</text>
-                    </view>
-                    <view class="">
-                        <view :class="['appraise-item', { 'active': index < 3 }]" v-for="(item, index) in appraise"
-                            :key="index">{{
-                                    item
-                            }}</view>
-                    </view>
+                    </view> -->
                 </view>
             </view>
 
             <view class="bottom-btn">
-                <button class="btn btn-proto">电子合同</button>
-                <button class="btn btn-refund">申请退款</button>
+                <u-button shape="circle" @click="toRefund">申请退款</u-button>
             </view>
         </view>
     </view>
 </template>
 
 <script>
+import _ from 'lodash'
 export default {
     data() {
         return {
-            appraise: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            appraise: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            orderId: '',
+            orderDetail: {}
+        }
+    },
+    onLoad(option) {
+        this.orderId = option.id
+    },
+    computed: {
+        cxrList() {
+            return _.get(this.orderDetail, ['cxrList']) || []
+        }
+    },
+    methods: {
+        getDetail() {
+            this.$api.orderDetail({ id: this.orderId }).then(res => {
+                this.orderDetail = res.data
+            })
+        },
+        toRefund() {
+            uni.navigateTo({ url: '/orderPages/pages/refund/index' })
+        }
+    },
+    watch: {
+        orderId: {
+            immediate: true,
+            handler(n) {
+                if (n) {
+                    this.getDetail()
+                }
+            }
         }
     }
 }
@@ -356,14 +369,15 @@ export default {
     padding: 15px 30px;
     text-align: right;
 
-    .btn {
+    /deep/ .u-button {
         display: inline-block;
         width: 240px;
         height: 90px;
         line-height: 90px;
-        border-radius: 45px;
         font-size: 32px;
         font-weight: 500;
+        background: rgba(0,0,0,0.0600);
+        border: none;
     }
 
     .btn-proto {

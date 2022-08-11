@@ -52,12 +52,12 @@ export default {
         {
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/wodetuandui.png',
           title: '我的团队',
-          url: '/pages/myTeam/index',
+          url: '/teamsPages/pages/myTeam/index',
         },
         {
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/chuangjiantuandui.png',
           title: '创建团队',
-          url: '/pages/createTeam/index',
+          url: '/teamsPages/pages/createTeam/index',
         },
         {
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/store.png',
@@ -94,7 +94,6 @@ export default {
     },
     getTeams() {
       this.$api.teamList(this.query).then(res => {
-        console.log(res)
         this.teams = res.rows
         this.total = res.total
       })

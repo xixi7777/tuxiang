@@ -4,22 +4,6 @@
 	},
 	"pages": [
 		{
-			"path": "pages/login/index",
-			"style": {
-				"navigationBarTitleText": "旅游",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/contact/index",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
 			"path": "pages/tabBar/home/index",
 			"style": {
 				"navigationBarTitleText": "旅游",
@@ -52,37 +36,14 @@
 			}
 		},
 		{
-			"path": "pages/leaderboard/index",
+			"path": "pages/login/index",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "旅游",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
 			}
 		},
-		{
-			"path": "pages/recommend/index",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/productDetail/index",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/myTeam/index",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		},
+		
 		{
 			"path": "pages/editInfo/index",
 			"style": {
@@ -108,60 +69,125 @@
 			}
 		},
 		{
-			"path": "pages/createTeam/index",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/selectDate/index",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
 			"path": "pages/signUpList/index",
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
 			}
+		}
+	],
+	"subPackages": [
+		{
+			"root": "productPages",
+			"pages": [
+				{
+					"path": "pages/leaderboard/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/selectDate/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/productDetail/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/recommend/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/traveler/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				}
+			]
 		},
 		{
-			"path": "pages/member/index",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
+			"root": "orderPages",
+			"pages": [
+				{
+					"path": "pages/myOrders/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/ordersDetail/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/orderConfirm/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/refund/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				}
+			]
 		},
 		{
-			"path": "pages/myOrders/index",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/ordersDetail/index",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/orderConfirm/index",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
+			"root": "teamsPages",
+			"pages": [
+				{
+					"path": "pages/myTeam/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/createTeam/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/member/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				}
+			]
 		}
 	],
 	"tabBar": {
@@ -172,26 +198,26 @@
 		"list": [
 			{
 				"pagePath": "pages/tabBar/home/index",
-				"iconPath": "static/icon/home@3x.png",
-				"selectedIconPath": "static/icon/home_selected@3x.png",
+				"iconPath": "static/icon/home.png",
+				"selectedIconPath": "static/icon/home_selected.png",
 				"text": "首页"
 			},
 			{
 				"pagePath": "pages/tabBar/spellGroup/index",
-				"iconPath": "static/icon/spell_group@3x.png",
-				"selectedIconPath": "static/icon/spell_group_selected@3x.png",
+				"iconPath": "static/icon/spell_group.png",
+				"selectedIconPath": "static/icon/spell_group_selected.png",
 				"text": "拼团"
 			},
 			{
 				"pagePath": "pages/tabBar/teams/index",
-				"iconPath": "static/icon/teams@3x.png",
-				"selectedIconPath": "static/icon/teams_selected@3x.png",
+				"iconPath": "static/icon/teams.png",
+				"selectedIconPath": "static/icon/teams_selected.png",
 				"text": "团队"
 			},
 			{
 				"pagePath": "pages/tabBar/personal/index",
-				"iconPath": "static/icon/me@3x.png",
-				"selectedIconPath": "static/icon/me_selected@3x.png",
+				"iconPath": "static/icon/me.png",
+				"selectedIconPath": "static/icon/me_selected.png",
 				"text": "我的"
 			}
 		]

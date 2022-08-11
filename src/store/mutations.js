@@ -1,10 +1,24 @@
-import types from './mutationTypes'
 
 export default {
-    [types.SET_CURRENT_TAB](state, current) {
+    setCurrentTab(state, current) {
         state.currentTab = current
     },
-    [types.SET_APPID](state, appid) {
+    setAppid(state, appid) {
         state.appid = appid
+    },
+    setCxrSelectedList(state, cxrSelectedList) {
+        state.cxrSelectedList = cxrSelectedList
+    },
+    setOrderProduct(state, orderProduct) {
+        state.orderProduct = orderProduct
+    },
+    setProductSkuList(state, productSkuList) {
+        state.productSkuList = productSkuList
+    },
+    setOrderInfo(state, orderInfo) {
+        state.orderInfo = orderInfo
+    },
+    setCxrList(state, cxrList) {
+        state.cxrList = cxrList
     }
 }

@@ -17,7 +17,7 @@
                 <view class="me-avatar">
                     <u-avatar :src="userinfo.imageUrl"></u-avatar>
                 </view>
-                <navigator url="/pages/myTeam/index" hover-class="navigator-hover-class">
+                <navigator url="/teamsPages/pages/myTeam/index" hover-class="navigator-hover-class">
                     <view class="fanhui">
                         <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png">
                         </cover-image>
@@ -42,7 +42,7 @@
                 <view class="title"><text>我的订单</text></view>
                 <view class="order-type">
                     <view class="item" v-for="(item, index) in orderTypes" :key="index">
-                        <navigator :url="item.url">
+                        <navigator :url="`/orderPages/pages/myOrders/index?status=${item.status}`" hover-class="navigator-hover-class">
                             <view :class="['icon', `icon__${index + 1}`]">
                                 <cover-image :src="item.icon"></cover-image>
                             </view>
@@ -85,11 +85,10 @@ export default {
         return {
             userinfo: {},
             orderTypes: [
-                { title: '全部', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dingdanorder.png', url: '/pages/myOrders/index' },
-                { title: '待支付', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/qianbao.png', url: '/pages/myOrders/index?' },
-                { title: '待出行', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/lvhangxiang.png', url: '/pages/myOrders/index?' },
-                { title: '取消', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/daishouhuo.png', url: '/pages/myOrders/index?' },
-                { title: '退款', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/tuikuanshouhou.png', url: '/pages/myOrders/index?' }
+                { title: '全部', status: 1, icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dingdanorder.png' },
+                { title: '待付款', status: 2, icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/qianbao.png' },
+                { title: '未出行', status: 3, icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/lvhangxiang.png' },
+                { title: '退款', status: 4, icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/tuikuanshouhou.png' }
             ],
             functions: [
                 { title: '积分明细', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/jifenmingxi.png' },

@@ -47,6 +47,9 @@
     "test:mp-baidu": "cross-env UNI_PLATFORM=mp-baidu jest -i",
     "test:mp-weixin": "cross-env UNI_PLATFORM=mp-weixin jest -i"
   },
+  "--minimize": {
+    "dev:mp-weixin": "cross-env NODE_ENV=development UNI_PLATFORM=mp-weixin vue-cli-service uni-build --minimize"
+  },
   "dependencies": {
     "@dcloudio/uni-app-plus": "^2.0.1-34920220630001",
     "@dcloudio/uni-h5": "^2.0.1-34920220630001",
@@ -95,6 +98,7 @@
     "@vue/cli-service": "~4.5.15",
     "babel-plugin-import": "^1.11.0",
     "compression-webpack-plugin": "^6.1.1",
+    "cross-env": "^7.0.3",
     "jest": "^25.4.0",
     "mini-types": "*",
     "miniprogram-api-typings": "*",

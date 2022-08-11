@@ -1,4 +1,9 @@
 export default {
     currentTab: 0,
-    appid: ''
+    appid: '',
+    cxrSelectedList: [],
+    cxrList: [],
+    orderProduct: {},
+    productSkuList: [],
+    orderInfo: {}
 }

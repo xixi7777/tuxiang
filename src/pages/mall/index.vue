@@ -51,7 +51,7 @@
 			<view class="top">
 				<text class="title">热门推荐</text>
 				<view class="more">
-					<!-- <navigator url="/pages/leaderboard/index" hover-class="navigator-hover-class"> -->
+					<!-- <navigator url="/productPages/pages/leaderboard/index" hover-class="navigator-hover-class"> -->
 						<text>查看全部</text>
 						<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
 					<!-- </navigator> -->
@@ -64,7 +64,7 @@
 						<view class="list-image">
 							<image :src="item.url"></image>
 						</view>
-						<!-- <navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?id=${item.id}`"> -->
+						<!-- <navigator hover-class="navigator-hover-class" :url="`/productPages/pages/productDetail/index?id=${item.id}`"> -->
 							<view class="scroll-title"><text>{{ item.name }}</text></view>
 							<view><text class="price-code">￥</text><text class="price">{{ item.price }}</text><text class="sale">{{ item.sale }}</text></view>
 						<!-- </navigator> -->

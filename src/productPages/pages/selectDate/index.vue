@@ -1,15 +1,15 @@
 <template>
     <view class="app-container">
-        <top :title="`【${name}】`" />
+        <top :title="name" />
 
         <view class="product">
             <view class="image">
-                <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_2.png" />
+                <image :src="productImage" lazy-load />
             </view>
             <view>
-                <view class="product-title text-ellipsis"><text>{{ `【${name}】` }}</text></view>
+                <view class="product-title text-ellipsis"><text>{{ name }}</text></view>
                 <view class="product-price">
-                    <text>￥ {{ price }}</text>
+                    <text>￥ {{ totalPrice }}</text>
                 </view>
             </view>
         </view>
@@ -18,24 +18,17 @@
             <view class="project-group__item" v-for="p in skuggList" :key="p.id">
                 <view class="project-title"><text>{{ p.ggmc }}</text></view>
                 <view class="project-list">
-                    <text @click="changeSkugg(p, c)" :class="[skuSelected[p.id] == c.id && 'is-active']" v-for="c in p.childList" :key="c.id">{{ c.ggmc }}</text>
+                    <text 
+                    @click="changeSkugg(p, c)" 
+                    :class="[skuXm[p.id] == c.id && 'is-active']" 
+                    v-for="c in p.childList" 
+                    :key="c.id">{{ c.ggmc }}</text>
                 </view>
             </view>
         </view>
 
         <view class="calendar-wrapper">
-            <view class="months-wrapper">
-                <scroll-view scroll-x="true" class="scroll">
-                    <view @click="selectMonth(m)" :class="['month-item', m == currentMonth && 'is-selected']" v-for="(m, i) in months" :key="i">
-                        <text>{{ m }}</text>
-                        <text class="line"></text>
-                    </view>
-                </scroll-view>
-            </view>
-
-            <view class="calendar-content">
-
-            </view>
+            <Calendar :sku-list="skuList" @select-date="selectDate" :default-select-date="calendarDefaultDate" />
         </view>
 
         <view class="person-type">
@@ -45,18 +38,14 @@
         <view class="quantity-wrapper">
             <view><text>购买数量</text></view>
             <view class="quantity-input">
-                <NumberInput v-model="count" />
-                <!-- <u-input shape="circle" type="number" v-model="count">
-                    <view slot="prefix" @click="decrease"><u-icon name="minus"></u-icon></view>
-                    <view slot="suffix" @click="increase"><u-icon name="plus"></u-icon></view>
-                </u-input> -->
+                <NumberInput v-model="count" :max="countMax" />
             </view>
         </view>
 
         <view class="fixed-button">
-            <view class="price-wrapper"><text>￥ {{ price }}</text></view>
+            <view class="price-wrapper"><text>￥ {{ totalPrice }}</text></view>
             <view class="button-wrapper">
-                <u-button type="primary" shape="circle">立即购买</u-button>
+                <u-button :disabled="buyDisabled" type="primary" shape="circle" @click="confirmOrder">立即购买</u-button>
             </view>
         </view>
     </view>
@@ -64,89 +53,102 @@
 <script>
 import Top from '@/components/top/Top'
 import NumberInput from '@/components/numberInput/NumberInput'
+import Calendar from '@/components/calendar/Calendar'
+
 import _ from 'lodash'
 import moment from 'moment'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
     components: {
         Top,
-        NumberInput
+        NumberInput,
+        Calendar
     },
     data() {
         return {
-            currentMonth: '',
             defaultSkubh: '',
+            calendarDefaultDate: '',
             personTypes: ['成人', '儿童'],
             skuggList: [],
+            skuList: [],
             count: 0,
-            price: 0,
-            skuSelected: {},
-            months: [],
+            skuXm: {},
+            selectedSku: {},
             productStockParam: {
                 cpbh: '',
                 skubh: '',
-                beginDate: '',
-                endDate: ''
+                beginDate: '2022-07-11',
+                endDate: '2023-07-11'
             }
         }
     },
     onLoad(option) {
-        const { cpbh, skubh } = option
+        let { skubh, kcrq } = option
         this.defaultSkubh = skubh || ''
-        this.getProductSku(cpbh)
-        // this.getProductDetail(cpbh)
-        this.productStockParam = {
-            ...this.productStockParam,
-            skubh: this.defaultSkubh,
-            cpbh
-        }
-        this.setMonths()
+        this.calendarDefaultDate = kcrq || ''
+        this.productStockParam.skubh = skubh
     },
     computed: {
-        name() {
+        ...mapGetters(['orderProduct']),
+        productImage() {
+            let images = _.get(this.orderProduct, ['cpzt']) || ''
+            images = images.split(',')
+            return images[0]
+        },
+        skuName() {
             let s = []
             this.skuggList.forEach(item => {
                 item.childList.forEach(child => {
-                    if (Object.values(this.skuSelected).includes(child.id)) {
+                    if (Object.values(this.skuXm).includes(child.id)) {
                         s.push(child.ggmc)
                     }
                 })
             })
             return s.join('+')
+        },
+        name() {
+            return _.get(this.orderProduct, ['cpmc'])
+        },
+        buyDisabled() {
+            // return false
+            return !this.count || !this.selectedSku.kcrq
+        },
+        totalPrice() {
+            const crj = _.get(this.selectedSku, ['crj'])*1 || 0
+            return crj * this.count
+        },
+        countMax() {
+            return _.get(this.selectedSku, ['stock']) || -1
         }
     },
     methods: {
-        selectMonth(month) {
-            this.currentMonth = month
-        },
-        setMonths() {
-            const nowMonth = moment().month()
-            this.currentMonth = `${nowMonth+1}月`
-            this.months.push(this.currentMonth)
-            for (let i = 1, j = 0; i < 12; i++) {
-                if (nowMonth+i+1 >= 13) {
-                    const monthStr = `${moment().year()+1}年${j+1}月`
-                    const nextYearMonth = j === 0 ? monthStr.substring(2): `${j+1}月`
-                    this.months.push(nextYearMonth)
-                    j++
-                } else {
-                    this.months.push(`${nowMonth+i+1}月`)
-                }
-            }
+        ...mapMutations(['setOrderInfo']),
+        selectDate(date) {
+            this.selectedSku = date
         },
         changeSkugg(p, c) {
-            if (!this.skuSelected[p.id] || this.skuSelected[p.id] !== c.id) {
-                this.skuSelected[p.id] = c.id
+            if (!this.skuXm[p.id] || this.skuXm[p.id] !== c.id) {
+                this.skuXm[p.id] = c.id
             }
-            else if (this.skuSelected[p.id] == c.id) {
-                this.skuSelected[p.id] = ''
+            else if (this.skuXm[p.id] == c.id) {
+                this.skuXm[p.id] = ''
             }
-            if (Object.values(this.skuSelected).every(Boolean)) {
-                this.productStockParam.skubh = Object.values(this.skuSelected).join('_')
+            if (Object.values(this.skuXm).every(Boolean)) {
+                this.productStockParam.skubh = Object.values(this.skuXm).join('_')
             }
         },
         setSkuParentId() {
+            let skus = []
+            if (this.defaultSkubh) {
+                skus = this.defaultSkubh.split('_')
+            }
             this.skuggList.forEach(item => {
-                this.$set(this.skuSelected, item.id, '')
+                this.$set(this.skuXm, item.id, '')
+                item.childList.forEach(sub => {
+                    if (skus.includes(sub.id)) {
+                        this.skuXm[item.id] = sub.id
+                    }
+                })
             })
         },
         getProductSku(cpbh) {
@@ -156,28 +158,29 @@ export default {
                 this.setSkuParentId()
             })
         },
-        getProductDetail(cpbh) {
-            this.$api.selectProductVo({ cpbh }).then(res => {
-                this.product = res.data
-            })
-        },
         selectProductStock: _.debounce(function() {
             this.$api.selectProductStock(this.productStockParam).then(res => {
-
+                this.skuList = res.data
+                if (this.defaultSkubh) {
+                    this.skuList.forEach(sku => {
+                        if (sku.skubh === this.defaultSkubh) {
+                            this.selectedSku = sku
+                        }
+                    })
+                }
             })
         }, 300),
-        increase() {
-            console.log('increase')
-            if (this.count < this.product.stock) {
-                this.count++  
-            }
-        },
-        decrease() {
-            console.log('decrease')
-            if (this.count > 0) {
-                this.count--
-            }
-        },
+        confirmOrder() {
+            this.setOrderInfo({
+                product: this.orderProduct,
+                count: this.count,
+                sku: this.selectedSku,
+                skuName: this.skuName
+            })
+            uni.navigateTo({ 
+                url: '/orderPages/pages/orderConfirm/index'
+            })
+        }
     },
     watch: {
         productStockParam: {
@@ -185,6 +188,20 @@ export default {
             deep: true,
             handler(n) {
                 this.selectProductStock()
+            }
+        },
+        orderProduct: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                if (n.cpbh) {
+                    this.getProductSku(n.cpbh)
+                    this.productStockParam = {
+                        ...this.productStockParam,
+                        skubh: this.defaultSkubh,
+                        cpbh: n.cpbh
+                    }
+                }
             }
         }
     }
@@ -290,35 +307,6 @@ export default {
     margin-top: 45px;
     padding-bottom: 54px;
     border-bottom: 1px dashed #d7d7d7;
-
-    .month-item {
-        display: inline-block;
-        font-size: 30px;
-        font-weight: 500;
-        color: #333333;
-        line-height: 35px;
-        height: 45px;
-        position: relative;
-        &:not(:first-child) {
-            margin-left: 74px;
-        }
-        .line {
-            display: none;
-        }
-        &.is-selected {
-            color: #17AA7D;
-            .line {
-                display: block;
-                position: absolute;
-                height: 8px;
-                background-color: #17AA7D;
-                border-radius: 4px;
-                bottom: 0;
-                left: 5px;
-                right: 5px;
-            }
-        }
-    }
 }
 .person-type {
     margin-top: 40px;

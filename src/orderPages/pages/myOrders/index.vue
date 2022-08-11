@@ -17,7 +17,12 @@
 
 
         <view class="tabs-status">
-            <u-tabs :list="listTabs" @click="click" lineWidth="30" lineColor="#17AA7D" :activeStyle="{
+            <u-tabs 
+            :list="listTabs" 
+            @click="changeOrderStatus" 
+            lineColor="#17AA7D" 
+            :current="currentTab"
+            :activeStyle="{
                 fontWeight: 'bold',
                 transform: 'scale(1.05)'
             }"></u-tabs>
@@ -35,7 +40,7 @@
                 </view>
             </view>
             <view class="order-list">
-                <view class="outer order-item" v-for="(item, index) in orderList" :key="index">
+                <view class="outer order-item" v-for="item in orderList" :key="item.id">
                     <view class="status-box">
                         <view class="left">
                             <image class="logo"
@@ -46,7 +51,7 @@
                         </view>
                         <view class="right"><text>{{ item.status }}</text></view>
                     </view>
-                    <navigator url="/pages/ordersDetail/index">
+                    <navigator :url="`/orderPages/pages/ordersDetail/index?id=${item.id}`" hover-class="navigator-hover-class">
                         <view class="info-box">
                             <view class="left">
                                 <image class="img" mode="scaleToFill" :src="item.url"></image>
@@ -54,93 +59,82 @@
                             <view class="right">
                                 <view class="title-box">
                                     <view class="title">
-                                        <text>{{ item.title }}</text>
+                                        <text>{{ item.spmc }}</text>
                                     </view>
                                     <view class="num-box">
                                         <view class="price"> <text>{{ '￥' + item.price }}</text></view>
-                                        <view class="num"><text>× {{ item.num }}</text></view>
+                                        <view class="num"><text>× {{ item.gmsl }}</text></view>
                                     </view>
                                 </view>
                                 <view class="detail">
-                                    <view>{{ item.desc }}</view>
-                                    <view><text>出行日期：{{ item.date }}</text></view>
+                                    <view>{{ item.skumc }}</view>
+                                    <view><text>出行日期：{{ item.cxrq }}</text></view>
                                 </view>
                             </view>
                         </view>
                     </navigator>
                     <view class="price-box">
-                        <text class="total-price">总价{{ '￥' + item.totalPrice }}</text>
-                        <text>实付款<text class="pay-price">{{ '￥' + item.payPrice }}</text></text>
+                        <text class="total-price">总价{{ '￥' + item.price }}</text>
+                        <text>实付款<text class="pay-price">{{ '￥' + item.realPrice }}</text></text>
                     </view>
                     <view class="btn-box">
-                        <button class="btn">取消订单</button>
+                        <u-button shape="circle" @click="toRefund">取消订单</u-button>
                     </view>
                 </view>
-
-
             </view>
         </view>
-
     </view>
 </template>
 
 <script>
+import _ from 'lodash'
 export default {
     data() {
         return {
-            listTabs: [{ name: '全部', }
-                , { name: '待付款', }
-                , { name: '处理中', }
-                , { name: '未出行', }
-                , { name: '待评价', }
-                , { name: '退款/售后', }
+            currentTab: 0,
+            query: {
+                status: 1,
+                openid: uni.getStorageSync('openid')
+            },
+            listTabs: [{ name: '全部', status: 1 }
+                , { name: '待付款', status: 2 }
+                , { name: '未出行', status: 3 }
+                , { name: '退款', status: 4 }
             ],
-            orderList: [{
-                title: '三亚槟榔谷南湾猴岛一日游海南陵水跟团旅游门票岛一日游海南陵水跟团旅游门票',
-                desc: 'A.猴岛+槟榔谷；成人',
-                date: '7月8日',
-                price: '188.00',
-                totalPrice: '188.00',
-                payPrice: '188.00',
-                status: '待付款',
-                num: 1,
-                url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
-            }, {
-                title: '三亚槟榔谷南湾猴岛一日游海南陵水跟团旅游门票电…',
-                desc: 'A.猴岛+槟榔谷；成人',
-                date: '7月8日',
-                price: '188.00',
-                totalPrice: '¥188.00',
-                payPrice: '¥188.00',
-                status: '待付款',
-                num: 1,
-                url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
-            }, {
-                title: '三亚槟榔谷南湾猴岛一日游海南陵水跟团旅游门票电…',
-                desc: 'A.猴岛+槟榔谷；成人',
-                date: '7月8日',
-                price: '188.00',
-                totalPrice: '¥188.00',
-                payPrice: '¥188.00',
-                status: '待付款',
-                num: 1,
-                url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
-            }, {
-                title: '三亚槟榔谷南湾猴岛一日游海南陵水跟团旅游门票电…',
-                desc: 'A.猴岛+槟榔谷；成人',
-                date: '7月8日',
-                totalPrice: '¥188.00',
-                payPrice: '¥188.00',
-                status: '待付款',
-                num: 1,
-                url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
-            }
-            ],
+            orderList: [],
+            
         }
     },
+    onLoad(option) {
+        this.query.status = option.status*1
+        this.listTabs.forEach((tab, index) => {
+            if (tab.status == this.query.status) {
+                this.currentTab = index
+            }
+        })
+    },
     methods: {
-        click(item) {
-            console.log('item', item);
+        changeOrderStatus(item) {
+            this.query.status = item.status
+        },
+        getOrderList() {
+            this.$api.orderList(this.query).then(res => {
+                this.orderList = res.data
+            })
+        },
+        toRefund() {
+            uni.navigateTo({ url: '/orderPages/pages/refund/index' })
+        }
+    },
+    watch: {
+        query: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                if (n.openid) {
+                    this.getOrderList()
+                }
+            }
         }
     }
 }
@@ -192,6 +186,9 @@ export default {
 
     /deep/ .u-tabs {
         font-size: 26px !important;
+    }
+    /deep/ .u-tabs__wrapper__nav__item {
+        flex: 1 !important;
     }
 }
 
@@ -281,7 +278,7 @@ export default {
         display: flex;
         flex-direction: row;
         margin: 25px 0 30px 0;
-
+        justify-content: space-between;
         .img {
             width: 180px;
             height: 180px;
@@ -295,6 +292,8 @@ export default {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
+                justify-content: space-between;
+                margin-bottom: 20px;
 
                 .title {
                     overflow: hidden;
@@ -329,6 +328,9 @@ export default {
         color: #999;
         margin-right: 10px;
     }
+    .detail {
+        line-height: 32px;
+    }
 
     .price-box {
         text-align: right;
@@ -343,7 +345,7 @@ export default {
         text-align: right;
         margin-top: 20px;
 
-        .btn {
+        /deep/ .u-button {
             display: inline-block;
             width: 200px;
             height: 68px;
@@ -353,7 +355,9 @@ export default {
             border-radius: 48px;
             border: 1px solid #BDBDBD;
             text-align: center;
+            background: rgba(23,170,125,0);
         }
     }
 }
+
 </style>>

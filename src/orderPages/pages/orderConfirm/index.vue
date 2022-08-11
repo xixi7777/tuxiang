@@ -17,24 +17,24 @@
 
         <view class="content-box">
             <view class=" order-info">
-                <view class="info-box" v-for="item in orderItem">
+                <view class="info-box">
                     <view class="order-product">
                         <view class="left">
-                            <image class="img" mode="scaleToFill" :src="item.url"></image>
+                            <image class="img" mode="scaleToFill" :src="productImage"></image>
                         </view>
                         <view class="right">
                             <view class="title">
-                                <text>{{ item.title }}</text>
+                                <text>{{ productName }}</text>
                             </view>
                             <view class="detail">
-                                <view class="text-ellipsis">{{ item.place }}</view>
-                                <view><text>出行日期：{{ item.date }}</text></view>
+                                <view class="text-ellipsis">{{ orderProduct.cfd_dictLabel }}</view>
+                                <view><text>出行日期：{{ moment(selectedSku.kcrq).format('YYYY-MM-DD') }}</text></view>
                             </view>
                         </view>
                     </view>
                     <view class="info-num">
-                        <text>数量:</text>
-                        <text>成人x4、儿童x3、老人x4</text>
+                        <text>数量: </text>
+                        <text>{{ count }}</text>
                     </view>
                     <view class="info-explain">
                         <view class="explain-item">即时确认：此订单支付完成即为预订成功</view>
@@ -51,22 +51,22 @@
 
             <view class="content-item">
                 <view class="item-line"> <text class="item-title">预订人信息</text></view>
-                <u-form labelPosition="left" :model="userInfo" :rules="rules" ref="form1" labelWidth="80">
-                    <u-form-item label="联系人" prop="name"
+                <u-form labelPosition="left" :model="contact" :rules="rules" ref="contactForm" labelWidth="80">
+                    <u-form-item label="联系人" prop="lxrxm"
                         leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png">
-                        <u-input type="text" v-model="userInfo.name" placeholder="请填写订单联系人姓名" />
+                        <u-input type="text" v-model="contact.lxrxm" placeholder="请填写订单联系人姓名" />
                     </u-form-item>
 
-                    <u-form-item label="手机号" prop="phone"
+                    <u-form-item label="手机号" prop="lxrdh"
                         leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png">
-                        <u-input type="number" v-model="userInfo.phone" placeholder="请输入手机号">
+                        <u-input type="number" v-model="contact.lxrdh" placeholder="请输入手机号">
                             <u--text text="+86" slot="prefix" margin="0 3px 0 0" type="tips"></u--text>
                         </u-input>
                     </u-form-item>
 
-                    <u-form-item label="备注" prop="remark"
+                    <u-form-item label="备注" prop="ddbz"
                         leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png">
-                        <u-input type="text" v-model="userInfo.remark" placeholder="如有特殊需要请备注" />
+                        <u-input type="text" v-model="contact.ddbz" placeholder="如有特殊需要请备注" />
                     </u-form-item>
                 </u-form>
                 <view>
@@ -76,7 +76,7 @@
                         src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
                 </view>
             </view>
-            <view class="content-item check-box">
+            <!-- <view class="content-item check-box">
                 <view class="item-line">
                     <text class="item-title">下单之后再填写出行信息</text>
 
@@ -91,17 +91,23 @@
                     <image class="decor right-decor"
                         src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
                 </view>
-            </view>
+            </view> -->
             <view class="content-item travel-info">
                 <view class="item-line"> <text class="item-title">出行信息</text> </view>
-                <u-form :model="dynamicForm" ref="formGoOut">
-                    <view class="item-line" v-for="(item, index) in dynamicForm.counter">
+                <u-form ref="formGoOut">
+                    <view class="item-line" v-for="item in travelers" :key="item.zjhm">
                         <image class="pre-img"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png"></image>
                         <text class="key">出行人</text>
-                        <u-input class="value" type="text" v-model="item.name" placeholder="请添加1个出行人" border='none'>
+                        <u-input 
+                        readonly 
+                        class="value" 
+                        type="text" 
+                        v-model="item.xm" 
+                        placeholder="请添加1个出行人" 
+                        border="none">
                         </u-input>
-                        <view class="add">+</view>
+                        <u-icon name="plus" color="#17AA7D" size="20" @click="addTravelers"></u-icon>
                     </view>
                 </u-form>
 
@@ -109,14 +115,14 @@
 
             <u-popup :show="show" mode="bottom" @close="close">
                 <view class='detail-box'>
-                    <view class="row">
-                        <text>成人</text><text class="num">×3</text>
+                    <view class="row" v-if="crCount">
+                        <text>成人</text><text class="num">￥ {{ selectedSku.crj || 0 }} × {{ crCount }}</text>
+                    </view>
+                    <view class="row" v-if="etCount">
+                        <text>儿童</text><text class="num">￥ {{ selectedSku.etj || 0 }} × {{ etCount }}</text>
                     </view>
                     <view class="row">
-                        <text>儿童</text><text class="num">×1</text>
-                    </view>
-                    <view class="row">
-                        <text>合计</text><text class="num">4</text>
+                        <text>合计</text><text class="num">￥ {{ totalPrice }}</text>
                     </view>
                 </view>
             </u-popup>
@@ -125,46 +131,50 @@
                 <view>
                     <view class="txt">总价</view>
                     <view>
-                        <text class="price">￥5895</text>
+                        <text class="price">￥ {{ totalPrice }}</text>
                         <text @click="show = true">
                             <text class="detail">明细</text>
                             <text class="arrow"></text>
                         </text>
                     </view>
                 </view>
-                <button class="btn">提交订单</button>
+                <button class="btn" @click="submit">提交订单</button>
             </view>
         </view>
+
+        <u-modal 
+        :show="successModal" 
+        :show-confirm-button="false"
+        :show-title="false">
+            <view class="popup-wrapper">
+                <view class="success-icon">
+                    <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/xdcg.png" />
+                </view>
+                <view class="content">下单成功啦</view>
+                <view class="button-wrapper">
+                    <u-button type="primary" shape="circle" @click="toOrder">确定</u-button>
+                    <view class="cancel" @click="successModal = false">关闭</view>
+                </view>
+            </view>
+        </u-modal>
     </view>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import _ from 'lodash'
+import moment from 'moment'
 export default {
     data() {
         return {
-
-            dynamicForm: {
-                'counter': [{ name: '' }, { name: '' }]
-            },
-            orderItem: [{
-                title: '三亚槟榔谷南湾猴岛一日游海南陵水跟团旅游门票岛一日游海南陵水跟团旅游门票',
-                desc: 'A.猴岛+槟榔谷；成人',
-                date: '7月8日',
-                price: '188.00',
-                totalPrice: '188.00',
-                payPrice: '188.00',
-                status: '待付款',
-                num: 1,
-                url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
-                place: '活动地点活动地点活动地点'
-            }],
-            userInfo: {
-                name: '',
-                phone: '',
-                remark: '',
+            successModal: false,
+            contact: {
+                lxrxm: '',
+                lxrdh: '',
+                ddbz: '',
             },
             rules: {
-                name: [
+                lxrxm: [
                     {
                         type: 'string',
                         required: true,
@@ -172,16 +182,14 @@ export default {
                         trigger: ['blur'],
                     },
                 ],
-                phone: [
+                lxrdh: [
                     {
                         required: true,
                         message: '请输入手机号',
                         trigger: ['blur'],
                     },
                     {
-                        // 自定义验证函数
                         validator: (rule, value, callback) => {
-                            // 返回true或者false的
                             return uni.$u.test.mobile(value);
                         },
                         message: '手机号码不正确',
@@ -192,22 +200,95 @@ export default {
             show: false
         };
     },
-    mounted() {
-        this.$refs.form1.setRules(this.rules);
+    computed: {
+        ...mapGetters(['cxrSelectedList', 'orderProduct', 'orderInfo']),
+        productName() {
+            return _.get(this.orderProduct, ['cpmc'])
+        },
+        count() {
+            return _.get(this.orderInfo, ['count']) || 0
+        },
+        selectedSku() {
+            return _.get(this.orderInfo, ['sku']) || {}
+        },
+        productImage() {
+            let images = _.get(this.orderProduct, ['cpzt']) || ''
+            images = images.split(',')
+            return images[0]
+        },
+        travelers() {
+            if (this.cxrSelectedList.length) {
+                return this.cxrSelectedList
+            }
+            return [{ zjhm: '5555555555', xm: '' }]
+        },
+        crCount() {
+            return this.cxrSelectedList.filter(item => item.cxlx == 1).length || 0
+        },
+        etCount() {
+            return this.cxrSelectedList.filter(item => item.cxlx == 2).length || 0
+        },
+        totalPrice() {
+            return this.crCount * (_.get(this.selectedSku, ['crj']) || 0) + this.etCount * (_.get(this.selectedSku, ['etj']) || 0)
+        }
     },
     methods: {
+        moment,
+        toOrder() {
+            uni.navigateTo({ url: '/orderPages/pages/myOrders/index' })
+        },
         submit() {
-            this.$refs.form1
-                .validate()
-                .then((res) => {
-                    uni.$u.toast('校验通过');
+            this.$refs.contactForm.validate().then(res => {
+                const cxrList = this.travelers.filter(item => !!item.zjhm)
+                console.log(cxrList)
+                if (!cxrList.length) {
+                    uni.$u.toast('请至少添加一位出行人！')
+                    return
+                }
+                
+                const params = {
+                    spbh: this.orderInfo.product.cpbh,
+                    spmc: this.orderInfo.product.cpmc,
+                    skubh: this.orderInfo.sku.skubh,
+                    skumc: this.orderInfo.skuName,
+                    cxrq: this.orderInfo.sku.kcrq,
+                    gmsl: this.orderInfo.count,
+                    openid: uni.getStorageSync('openid'),
+                    ...this.contact,
+                    cxrList
+                }
+                this.$api.addOrder(params).then(res => {
+                    if (res.code === 200) {
+                        this.payment(res.data)
+                    } else {
+                        uni.$u.toast(res.msg)
+                    }
                 })
-                .catch((errors) => {
-                    // uni.$u.toast("内容有误噢");
-                });
+            })
+        },
+        payment(param) {
+            wx.requestPayment({
+                timeStamp: param.timeStamp,
+                nonceStr: param.nonceStr,
+                package: param.packageValue,
+                signType: param.signType,
+                paySign: param.paySign,
+                success: res => {
+                    this.successModal = true
+                },
+                fail: err => {
+                    uni.$u.toast('支付失败')
+                },
+                complete: res => {
+                    uni.$u.toast('取消支付')
+                }
+            })
         },
         close() {
             this.show = false
+        },
+        addTravelers() {
+            uni.navigateTo({ url: '/productPages/pages/traveler/index' })
         }
     },
 }
@@ -438,7 +519,7 @@ export default {
     right: 0;
     background: #FFFFFF;
     box-shadow: 0px -6px 10px 0px rgba(0, 0, 0, 0.0600);
-    padding: 15px 30px;
+    padding: 20px 40px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -482,6 +563,45 @@ export default {
         font-size: 32px;
         font-weight: 500;
         color: #fff;
+    }
+}
+.popup-wrapper {
+    // padding: 145px 50px 86px;
+    .success-icon {
+        width: 172px;
+        height: 172px;
+        margin: 0 auto;
+        image {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .content {
+        margin-top: 85px;
+        text-align: center;
+        font-size: 48px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #000000;
+        line-height: 67px;
+    }
+    .button-wrapper {
+        margin-top: 60px;
+        text-align: center;
+        .cancel {
+            margin-top: 42px;
+            font-size: 30px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #959595;
+            line-height: 42px;
+        }
+        /deep/ .u-button {
+            width: 500px;
+            height: 76px;
+            font-size: 30px;
+            font-family: PingFangSC-Regular, PingFang SC;
+        }
     }
 }
 </style>

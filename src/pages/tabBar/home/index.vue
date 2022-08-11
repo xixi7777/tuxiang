@@ -1,5 +1,5 @@
 <template>
-	<view class="app-container">
+	<view class="app-container" v-if="showPage">
 		<!-- <tab-bar :current="0"></tab-bar> -->
         <view class="app-top-background home"></view>
 		<view class="page-title">
@@ -52,7 +52,7 @@
 			<view class="top">
 				<text class="title">排行榜</text>
 				<view class="more">
-					<navigator url="/pages/leaderboard/index" hover-class="navigator-hover-class">
+					<navigator url="/productPages/pages/leaderboard/index" hover-class="navigator-hover-class">
 						<text>查看全部</text>
 						<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
 					</navigator>
@@ -65,7 +65,7 @@
 						<view class="list-image">
 							<image lazy-load :src="item.image"></image>
 						</view>
-						<navigator hover-class="navigator-hover-class" :url="`/pages/productDetail/index?${item.url}`">
+						<navigator hover-class="navigator-hover-class" :url="`/productPages/pages/productDetail/index?${item.url}`">
 							<view class="scroll-title"><text>{{ item.name }}</text></view>
 							<view class="price-wrapper"><text class="price-code">￥</text><text class="price">1180</text><text class="sale">七折</text></view>
 						</navigator>
@@ -79,7 +79,7 @@
 			<view class="top">
 				<text class="title">热门推荐</text>
 				<view class="more">
-					<navigator url="/pages/recommend/index" hover-class="navigator-hover-class">
+					<navigator url="/productPages/pages/recommend/index" hover-class="navigator-hover-class">
 						<text>更多</text>
 						<image lazy-load class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
 					</navigator>
@@ -135,6 +135,7 @@ export default {
 	data() {
 		return {
 			keyword: null,
+			showPage: false,
 			current: 0,
 			wfList: [],
 			flowList: [],
@@ -146,7 +147,15 @@ export default {
 		}
 	},
 	onLoad() {
-		this.getConfig()
+		const openid = uni.getStorageSync('openid')
+        if (!openid) {
+            uni.reLaunch({
+                url: '/pages/login/index'
+            });
+        } else {
+			this.showPage = true
+			this.getConfig()
+		}
 	},
 	computed: {
 		slide() {

@@ -222,5 +222,38 @@ export default {
             method: 'POST',
             data
         })
+    },
+    // 下单
+    addOrder: data => {
+        return request({
+            url: '/wechat/order/add',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 订单列表
+    orderList: data => {
+        return request({
+            url: '/wechat/order/list',
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 订单详情
+    orderDetail: data => {
+        return request({
+            url: `/wechat/order/getByOrder/${data.id}`,
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
     }
 }

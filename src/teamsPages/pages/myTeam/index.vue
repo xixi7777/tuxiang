@@ -64,7 +64,7 @@
                   <view class="row-box">
                     <text>总人数</text>
                     <text>积分</text>
-                    <navigator url="/pages/editInfo/index">
+                    <navigator url="/pages/editInfo/index" hover-class="navigator-hover-class">
                       <view class="info-edit">信息编辑</view>
                     </navigator>
                   </view>
@@ -84,7 +84,7 @@
       <view class="feature-wrapper">
         <u-row>
           <u-col :span="3" v-for="(item, index) in features" :key="item.name">
-            <navigator :url="item.url">
+            <navigator :url="item.url" hover-class="navigator-hover-class">
               <view class="feature-item">
                 <image class="icon-image" :src="item.icon"> </image>
                 <text>{{ item.name }}</text>
@@ -116,15 +116,15 @@
         </view>
         <view class="btn-wrapper">
           <view class="button">
-            <navigator url=""> 邀请好友 </navigator>
+            <navigator url="" hover-class="navigator-hover-class"> 邀请好友 </navigator>
           </view>
           <view class="button">
-            <navigator :url="`/pages/signUpList/index?id=${item.id}`">
+            <navigator :url="`/pages/signUpList/index?id=${item.id}`" hover-class="navigator-hover-class">
               报名列表
             </navigator>
           </view>
           <view class="button">
-            <navigator url=""> 立即报名 </navigator>
+            <navigator url="" hover-class="navigator-hover-class"> 立即报名 </navigator>
           </view>
         </view>
         <view v-if="index != list.length - 1">
@@ -151,12 +151,12 @@ export default {
         {
           name: '排行榜',
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/rankings.png',
-          url: '/pages/leaderboard/index',
+          url: '/productPages/pages/leaderboard/index',
         },
         {
           name: '成员列表',
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/member.png',
-          url: '/pages/member/index',
+          url: '/teamsPages/pages/member/index',
         },
         {
           name: '服装商城',

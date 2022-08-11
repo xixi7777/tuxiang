@@ -1,0 +1,324 @@
+<template>
+    <view class="app-container">
+        <view class="app-top-background"></view>
+        <top title="详情" text-left background-color="transparent" />
+        <view class="add-wrap">
+            <view class="add-box">
+                <view><text>常用出行人信息</text></view>
+                <view class="button-wrapper">
+                    <u-button type="primary" shape="circle" @click="openAdd"><u-icon color="#fff" size="12" name="plus"></u-icon>添加</u-button>
+                </view>
+            </view>
+        </view>
+        <view class="traveler-list">
+            <u-checkbox-group @change="checkboxGroupChange" wrap active-color="#17AA7D">
+                <view class="traveler-item" v-for="(item, index) in travelerList" :key="index">
+                    <u-checkbox 
+                        :name="item.zjhm"
+                        :checked="item.checked"
+                    ></u-checkbox>
+                    <view>
+                        <view class="name">{{ item.xm }}</view>
+                        <view><text class="label">电话</text><text>{{ item.lxdh }}</text></view>
+                        <view><text class="label">证件号</text><text>{{ item.zjhm }}</text></view>
+                        <view><text class="label">证件类型</text><text>{{ item.zjlx }}</text></view>
+                        <view><text class="label">人员类型</text><text>{{ item.cxlx === 1 ? '成人' : '儿童' }}</text></view>
+                    </view>
+                </view>
+            </u-checkbox-group>
+        </view>
+
+        <u-modal 
+        :show="modalVisible" 
+        title="添加"
+        closeOnClickOverlay
+        :show-confirm-button="false"
+        >
+            <view class="slot-content">
+                <u-form :model="form" :rules="rules" ref="uForm" label-position="top" label-width="600">
+                    <u-form-item label="姓名" prop="xm">
+                        <u-input v-model="form.xm" border="bottom" />
+                    </u-form-item>
+                    <u-form-item label="电话" prop="lxdh">
+                        <u-input type="number" border="bottom" v-model="form.lxdh" />
+                    </u-form-item>
+                    <u-form-item label="证件类型" prop="zjlx">
+                        <view class="picker-input" @click="showZjlxPicker">{{ form.zjlx }} <u-icon name="arrow-right"></u-icon></view>
+                        <u-picker 
+                        :show="showZjlx"
+                        :columns="zjlxOption" 
+                        @cancel="showZjlx = false" 
+                        @confirm="confirmZjlx"></u-picker>
+                    </u-form-item>
+                    <u-form-item label="证件号" prop="zjhm">
+                        <u-input type="text" v-model="form.zjhm" border="bottom" />
+                    </u-form-item>
+                    <u-form-item label="出行人类型">
+                        <view class="picker-input" @click="showCxlxPicker">{{ cxlxText }} <u-icon name="arrow-right"></u-icon> </view>
+                        <u-picker 
+                        :show="showCxlx"
+                        :defaultIndex="0"
+                        :columns="cxlxOption" 
+                        keyName="text"
+                        @cancel="showCxlx = false" 
+                        @confirm="confirmCxlx"></u-picker>
+                    </u-form-item>
+                </u-form>
+                <u-button type="primary" shape="circle" @click="submit">添加</u-button>
+            </view>
+        </u-modal>
+    </view>
+</template>
+
+<script>
+import Top from '@/components/top/Top'
+import { mapMutations, mapGetters } from 'vuex';
+export default {
+    components: {
+        Top
+    },
+    data() {
+        return {
+            modalVisible: false,
+            showZjlx: false,
+            showCxlx: false,
+            cxrChecked: [],
+            form: {
+                xm: '',
+                lxdh: '',
+                zjlx: '',
+                zjhm: '',
+                cxlx: 1,
+                bz: ''
+            },
+            rules: {
+                xm: [
+                    { required: true, message: '请输入姓名', trigger: ['change'] }
+                ],
+                lxdh: [
+                    { required: true, message: '请输入联系电话', trigger: ['change'] },
+                    {
+                        validator: (rule, value, callback) => {
+                            return this.$u.test.mobile(value);
+                        },
+                        message: '手机号码不正确',
+                        trigger: ['change','blur'],
+                    }
+                ],
+                zjlx: [
+                    { required: true, message: '请选择证件类型', trigger: ['change'] }
+                ],
+                zjhm: [
+                    { required: true, message: '请输入证件号码', trigger: ['change'] }
+                ],
+                cxlx: [
+                    { required: true, message: '请选择出行人类型', trigger: ['change'] }
+                ]
+            },
+            travelerList: [],
+            cxlxOption: [
+                [{ value: 1, text: '成人' },
+                { value: 2, text: '儿童' }]
+            ],
+            zjlxOption: [
+                ['身份证', '护照', '台湾通行证', '港澳通行证']
+            ]
+        }
+    },
+    computed: {
+        ...mapGetters(['cxrSelectedList', 'cxrList']),
+        cxlxText() {
+            let label = '成人'
+            this.cxlxOption.forEach(item => {
+                item.forEach(sub => {
+                    if (sub.value === this.form.cxlx) {
+                        label = sub.text
+                    }
+                })
+            })
+            return label
+        }
+    },
+    methods: {
+        ...mapMutations(['setCxrSelectedList', 'setCxrList']),
+        checkboxGroupChange(values) {
+            const list = []
+            this.travelerList.forEach(item => {
+                if (values.includes(item.zjhm)) {
+                    list.push(item)
+                }
+            })
+            this.setCxrSelectedList(list)
+        },
+        openAdd() {
+            this.modalVisible = true
+        },
+        showZjlxPicker() {
+            this.showZjlx = true
+        },
+        showCxlxPicker() {
+            this.showCxlx = true
+        },
+        confirmZjlx(selector) {
+            this.form.zjlx = selector.value[0];
+            this.showZjlx = false
+        },
+        confirmCxlx(selector) {
+            this.form.cxlx = selector.value[0].value;
+            this.showCxlx = false
+        },
+        resetForm() {
+            this.form = {
+                xm: '',
+                lxdh: '',
+                zjlx: '',
+                zjhm: '',
+                cxlx: 1,
+                bz: ''
+            }
+            this.$refs.uForm.resetFields()
+        },
+        submit() {
+            this.$refs.uForm.validate().then(res => {
+                this.modalVisible = false
+                this.travelerList.push(this.form)
+                this.setCxrList(this.travelerList)
+            })
+        }
+    },
+    watch: {
+        cxrSelectedList: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                this.travelerList = this.cxrList
+                if (n.length) {
+                    this.travelerList.forEach(item => {
+                        n.forEach(sub => {
+                            if (item.zjhm == sub.zjhm) {
+                                this.$set(item, 'checked', true)
+                            }
+                        })
+                    })
+                }
+            }
+        },
+        modalVisible: {
+            handler(n) {
+                if (!n && this.$refs.uForm) {
+                    this.resetForm()
+                }
+            }
+        }
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+.add-wrap {
+    margin-top: 170px;
+    border-radius: 0px 0px 0px 50px;
+
+    .add-box {
+        height: 180px;
+        background: #FFFFFF;
+        box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1000);
+        border-radius: 20px;
+        font-size: 32px;
+        font-weight: 500;
+        color: #17AA7D;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+        .button-wrapper {
+            width: 160px;
+            height: 60px;
+        }
+        /deep/
+        .u-button {
+            font-size: 24px;
+            .u-icon {
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+.traveler-list {
+    /deep/ .u-checkbox-group {
+        display: block;
+    }
+}
+.traveler-item {
+    position: relative;
+    background: #fff;
+    box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1000);
+    border-radius: 20px;
+    padding: 25px 30px 55px 30px;
+    font-size: 24px;
+    color: #333333;
+    margin-top: 20px;
+    display: flex;
+    align-items: flex-start;
+    /deep/ .u-checkbox__icon-wrap {
+        border-color: #17AA7D !important;
+        margin-top: 6px;
+    }
+    .name {
+        font-size: 32px;
+        font-weight: 500;
+        margin-bottom: 6px;
+    }
+
+    .label {
+        width: 120px;
+        display: inline-block;
+    }
+    &>view:last-child {
+        margin-left: 16px;
+        &>view:not(:first-child) {
+            margin-top: 10px;
+        }
+    }
+}
+.slot-content {
+    width: 500px;
+    margin: 0 auto;
+    /deep/ .u-button {
+        width: 400px;
+        height: 96px;
+        margin: 0 auto;
+    }
+    /deep/
+    .u-form-item__body__left__content__label {
+        font-size: 24px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #999999;
+        line-height: 33px;
+    }
+    /deep/
+    .u-border-bottom {
+        padding-left: 0 !important;
+        border-bottom: 1px solid #e2e2e2;
+    }
+    .picker-input {
+        border-bottom: 1px solid #e2e2e2;
+        padding: 20px 6px 20px 0;
+        height: 42px;
+        line-height: 42px;
+        position: relative;
+        /deep/ .u-icon {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+    /deep/ .u-form-item__body__left {
+        margin-bottom: 0 !important;
+    }
+}
+</style>
