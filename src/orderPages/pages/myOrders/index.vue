@@ -18,10 +18,11 @@
 
         <view class="tabs-status">
             <u-tabs 
-            :list="listTabs" 
-            @click="changeOrderStatus" 
+            :list="listTabs"
             lineColor="#17AA7D" 
             :current="currentTab"
+            @change="tabChange"
+            keyName="label"
             :activeStyle="{
                 fontWeight: 'bold',
                 transform: 'scale(1.05)'
@@ -49,7 +50,7 @@
                             <image class="img"
                                 src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png" />
                         </view>
-                        <view class="right"><text>{{ item.status }}</text></view>
+                        <view class="right"><text>{{ item.ddzt_dictLabel }}</text></view>
                     </view>
                     <navigator :url="`/orderPages/pages/ordersDetail/index?id=${item.id}`" hover-class="navigator-hover-class">
                         <view class="info-box">
@@ -94,37 +95,33 @@ export default {
         return {
             currentTab: 0,
             query: {
-                status: 1,
+                status: null,
                 openid: uni.getStorageSync('openid')
             },
             listTabs: [
-                { name: '全部', status: '' }, 
-                { name: '待付款', status: '0' },
-                { name: '未出行', status: '5' },
-                { name: '退款', status: '2,3' }
+                { label: '全部', value: '1' }, 
+                { label: '待付款', value: '2' },
+                { label: '未出行', value: '3' },
+                { label: '退款', value: '4' }
             ],
             orderList: []
         }
     },
     onLoad(option) {
-        this.query.status = option.status
-        this.listTabs.forEach((tab, index) => {
-            if (tab.status == this.query.status) {
-                this.currentTab = index
-            }
-        })
+        this.query.status = ''+option.status || ''
     },
     computed: {
+        // ...mapGetters(['orderStatus'])
     },
     methods: {
-        changeOrderStatus(item) {
-            this.query.status = item.status
+        tabChange(item) {
+            this.query.status = item.value
         },
-        getOrderList() {
+        getOrderList: _.debounce(function() {
             this.$api.orderList(this.query).then(res => {
                 this.orderList = res.data
             })
-        },
+        }, 300),
         showCancelOrder(order) {
             return [5].includes(order.ddzt)
         },
@@ -139,6 +136,20 @@ export default {
             handler(n) {
                 if (n.openid) {
                     this.getOrderList()
+                }
+            }
+        },
+        'query.status': {
+            immediate: true,
+            handler(n) {
+                if (n !== '' || n !== undefined) {
+                    this.listTabs.forEach((tab, index) => {
+                        if (tab.value == this.query.status) {
+                            this.currentTab = index
+                        }
+                    })
+                } else {
+                    this.currentTab = 0
                 }
             }
         }

@@ -87,13 +87,13 @@
 
         <view class="fixed-button">
             <view class="operation">
-                <button open-type="contact" @contact="contact" hover-class="none" plain>
+                <button class="open-type__button" open-type="contact" @contact="contact" hover-class="none" plain>
                     <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/kefu.png"></image>
                     <text>客服</text>
                 </button>
             </view>
             <view class="operation">
-                <button open-type="share" hover-class="none" plain>
+                <button class="open-type__button" open-type="share" hover-class="none" plain>
                     <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang_detail.png"></image>
                     <text>分享</text>
                 </button>
@@ -177,13 +177,6 @@ export default {
         contact(res) {
             console.log(res)
         }
-    },
-    onShareAppMessage() {
-        return {
-            title: '微信好友分享',
-            path: `/productPages/pages/productDetail/index?cpbh=${this.cpbh}`,
-            imageUrl: this.images[0]
-        }
     }
 }
 </script>
@@ -214,11 +207,6 @@ export default {
         .operation {
             width: 18%;
             text-align: center;
-            button {
-                height: 100%;
-                width: 100%;
-                border: none;
-            }
             image {
                 width: 40px;
                 height: 40px;

@@ -267,10 +267,20 @@ export default {
             }
         })
     },
-    // 字典数据
+    // 退款原因类型
     mallOrderRefund: data => {
         return request({
             url: '/wechat/user/type/mall_order_refund',
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    orderConfigType: data => {
+        return request({
+            url: `/wechat/order/type/${data.code}`,
             method: 'GET',
             data,
             header: {

@@ -146,7 +146,7 @@
 
 <script>
 import Top from '@/components/top/Top';
-import { httpUrl } from '@/utils/config'
+import config from '@/utils/config.js';
 export default {
   components: {
     Top
@@ -288,18 +288,19 @@ export default {
       });
     },
     uploadImage() {
-      uni.chooseImage({
+      wx.chooseImage({
         count: 1,
         sizeType: ["compressed"],
-        sourceType: ["album"],
+        sourceType: ["album", "camera"],
         success: res => {
-          var filePath = res.tempFilePaths[0];
-          uni.uploadFile({
-              url: `${httpUrl}/file/upload/uploadFile`,
+          const filePath = res.tempFilePaths[0];
+          const file = res.tempFiles[0]
+          wx.uploadFile({
+              url: `${config.httpUrl}/file/upload/uploadFile`,
               filePath,
               name: 'file',
-              formData: {
-                  'user': 'test'
+              header: {
+                'content-type': 'multipart/form-data',
               },
               success: uploadFileRes => {
                   console.log(uploadFileRes.data);

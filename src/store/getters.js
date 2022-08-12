@@ -6,13 +6,8 @@ export default {
     productSkuList: state => state.productSkuList,
     orderInfo: state => state.orderInfo,
     cxrList: state => state.cxrList,
-    orderStatus: () => {
-        return {
-            '0': '生成订单',
-            '1': '订单关闭',
-            '2,3': '退款',
-            '4': '已完成',
-            '5': '已支付'
-        }
-    }
+    orderStatus: state => state.orderStatus,
+    zjlxOptions: state => state.zjlxOptions,
+    cxlxOptions: state => state.cxlxOptions,
+    userInfo: state => state.userInfo
 }

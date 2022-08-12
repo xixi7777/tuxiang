@@ -25,7 +25,8 @@
     <view class="teams-group">
         <view class="team-item" v-for="(item, index) in teams" :key="index">
             <view class="avatar">
-                <u-avatar :src="item.logo"></u-avatar>
+              <image :src="item.logo"></image>
+                <!-- <u-avatar :src="item.logo"></u-avatar> -->
             </view>
             <view class="name text-ellipsis"><text>{{ item.title }}</text></view>
             <view class="desc text-ellipsis"><text>{{ item.note }}</text></view>
@@ -33,21 +34,34 @@
             <view class="members">团队人数</view>
             <view class="date"><text>{{ moment(item.createTime).format('YYYY年MM月DD日') }}</text></view>
             <view class="button">
-                <u-button type="primary" shape="circle" text="申请加入"></u-button>
+                <u-button type="primary" shape="circle" text="申请加入" @click="joinTeam(item)"></u-button>
             </view>
         </view>
     </view>
+    <u-modal
+    :show="showPwd" 
+    title="入团密码"
+    closeOnClickOverlay
+    :showConfirmButton="false"
+    @close="close">
+        <view class="modal-content">
+            <u-input type="password" v-model="addParams.pwd" focus border="bottom" />
+            <u-button type="primary" shape="circle" text="确认" @click="addMember"></u-button>
+        </view>
+	</u-modal>
   </view>
 </template>
 <script>
 import Search from '@/components/pageSearch/PageSearch';
 import moment from 'moment'
+import { mapGetters } from 'vuex';
 export default {
   components: {
     Search,
   },
   data() {
     return {
+      showPwd: false,
       menus: [
         {
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/wodetuandui.png',
@@ -73,6 +87,11 @@ export default {
         title: '',
         dzxm: '',
         dzsjh: ''
+      },
+      addParams: {
+        userId: null,
+        teamCode: null,
+        pwd: null
       }
     }
   },
@@ -86,6 +105,9 @@ export default {
     this.query.pageNum++
     this.getTeams()
   },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
   methods: {
     moment,
     resetQuery() {
@@ -97,6 +119,34 @@ export default {
         this.teams = res.rows
         this.total = res.total
       })
+    },
+    addMember() {
+      this.$api.addMember(this.addParams).then(res => {
+        if (res.code == 200) {
+          uni.$u.toast('成功加入')
+          this.showPwd = false
+        }
+      })
+    },
+    joinTeam(team) {
+      this.addParams = {
+        ...this.addParams,
+        teamCode: team.teamCode,
+        userId: this.userInfo.id
+      }
+      if (team.jdyq == 0) {
+        this.addMember()
+        return
+      }
+      if (team.jdyq == 1) {
+        this.showPwd = true
+        return
+      }
+      uni.$u.toast('仅限团队邀请')
+    },
+    close() {
+      this.showPwd = false
+      this.addParams.pwd = null
     }
   }
 };
@@ -168,10 +218,10 @@ export default {
       margin: 0 auto;
       transform: translateY(-43px);
       overflow: hidden;
-      /deep/ .u-avatar,
-      /deep/ .u-avatar__image {
-        width: 126px !important;
-        height: 126px !important;
+      image {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
       }
     }
     .name {
@@ -217,6 +267,14 @@ export default {
         height: 55px;
       }
     }
+  }
+}
+.modal-content {
+  /deep/ .u-button {
+    margin-top: 30px;
+  }
+  /deep/ .u-border-bottom {
+      border-bottom: 1px solid #e2e2e2;
   }
 }
 </style>

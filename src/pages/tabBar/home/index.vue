@@ -126,6 +126,7 @@ import Search from '@/components/pageSearch/PageSearch'
 
 import { waterfallMixins } from '@/mixins/waterfallMixins';
 import _ from 'lodash'
+import { mapMutations } from 'vuex'
 export default {
 	mixins: [waterfallMixins],
 	components: {
@@ -157,6 +158,9 @@ export default {
 			this.getConfig()
 		}
 	},
+	created() {
+		this.getUserInfo()
+	},
 	computed: {
 		slide() {
 			const slide = _.get(this.homeInfo, ['slide']) || []
@@ -176,6 +180,13 @@ export default {
 		}
 	},
 	methods: {
+		...mapMutations(['setUserInfo']),
+		getUserInfo() {
+            const openid = uni.getStorageSync('openid')
+            this.$api.getMallUser({ openid }).then(res => {
+                this.setUserInfo(res.data)
+            })
+        },
 		swiperChange({current}) {
 			this.current = current
 		},

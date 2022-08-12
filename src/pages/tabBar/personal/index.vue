@@ -6,16 +6,16 @@
 
         <view class="person-wrapper">
             <view class="left">
-                <view class="name text-ellipse"><text>Hi~, 我是{{ userinfo.nickName }}</text></view>
-                <view class="team"><text>所属团队: {{ userinfo.team ? userinfo.team : '暂未加入团队' }}</text>
-                    <view class="leader" v-if="userinfo.teamzw_dictLabel">
-                        <text>{{ userinfo.teamzw_dictLabel }}</text>
+                <view class="name text-ellipse"><text>Hi~, 我是{{ userInfo.nickName }}</text></view>
+                <view class="team"><text>所属团队: {{ userInfo.team ? userInfo.team : '暂未加入团队' }}</text>
+                    <view class="leader" v-if="userInfo.teamzw_dictLabel">
+                        <text>{{ userInfo.teamzw_dictLabel }}</text>
                     </view>
                 </view>
             </view>
             <view class="right">
                 <view class="me-avatar">
-                    <u-avatar :src="userinfo.imageUrl"></u-avatar>
+                    <u-avatar :src="userInfo.imageUrl"></u-avatar>
                 </view>
                 <navigator url="/teamsPages/pages/myTeam/index" hover-class="navigator-hover-class">
                     <view class="fanhui">
@@ -28,11 +28,11 @@
 
         <view class="jifen-wrapper">
             <view class="jifen">
-                <view><text>{{ userinfo.integral }}</text></view>
+                <view><text>{{ userInfo.integral }}</text></view>
                 <view><text>我的积分</text></view>
             </view>
             <view class="cishu">
-                <view><text>{{ userinfo.orderNum || 0 }}</text></view>
+                <view><text>{{ userInfo.orderNum || 0 }}</text></view>
                 <view><text>旅行次数</text></view>
             </view>
         </view>
@@ -42,11 +42,11 @@
                 <view class="title"><text>我的订单</text></view>
                 <view class="order-type">
                     <view class="item" v-for="(item, index) in orderTypes" :key="index">
-                        <navigator :url="`/orderPages/pages/myOrders/index?status=${item.status}`" hover-class="navigator-hover-class">
+                        <navigator :url="`/orderPages/pages/myOrders/index?status=${item.value}`" hover-class="navigator-hover-class">
                             <view :class="['icon', `icon__${index + 1}`]">
                                 <cover-image :src="item.icon"></cover-image>
                             </view>
-                            <view class="title"><text>{{ item.title }}</text></view>
+                            <view class="title"><text>{{ item.label }}</text></view>
                         </navigator>
                     </view>
                 </view>
@@ -55,64 +55,66 @@
             <view class="order-wrapper">
                 <view class="title"><text>更多功能</text></view>
                 <view class="order-type">
-                    <view class="item" v-for="(item, index) in functions" :key="index" @click="operate(item.type)">
-                        <view class="function-icon">
-                            <cover-image :src="item.icon"></cover-image>
-                        </view>
-                        <view class="title"><text>{{ item.title }}</text></view>
+                    <view class="item" v-for="(item, index) in functions" :key="index">
+                        <button class="open-type__button" :open-type="item.openType" hover-class="none" plain>
+                            <view class="function-icon">
+                                    <image :src="item.icon"></image>
+                            </view>
+                            <view class="title"><text>{{ item.title }}</text></view>
+                        </button>
                     </view>
                 </view>
             </view>
 
             <view class="order-wrapper about">
                 <view class="about-list" v-for="(item, index) in about" :key="index">
-                    <view class="about-icon">
-                        <cover-image :src="item.icon"></cover-image>
-                    </view>
-                    <view class="about-title"><text>{{ item.title }}</text></view>
-                    <view class="go">
-                        <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png">
-                        </cover-image>
-                    </view>
+                    <button class="open-type__button" :open-type="item.openType" hover-class="none" plain>
+                        <view class="about-icon">
+                            <image :src="item.icon"></image>
+                        </view>
+                        <view class="about-title"><text>{{ item.title }}</text></view>
+                        <view class="go">
+                            <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png">
+                            </image>
+                        </view>
+                    </button>
                 </view>
             </view>
         </view>
     </view>
 </template>
 <script>
+import { mapGetters, mapMutations } from 'vuex'
 export default {
     data() {
         return {
-            userinfo: {},
             orderTypes: [
-                { title: '全部', status: '', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dingdanorder.png' },
-                { title: '待付款', status: '0', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/qianbao.png' },
-                { title: '未出行', status: '5', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/lvhangxiang.png' },
-                { title: '退款', status: '2,3', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/tuikuanshouhou.png' }
+                { label: '全部', value: '1', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dingdanorder.png' },
+                { label: '待付款', value: '2', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/qianbao.png' },
+                { label: '未出行', value: '3', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/lvhangxiang.png' },
+                { label: '退款', value: '4', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/tuikuanshouhou.png' }
             ],
             functions: [
-                { title: '积分明细', type: 'integral', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/jifenmingxi.png' },
-                { title: '我的收藏', type: 'collect', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/wodeshoucang.png' },
-                { title: '分享好友', type: 'share', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang.png' }
+                { title: '积分明细', openType: '', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/jifenmingxi.png' },
+                { title: '我的收藏', openType: '', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/wodeshoucang.png' },
+                { title: '分享好友', openType: 'share', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang.png' }
             ],
             about: [
-                { title: '关于我们', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/guanyuwomen.png' },
-                { title: '用户协议', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/xieyi.png' },
-                { title: '联系客服', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/kefu.png' }
+                { title: '关于我们', openType: '', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/guanyuwomen.png' },
+                { title: '用户协议', openType: '', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/xieyi.png' },
+                { title: '联系客服', openType: 'contact', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/kefu.png' }
             ]
         }
     },
-    onLoad() {
-        this.getUserInfo()
+    computed: {
+        ...mapGetters(['orderStatus', 'userInfo'])
     },
     methods: {
-        getUserInfo() {
-            const openid = uni.getStorageSync('openid')
-            this.$api.getMallUser({ openid }).then(res => {
-                this.userinfo = res.data
+        ...mapMutations(['setOrderStatus', 'setUserInfo']),
+        getOrderTypes() {
+            this.$api.orderConfigType({ code: 'mall_order_status' }).then(res => {
+                this.setOrderStatus(res.data)
             })
-        },
-        operate(type) {
         }
     }
 }
@@ -301,14 +303,14 @@ export default {
                 width: 51px;
             }
 
-            .icon__5 {
-                width: 67px;
-            }
-
             .function-icon {
                 width: 74px;
                 height: 65px;
                 margin: 0 auto;
+                image {
+                    width: 100%;
+                    height: 100%;
+                }
             }
         }
     }
@@ -322,35 +324,47 @@ export default {
         justify-content: center;
         align-items: center;
 
+        button {
+            text-align: left;
+            display: flex;
+        }
         &:not(:first-child) {
-            margin-top: 80px;
+            margin-top: 30px;
         }
 
         .about-icon {
             height: 40px;
             width: 44px;
+            image {
+                width: 100%;
+                height: 100%;
+            }
         }
 
         .about-title {
             font-size: 32px;
             color: #333;
-            line-height: 46px;
             flex: 1;
-            padding-left: 34px;
+            padding-left: 50px;
         }
 
         .go {
             width: 17px;
             height: 30px;
+            image {
+                height: 100%;
+                width: 100%;
+            }
         }
 
         &:nth-child(2) {
             .about-icon {
                 width: 33px;
             }
-
+        }
+        &:nth-child(2) {
             .about-title {
-                padding-left: 44px;
+                padding-left: 63px;
             }
         }
     }

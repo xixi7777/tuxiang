@@ -40,7 +40,7 @@ export default class Request {
 							})
 						} else {
 							uni.showToast({
-								title: `app 错误${res.msg}`,
+								title: res.data.msg,
 								icon: 'none'
 							})
 							return

@@ -20,5 +20,17 @@ export default {
     },
     setCxrList(state, cxrList) {
         state.cxrList = cxrList
+    },
+    setOrderStatus(state, orderStatus) {
+        state.orderStatus = orderStatus
+    },
+    setZjlxOptions(state, zjlxOptions) {
+        state.zjlxOptions = zjlxOptions
+    },
+    setCxlxOptions(state, cxlxOptions) {
+        state.cxlxOptions = cxlxOptions
+    },
+    setUserInfo(state, userInfo) {
+        state.userInfo = userInfo
     }
 }

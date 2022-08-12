@@ -44,11 +44,12 @@
                         <u-input type="number" border="bottom" v-model="form.lxdh" />
                     </u-form-item>
                     <u-form-item label="证件类型" prop="zjlx">
-                        <view class="picker-input" @click="showZjlxPicker">{{ form.zjlx }} <u-icon name="arrow-right"></u-icon></view>
+                        <view class="picker-input" @click="showZjlxPicker">{{ zjlxLabel }} <u-icon name="arrow-right"></u-icon></view>
                         <u-picker 
                         :show="showZjlx"
-                        :columns="zjlxOption" 
+                        :columns="[zjlxOptions]" 
                         @cancel="showZjlx = false" 
+                        keyName="label"
                         @confirm="confirmZjlx"></u-picker>
                     </u-form-item>
                     <u-form-item label="证件号" prop="zjhm">
@@ -59,8 +60,8 @@
                         <u-picker 
                         :show="showCxlx"
                         :defaultIndex="0"
-                        :columns="cxlxOption" 
-                        keyName="text"
+                        :columns="[cxlxOptions]" 
+                        keyName="label"
                         @cancel="showCxlx = false" 
                         @confirm="confirmCxlx"></u-picker>
                     </u-form-item>
@@ -89,7 +90,7 @@ export default {
                 lxdh: '',
                 zjlx: '',
                 zjhm: '',
-                cxlx: 1,
+                cxlx: '',
                 bz: ''
             },
             rules: {
@@ -116,32 +117,46 @@ export default {
                     { required: true, message: '请选择出行人类型', trigger: ['change'] }
                 ]
             },
-            travelerList: [],
-            cxlxOption: [
-                [{ value: 1, text: '成人' },
-                { value: 2, text: '儿童' }]
-            ],
-            zjlxOption: [
-                ['身份证', '护照', '台湾通行证', '港澳通行证']
-            ]
+            travelerList: []
         }
     },
     computed: {
-        ...mapGetters(['cxrSelectedList', 'cxrList']),
+        ...mapGetters(['cxrSelectedList', 'cxrList', 'cxlxOptions', 'zjlxOptions']),
         cxlxText() {
-            let label = '成人'
-            this.cxlxOption.forEach(item => {
-                item.forEach(sub => {
-                    if (sub.value === this.form.cxlx) {
-                        label = sub.text
-                    }
-                })
+            let label = ''
+            this.cxlxOptions.forEach(item => {
+                if (item.value === this.form.cxlx) {
+                    label = item.label
+                }
+            })
+            return label
+        },
+        zjlxLabel() {
+            let label = ''
+            this.zjlxOptions.forEach(item => {
+                if (item.value === this.form.cxlx) {
+                    label = item.label
+                }
             })
             return label
         }
     },
+    created() {
+        this.getCxlx()
+        this.getZjlx()
+    },
     methods: {
-        ...mapMutations(['setCxrSelectedList', 'setCxrList']),
+        ...mapMutations(['setCxrSelectedList', 'setCxrList', 'setCxlxOptions', 'setZjlxOptions']),
+        getCxlx() {
+            this.$api.orderConfigType({ code: 'mall_order_people' }).then(res => {
+                this.setCxlxOptions(res.data)
+            })
+        },
+        getZjlx() {
+            this.$api.orderConfigType({ code: 'mall_order_docment' }).then(res => {
+                this.setZjlxOptions(res.data)
+            })
+        },
         checkboxGroupChange(values) {
             const list = []
             this.travelerList.forEach(item => {
@@ -161,7 +176,7 @@ export default {
             this.showCxlx = true
         },
         confirmZjlx(selector) {
-            this.form.zjlx = selector.value[0];
+            this.form.zjlx = selector.value[0].value;
             this.showZjlx = false
         },
         confirmCxlx(selector) {

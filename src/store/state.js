@@ -5,5 +5,9 @@ export default {
     cxrList: [],
     orderProduct: {},
     productSkuList: [],
-    orderInfo: {}
+    orderInfo: {},
+    orderStatus: [],
+    zjlxOptions: [],
+    cxlxOptions: [],
+    userInfo: {}
 }

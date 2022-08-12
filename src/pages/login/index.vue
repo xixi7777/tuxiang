@@ -70,7 +70,6 @@ export default {
                 const { sessionKey, openid } = loginRes.data
 
                 uni.setStorageSync('openid', openid);
-                uni.setStorageSync('userinfo', this.userInfo);
 
                 const pc = new WXBizDataCrypt(this.appid, sessionKey)
                 const decryptedData = pc.decryptData(encryptedData , iv)

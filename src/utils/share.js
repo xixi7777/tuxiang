@@ -10,12 +10,22 @@ export default {
     },
     onShareAppMessage(res) {
         const imageUrl = this.shareUrl || ''
-        if (res.from === 'button') {
-            const path = `/${this.$scope.route}?cpbh=${this.$scope.options.cpbh}`
-            return {
-                title: '商品分享',
-                path,
-                imageUrl
+        const { options } = this.$scope
+        if (this.$scope.route.includes('productDetail')) {
+            if (options.cpbh) {
+                const path = `/${this.$scope.route}?cpbh=${options.cpbh}`
+                return {
+                    title: '商品分享',
+                    path,
+                    imageUrl
+                }
+            }
+            if (this.$scope.route.includes('personal')) {
+                return {
+                    title: '途享旅程',
+                    path: '/pages/tabBar/home/index',
+                    imageUrl
+                }
             }
         }
         if (res.from === 'menu') {
