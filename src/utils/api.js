@@ -255,5 +255,27 @@ export default {
                 'content-type': 'application/json'
             }
         })
+    },
+    // 申请退款
+    applyRefund: data => {
+        return request({
+            url: '/wechat/order/applyRefund',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 字典数据
+    mallOrderRefund: data => {
+        return request({
+            url: '/wechat/user/type/mall_order_refund',
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
     }
 }

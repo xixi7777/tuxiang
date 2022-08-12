@@ -77,8 +77,8 @@ export default {
             productStockParam: {
                 cpbh: '',
                 skubh: '',
-                beginDate: '2022-07-11',
-                endDate: '2023-07-11'
+                beginDate: moment().format('YYYY-MM-DD'),
+                endDate: moment().add(1, 'y').format('YYYY-MM-DD')
             }
         }
     },
@@ -104,7 +104,7 @@ export default {
                     }
                 })
             })
-            return s.join('+')
+            return s.join('|')
         },
         name() {
             return _.get(this.orderProduct, ['cpmc'])

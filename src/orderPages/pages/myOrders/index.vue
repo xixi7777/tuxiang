@@ -77,8 +77,8 @@
                         <text class="total-price">总价{{ '￥' + item.price }}</text>
                         <text>实付款<text class="pay-price">{{ '￥' + item.realPrice }}</text></text>
                     </view>
-                    <view class="btn-box">
-                        <u-button shape="circle" @click="toRefund">取消订单</u-button>
+                    <view class="btn-box" v-if="showCancelOrder(item)">
+                        <u-button shape="circle" @click="toRefund(item)">取消订单</u-button>
                     </view>
                 </view>
             </view>
@@ -88,6 +88,7 @@
 
 <script>
 import _ from 'lodash'
+import { mapGetters } from 'vuex'
 export default {
     data() {
         return {
@@ -96,22 +97,24 @@ export default {
                 status: 1,
                 openid: uni.getStorageSync('openid')
             },
-            listTabs: [{ name: '全部', status: 1 }
-                , { name: '待付款', status: 2 }
-                , { name: '未出行', status: 3 }
-                , { name: '退款', status: 4 }
+            listTabs: [
+                { name: '全部', status: '' }, 
+                { name: '待付款', status: '0' },
+                { name: '未出行', status: '5' },
+                { name: '退款', status: '2,3' }
             ],
-            orderList: [],
-            
+            orderList: []
         }
     },
     onLoad(option) {
-        this.query.status = option.status*1
+        this.query.status = option.status
         this.listTabs.forEach((tab, index) => {
             if (tab.status == this.query.status) {
                 this.currentTab = index
             }
         })
+    },
+    computed: {
     },
     methods: {
         changeOrderStatus(item) {
@@ -122,8 +125,11 @@ export default {
                 this.orderList = res.data
             })
         },
-        toRefund() {
-            uni.navigateTo({ url: '/orderPages/pages/refund/index' })
+        showCancelOrder(order) {
+            return [5].includes(order.ddzt)
+        },
+        toRefund(order) {
+            uni.navigateTo({ url: `/orderPages/pages/refund/index?id=${order.id}` })
         }
     },
     watch: {

@@ -74,13 +74,13 @@
                         <text class="key">手机号</text>
                         <text class="value">86 {{ orderDetail.lxrdh }}</text>
                     </view>
-                    <view class="item-line">
+                    <!-- <view class="item-line">
                         <image class="pre-img"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png">
                         </image>
                         <text class="key">身份证</text>
                         <text class="value">{{ orderDetail.zjhm || '' }}</text>
-                    </view>
+                    </view> -->
                     <view class="item-line">
                         <image class="pre-img"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_date.png"></image>
@@ -125,7 +125,7 @@
                 </view>
             </view>
 
-            <view class="bottom-btn">
+            <view class="bottom-btn" v-if="showRefund">
                 <u-button shape="circle" @click="toRefund">申请退款</u-button>
             </view>
         </view>
@@ -148,6 +148,10 @@ export default {
     computed: {
         cxrList() {
             return _.get(this.orderDetail, ['cxrList']) || []
+        },
+        showRefund() {
+            const status = _.get(this.orderDetail, ['ddzt'])
+            return [5].includes(status)
         }
     },
     methods: {
@@ -157,7 +161,7 @@ export default {
             })
         },
         toRefund() {
-            uni.navigateTo({ url: '/orderPages/pages/refund/index' })
+            uni.navigateTo({ url: `/orderPages/pages/refund/index?id=${this.orderId}` })
         }
     },
     watch: {

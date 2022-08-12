@@ -7,9 +7,9 @@
         <view class="person-wrapper">
             <view class="left">
                 <view class="name text-ellipse"><text>Hi~, 我是{{ userinfo.nickName }}</text></view>
-                <view class="team"><text>所属团队: 随便队</text>
-                    <view class="leader">
-                        <text>队长</text>
+                <view class="team"><text>所属团队: {{ userinfo.team ? userinfo.team : '暂未加入团队' }}</text>
+                    <view class="leader" v-if="userinfo.teamzw_dictLabel">
+                        <text>{{ userinfo.teamzw_dictLabel }}</text>
                     </view>
                 </view>
             </view>
@@ -55,7 +55,7 @@
             <view class="order-wrapper">
                 <view class="title"><text>更多功能</text></view>
                 <view class="order-type">
-                    <view class="item" v-for="(item, index) in functions" :key="index">
+                    <view class="item" v-for="(item, index) in functions" :key="index" @click="operate(item.type)">
                         <view class="function-icon">
                             <cover-image :src="item.icon"></cover-image>
                         </view>
@@ -85,15 +85,15 @@ export default {
         return {
             userinfo: {},
             orderTypes: [
-                { title: '全部', status: 1, icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dingdanorder.png' },
-                { title: '待付款', status: 2, icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/qianbao.png' },
-                { title: '未出行', status: 3, icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/lvhangxiang.png' },
-                { title: '退款', status: 4, icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/tuikuanshouhou.png' }
+                { title: '全部', status: '', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dingdanorder.png' },
+                { title: '待付款', status: '0', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/qianbao.png' },
+                { title: '未出行', status: '5', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/lvhangxiang.png' },
+                { title: '退款', status: '2,3', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/tuikuanshouhou.png' }
             ],
             functions: [
-                { title: '积分明细', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/jifenmingxi.png' },
-                { title: '我的收藏', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/wodeshoucang.png' },
-                { title: '分享好友', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang.png' }
+                { title: '积分明细', type: 'integral', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/jifenmingxi.png' },
+                { title: '我的收藏', type: 'collect', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/wodeshoucang.png' },
+                { title: '分享好友', type: 'share', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang.png' }
             ],
             about: [
                 { title: '关于我们', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/guanyuwomen.png' },
@@ -103,7 +103,6 @@ export default {
         }
     },
     onLoad() {
-        // this.userinfo = uni.getStorageSync('userinfo')
         this.getUserInfo()
     },
     methods: {
@@ -112,6 +111,8 @@ export default {
             this.$api.getMallUser({ openid }).then(res => {
                 this.userinfo = res.data
             })
+        },
+        operate(type) {
         }
     }
 }

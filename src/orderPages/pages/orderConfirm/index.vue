@@ -122,7 +122,7 @@
                         <text>儿童</text><text class="num">￥ {{ selectedSku.etj || 0 }} × {{ etCount }}</text>
                     </view>
                     <view class="row">
-                        <text>合计</text><text class="num">￥ {{ totalPrice }}</text>
+                        <text>合计</text><text class="num">￥ {{ detailTotal }}</text>
                     </view>
                 </view>
             </u-popup>
@@ -229,6 +229,9 @@ export default {
             return this.cxrSelectedList.filter(item => item.cxlx == 2).length || 0
         },
         totalPrice() {
+            return this.count * (_.get(this.selectedSku, ['crj']) || 0)
+        },
+        detailTotal() {
             return this.crCount * (_.get(this.selectedSku, ['crj']) || 0) + this.etCount * (_.get(this.selectedSku, ['etj']) || 0)
         }
     },
@@ -278,9 +281,6 @@ export default {
                 },
                 fail: err => {
                     uni.$u.toast('支付失败')
-                },
-                complete: res => {
-                    uni.$u.toast('取消支付')
                 }
             })
         },

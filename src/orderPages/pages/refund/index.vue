@@ -24,10 +24,10 @@
                         </view>
                         <view class="right">
                             <view class="title">
-                                <text>{{ order.cpmc }}</text>
+                                <text>{{ order.spmc }}</text>
                             </view>
                             <view class="detail">
-                                <view class="text-ellipsis">{{ order.cfd_dictLabel }}</view>
+                                <view class="text-ellipsis">{{ order.skumc }}</view>
                                 <view><text>出行日期：{{ order.cxrq }}</text></view>
                             </view>
                         </view>
@@ -44,18 +44,25 @@
             <view class="content-item travel-info">
                 <view class="item-line item-line__title">
                     <view>
-                        <text class="item-title">出行信息</text>
-                        <u-icon name="info-circle" color="#838689" size="18"></u-icon>
+                        <text class="item-title">退款金额</text>
+                        <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/info.png" size="20"></u-icon>
                     </view>
-                    <view class="price">￥ 580</view>
+                    <view class="price">￥ {{ order.realPrice }}</view>
                 </view>
                 <view class="item-line item-line__title">
                     <view>
-                        <image class="pre-img"
-                        src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png"></image>
+                        <u-icon size="20" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png"></u-icon>
                         <text class="key">成人</text>
                     </view>
-                    <view class="item-price">￥500 * 1</view>
+                    <view class="item-price">￥ {{ order.crj || 0}} * {{ adult.length }}</view>
+                </view>
+
+                <view class="item-line item-line__title" v-if="children.length">
+                    <view>
+                        <u-icon size="20" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png"></u-icon>
+                        <text class="key">儿童</text>
+                    </view>
+                    <view class="item-price">￥ {{ order.etj || 0}} * {{ children.length }}</view>
                 </view>
 
                 <view>
@@ -71,23 +78,24 @@
                     <view>
                         <text class="item-title">退款原因</text>
                     </view>
-                    <view>
-                        <text @click="refundModal = true" class="tkyy-title">买错了</text>
+                    <view @click="refundModal = true">
+                        <text class="tkyy-title">{{ refundLabel }}</text>
                         <u-icon color="#838689" name="arrow-right" size="12"></u-icon>
                     </view>
                 </view>
                 <view class="item-line" >
-                    <image class="pre-img"
-                        src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/tuikuan.png"></image>
+                    <u-icon size="20" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/tuikuan.png"></u-icon>
                     <u-textarea 
                     v-model="refund.tkyy"
+                    count
+                    maxlength="200"
                     placeholder="退款说明，选填，限200字"></u-textarea>
                 </view>
             </view>
 
             <view class="footer-button">
                 <view class="remark">
-                    <u-icon size="12" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dengpao.png"></u-icon>
+                    <u-icon size="16" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dengpao.png"></u-icon>
                     <text>如需部分退款请联系商家操作</text>
                 </view>
                 <u-button type="primary" shape="circle" @click="submit">提交</u-button>
@@ -109,20 +117,21 @@
                                 <u-radio
                                     activeColor="#55C6A6"
                                     inactiveColor="#D8D8D8"
-                                    :label="item.name"
-                                    :name="item.value"
+                                    :label="item.dictLabel"
+                                    :name="item.dictValue"
                                 ></u-radio>
-                                <u-textarea 
-                                v-if="item.value == 5" 
-                                placeholder="请输入内容" ></u-textarea>
+                                <!-- <u-textarea 
+                                v-if="key === 5" 
+                                v-model="other"
+                                placeholder="请输入内容"></u-textarea> -->
                             </view>
                         </u-radio-group>
                     </u-form-item>
                 </u-form>
 
                 <view class="button-wrapper">
-                    <u-button type="primary" shape="circle" @click="refundConfirm">确定</u-button>
-                    <view class="cancel" @click="refundModal = false">关闭</view>
+                    <u-button type="primary" shape="circle" @click="refundModal = false">确定</u-button>
+                    <view class="cancel" @click="cancel">关闭</view>
                 </view>
             </view>
         </u-modal>
@@ -139,25 +148,72 @@ export default {
             order: {},
             refundModal: false,
             refund: {
-                tklx: 1,
+                tklx: null,
                 tkyy: ''
             },
-            refundTypes: [
-                { value: 1, name: '优惠未使用，重新下单' },
-                { value: 2, name: '年龄、证件等不符合出行条件' },
-                { value: 3, name: '天气原因，无法出行' },
-                { value: 4, name: '身体原因，无法出行' },
-                { value: 5, name: '其他' }
-            ]
+            refundTypes: []
         };
+    },
+    onLoad(option) {
+        const { id } = option
+        this.getOrderDetail(id)
+        this.getRefundTypes()
+    },
+    computed: {
+        cxrList() {
+            return _.get(this.order, ['cxrList']) || []
+        },
+        adult() {
+            return this.cxrList.filter(i => i.cxlx === 1)
+        },
+        children() {
+            return this.cxrList.filter(i => i.cxlx === 2)
+        },
+        refundLabel() {
+            if (this.refund.tklx == null || this.refund.tklx == '') {
+                return ''
+            }
+
+            const refund = this.refundTypes.find(item => item.dictValue == this.refund.tklx*1)
+            if (refund) {
+                return refund.dictLabel
+            }
+
+            return ''
+        }
     },
     methods: {
         moment,
         submit() {
-
+            if (!this.refund.tklx) {
+                uni.$u.toast('请选择退款类型')
+                return
+            }
+            this.refund.tklx = this.refund.tklx*1
+            this.$api.applyRefund({
+                id: this.order.id,
+                openid: uni.getStorageSync('openid'),
+                ...this.refund
+            }).then(res => {
+                uni.navigateTo({ url: '/orderPages/pages/myOrders/index' })
+            })
         },
-        refundConfirm() {
-
+        cancel() {
+            this.refundModal = false
+            this.refund = {
+                ...this.refund,
+                tklx: null
+            }
+        },
+        getOrderDetail(id) {
+            this.$api.orderDetail({ id }).then(res => {
+                this.order = res.data
+            })
+        },
+        getRefundTypes() {
+            this.$api.mallOrderRefund().then(res => {
+                this.refundTypes = res.data
+            })
         }
     }
 }
@@ -310,8 +366,9 @@ export default {
             }
             &__title {
                 justify-content: space-between;
-                /deep/ .uicon-info-circle {
+                /deep/ .u-icon__img {
                     margin-left: 20px;
+                    vertical-align: -10px;
                 }
                 /deep/ .uicon-arrow-right {
                     margin-left: 10px;
@@ -355,7 +412,8 @@ export default {
         }
 
         .key {
-            width: 160px;
+            // width: 160px;
+            padding-left: 20px;
         }
 
         .add {

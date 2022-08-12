@@ -103,10 +103,10 @@ export default {
         // 获取当前月及一年后的月份
         setMonths() {
             this.months = []
-            this.months.push({
-                y: this.year,
-                m: this.month-1
-            })
+            // this.months.push({
+            //     y: this.year,
+            //     m: this.month-1
+            // })
             for (let i = 0, j = 0; i < 12; i++) {
                 if (this.month+i >= 13) {
                     this.months.push({
@@ -189,6 +189,11 @@ export default {
                         temp = { ...temp, ... sku }
                     }
                 })
+                if (temp.year == this.choose.year
+                    && temp.month == this.choose.month
+                    && temp.date == this.choose.date) {
+                    this.selectDate(temp)
+                }
                 skuDates.push(temp)
             })
             

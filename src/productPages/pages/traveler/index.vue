@@ -33,6 +33,7 @@
         title="添加"
         closeOnClickOverlay
         :show-confirm-button="false"
+        @close="modalVisible=false"
         >
             <view class="slot-content">
                 <u-form :model="form" :rules="rules" ref="uForm" label-position="top" label-width="600">

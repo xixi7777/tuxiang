@@ -42,7 +42,7 @@
             <view class="desc-footer flex-box space-between p-h-20">
                 <view class="left flex-box">
                     <view class="anxinyou-icon">
-                        <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/anxinyou.png"></cover-image>
+                        <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/anxinyou.png"></image>
                     </view>
                     <view class="anxinyou"><text>安心游</text></view>
                 </view>
@@ -90,7 +90,7 @@
                 <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/kefu.png"></image>
                 <text>客服</text>
             </view>
-            <view class="operation">
+            <view class="operation" @click="shareVisible = true">
                 <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang_detail.png"></image>
                 <text>分享</text>
             </view>
@@ -98,6 +98,19 @@
                 <u-button type="primary" shape="circle" @click="toSelectDate">立即购买</u-button>
             </view>
         </view>
+
+        <u-popup :show="shareVisible" @close="shareVisible=false"> 
+            <view class="share-content">
+                <view>
+                    <u-icon open-type="share" @click="appShare('WXSceneSession')" name="weixin-circle-fill" size="40" color="#17AA7D"></u-icon>
+                    <view>微信好友</view>
+                </view>
+                <view>
+                    <u-icon open-type="share" @click="appShare('WXSceneTimeline')" name="moments-circel-fill" size="40" color="#17AA7D"></u-icon>
+                    <view>微信朋友圈</view>
+                </view>
+            </view>
+        </u-popup>
     </view>
 </template>
 <script>
@@ -114,6 +127,7 @@ export default {
     },
     data() {
         return {
+            shareVisible: false,
             product: {},
             currentNum: 0,
             skuList: [],
@@ -138,7 +152,7 @@ export default {
         ...mapMutations(['setOrderProduct']),
         moment,
         isSelected(item) {
-            return moment().format('YYYY-MM-DD') == item.kcrq
+            return moment().format('YYYY-MM-DD') == moment(item.kcrq).format('YYYY-MM-DD')
         },
         toSelectDate() {
             uni.navigateTo({
@@ -156,8 +170,8 @@ export default {
             this.$api.selectProductStock({ 
                     cpbh, 
                     skubh,
-                    beginDate: '2022-07-11',
-                    endDate: '2023-07-20'
+                    beginDate: moment().format('YYYY-MM-DD'),
+                    endDate: moment().add(1, 'y').format('YYYY-MM-DD')
                 }).then(res => {
                     this.skuList = this.sortSkuByDate(res.data)
             })
@@ -166,6 +180,28 @@ export default {
             return list.sort((a, b) => {
                 return Date.parse(a.kcrq.replace(/-/g, '/')) - Date.parse(b.kcrq.replace(/-/g, '/'))
             })
+        },
+        appShare(scene) {
+            uni.share({
+                provider: 'weixin',
+                scene,
+                type: 1,
+                summary: this.product.cpmc,
+                success: res => {
+                    this.shareVisible = false
+                },
+                fail: err => {
+                    console.log(err)
+                    uni.$u.toast('分享失败')
+                }
+            })
+        }
+    },
+    onShareAppMessage() {
+        return {
+            title: '分享测试',
+            path: '/productPages/pages/productDetail/index',
+            imageUrl: ''
         }
     }
 }
@@ -334,6 +370,10 @@ export default {
             .anxinyou-icon {
                 width: 70px;
                 height: 60px;
+                image {
+                    width: 100%;
+                    height: 100%;
+                }
             }
             .anxinyou {
                 margin-left: 14px;
@@ -433,6 +473,22 @@ export default {
         margin-top: 30px;
         background-color: #3cacc4;
         padding: 30px;
+    }
+}
+.share-content {
+    display: flex;
+    height: 200px;
+    justify-content: center;
+    align-items: center;
+    &>view {
+        flex: 1;
+        text-align: center;
+        view {
+            margin-top: 20px;
+        }
+        /deep/ .u-icon__icon {
+            margin: 0 auto;
+        }
     }
 }
 </style>
