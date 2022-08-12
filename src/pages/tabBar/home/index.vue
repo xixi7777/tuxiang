@@ -62,10 +62,10 @@
 			<view class="scroll-list-wrapper">
 				<scroll-view scroll-x="true" class="scroll">
 					<view v-for="item in rankproduct" class="scroll-item" :key="item.name">
-						<view class="list-image">
-							<image lazy-load :src="item.image"></image>
-						</view>
 						<navigator hover-class="navigator-hover-class" :url="`/productPages/pages/productDetail/index?${item.url}`">
+							<view class="list-image">
+								<image lazy-load :src="item.image"></image>
+							</view>
 							<view class="scroll-title"><text>{{ item.name }}</text></view>
 							<view class="price-wrapper"><text class="price-code">￥</text><text class="price">1180</text><text class="sale">七折</text></view>
 						</navigator>

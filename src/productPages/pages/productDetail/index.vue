@@ -87,30 +87,21 @@
 
         <view class="fixed-button">
             <view class="operation">
-                <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/kefu.png"></image>
-                <text>客服</text>
+                <button open-type="contact" @contact="contact" hover-class="none" plain>
+                    <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/kefu.png"></image>
+                    <text>客服</text>
+                </button>
             </view>
-            <view class="operation" @click="shareVisible = true">
-                <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang_detail.png"></image>
-                <text>分享</text>
+            <view class="operation">
+                <button open-type="share" hover-class="none" plain>
+                    <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang_detail.png"></image>
+                    <text>分享</text>
+                </button>
             </view>
             <view class="button-wrapper">
                 <u-button type="primary" shape="circle" @click="toSelectDate">立即购买</u-button>
             </view>
         </view>
-
-        <u-popup :show="shareVisible" @close="shareVisible=false"> 
-            <view class="share-content">
-                <view>
-                    <u-icon open-type="share" @click="appShare('WXSceneSession')" name="weixin-circle-fill" size="40" color="#17AA7D"></u-icon>
-                    <view>微信好友</view>
-                </view>
-                <view>
-                    <u-icon open-type="share" @click="appShare('WXSceneTimeline')" name="moments-circel-fill" size="40" color="#17AA7D"></u-icon>
-                    <view>微信朋友圈</view>
-                </view>
-            </view>
-        </u-popup>
     </view>
 </template>
 <script>
@@ -124,6 +115,7 @@ export default {
     },
     onLoad(option) {
         this.getProductDetail(option.cpbh)
+        this.cpbh = option.cpbh
     },
     data() {
         return {
@@ -131,6 +123,7 @@ export default {
             product: {},
             currentNum: 0,
             skuList: [],
+            cpbh: '',
             weekdays: {
                 1: '周一',
                 2: '周二',
@@ -181,27 +174,15 @@ export default {
                 return Date.parse(a.kcrq.replace(/-/g, '/')) - Date.parse(b.kcrq.replace(/-/g, '/'))
             })
         },
-        appShare(scene) {
-            uni.share({
-                provider: 'weixin',
-                scene,
-                type: 1,
-                summary: this.product.cpmc,
-                success: res => {
-                    this.shareVisible = false
-                },
-                fail: err => {
-                    console.log(err)
-                    uni.$u.toast('分享失败')
-                }
-            })
+        contact(res) {
+            console.log(res)
         }
     },
     onShareAppMessage() {
         return {
-            title: '分享测试',
-            path: '/productPages/pages/productDetail/index',
-            imageUrl: ''
+            title: '微信好友分享',
+            path: `/productPages/pages/productDetail/index?cpbh=${this.cpbh}`,
+            imageUrl: this.images[0]
         }
     }
 }
@@ -223,7 +204,7 @@ export default {
         background: #FFFFFF;
         z-index: 999;
         .button-wrapper {
-            width: 65%;
+            width: 64%;
             /deep/
             .u-button {
                 height: 90px;
@@ -231,8 +212,13 @@ export default {
             }
         }
         .operation {
-            width: 80px;
+            width: 18%;
             text-align: center;
+            button {
+                height: 100%;
+                width: 100%;
+                border: none;
+            }
             image {
                 width: 40px;
                 height: 40px;
@@ -473,22 +459,6 @@ export default {
         margin-top: 30px;
         background-color: #3cacc4;
         padding: 30px;
-    }
-}
-.share-content {
-    display: flex;
-    height: 200px;
-    justify-content: center;
-    align-items: center;
-    &>view {
-        flex: 1;
-        text-align: center;
-        view {
-            margin-top: 20px;
-        }
-        /deep/ .u-icon__icon {
-            margin: 0 auto;
-        }
     }
 }
 </style>
