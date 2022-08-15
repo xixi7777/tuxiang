@@ -40,10 +40,10 @@ export default class Request {
 							})
 						} else {
 							uni.showToast({
-								title: res.data.msg,
+								title: `${res.data.msg}`,
 								icon: 'none'
 							})
-							return
+							reject(res.data.msg)
 						}
 					}
 				},

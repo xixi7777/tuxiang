@@ -14,26 +14,30 @@
       </view>
     </view>
     <view class="form-wrapper">
+      <view class="form upload-avatar" @click="uploadImage">
+          <image class="image circle" :src="user.imageUrl" mode="aspectFill"></image>
+        <text class="text">上传头像</text>
+      </view>
       <view class="form">
-        <u-form labelPosition="left" :model="userInfo" :rules="rules" ref="form1" labelWidth="100">
-          <u-form-item label="真实姓名" prop="name"
+        <u-form labelPosition="left" :model="user" :rules="rules" ref="form1" labelWidth="100">
+          <u-form-item label="真实姓名" prop="nickName"
             leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png">
-            <u-input type="text" v-model="userInfo.name" placeholder="请输入真实姓名" />
+            <u-input type="text" v-model="user.nickName" placeholder="请输入真实姓名" />
           </u-form-item>
 
           <u-form-item label="手机号" prop="phone"
             leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png">
-            <u-input type="number" v-model="userInfo.phone" placeholder="请输入手机号" />
+            <u-input type="number" v-model="user.phone" placeholder="请输入手机号" />
           </u-form-item>
 
-          <u-form-item label="性别" prop="gender"
+          <u-form-item label="性别" prop="xb"
             leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_gender.png">
-            <u-input type="text" v-model="userInfo.gender" placeholder="请输入性别" />
+            <u-input type="text" v-model="user.xb" placeholder="请输入性别" />
           </u-form-item>
-          <u-form-item label="尺码" prop="size"
+          <!-- <u-form-item label="尺码" prop="size"
             leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_size.png">
             <u-input type="text" v-model="userInfo.size" placeholder="请输入尺码" />
-          </u-form-item>
+          </u-form-item> -->
         </u-form>
       </view>
       <button @click="submit" class="btn-submit">提交</button>
@@ -42,17 +46,21 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
+import _ from 'lodash'
+import config from '@/utils/config'
 export default {
   data() {
     return {
-      userInfo: {
-        name: '',
+      user: {
+        openid: uni.getStorageSync('openid'),
         phone: '',
-        gender: '',
-        size: '',
+        xb: '',
+        nickName: '',
+        imageUrl: ''
       },
       rules: {
-        name: [
+        nickName: [
           {
             type: 'string',
             required: true,
@@ -76,7 +84,7 @@ export default {
             trigger: ['blur'],
           },
         ],
-        gender: [
+        xb: [
           {
             max: 1,
             type: 'string',
@@ -85,32 +93,73 @@ export default {
             trigger: ['blur'],
           },
         ],
-        size: [
-          {
-            type: 'string',
-            required: true,
-            message: '请输入尺码',
-            trigger: ['blur'],
-          },
-        ],
+        // size: [
+        //   {
+        //     type: 'string',
+        //     required: true,
+        //     message: '请输入尺码',
+        //     trigger: ['blur'],
+        //   },
+        // ],
       },
     };
   },
-  mounted() {
-    this.$refs.form1.setRules(this.rules);
+  computed: {
+    ...mapGetters(['userInfo'])
   },
   methods: {
+    ...mapMutations(['setUserInfo']),
+    uploadImage() {
+      wx.chooseImage({
+        count: 1,
+        sizeType: ["compressed"],
+        sourceType: ["album", "camera"],
+        success: res => {
+          const filePath = res.tempFilePaths[0];
+          const file = res.tempFiles[0]
+          wx.uploadFile({
+              url: `${config.httpUrl}/file/upload/uploadFile`,
+              filePath,
+              name: 'file',
+              success: uploadFileRes => {
+                const res = JSON.parse(uploadFileRes.data)
+                this.user.imageUrl = res.data.url
+              },
+              fail: err => {
+                console.log(err)
+              }
+          });
+        },
+        fail: error => {
+          console.log(error)
+        }
+      })
+    },
     submit() {
       this.$refs.form1
         .validate()
         .then((res) => {
-          uni.$u.toast('校验通过');
+          this.$api.editUserVo(this.user).then(res => {
+            this.setUserInfo(this.user)
+            uni.navigateBack()
+          })
         })
         .catch((errors) => {
-          // uni.$u.toast("内容有误噢");
+          uni.$u.toast("请完善信息");
         });
     },
   },
+  watch: {
+    userInfo: {
+      immediate: true,
+      deep: true,
+      handler(n) {
+        if (!_.isEmpty(n)) {
+          this.user = n
+        }
+      }
+    }
+  }
 };
 </script>
 

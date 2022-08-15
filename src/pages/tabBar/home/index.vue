@@ -313,10 +313,6 @@ export default {
 			.list-image {
 				width: 302px;
 				height: 220px;
-				image {
-					height: 100%;
-					width: 100%;
-				}
 			}
 			.scroll-title {
 				margin-top: 18px;

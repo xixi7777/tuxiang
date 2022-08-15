@@ -100,10 +100,6 @@ export default {
         .hot-image {
             width: 100%;
             height: 163px;
-            image {
-                width: 100%;
-                height: 100%;
-            }
         }
         &:nth-child(4n) {
             background: #A3AEC6;
@@ -146,10 +142,6 @@ export default {
                 width: 207px;
                 height: 207px;
                 position: relative;
-                image {
-                    width: 100%;
-                    height: 100%;
-                }
                 .top-icon {
                     position: absolute;
                     width: 91px;

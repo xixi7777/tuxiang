@@ -154,10 +154,6 @@ export default {
             position: relative;
             border-radius: 13px;
             overflow: hidden;
-            .image {
-                width: 100%;
-                height: 100%;
-            }
             .top-left {
                 line-height: 35px;
                 text-align: center;

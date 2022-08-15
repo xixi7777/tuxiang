@@ -5,25 +5,8 @@
     <view class="form-wrapper">
         <!-- upload -->
         <view class="form upload-avatar" @click="uploadImage">
-            <image class="image" :src="avatarUrl" mode="scaleToFill"></image>
+            <image class="image circle" :src="avatarUrl" mode="aspectFill"></image>
           <text class="text">上传头像</text>
-          <!-- <u-upload
-            :fileList="fileList"
-            @afterRead="afterRead"
-            @delete="deletePic"
-            name="avatar"
-            :previewFullImage="true"
-            width="690"
-            height="250"
-            :maxCount="1"
-          >
-            <image
-              v-if="!fileList.length"
-              class="image"
-              src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/upload_avatar.png"
-              mode="widthFix"
-            ></image>
-          </u-upload> -->
         </view>
 
           <u-form
@@ -46,7 +29,7 @@
                   placeholder="请输入队伍名称"
                 />
               </u-form-item>
-              <u-form-item
+              <!-- <u-form-item
                 label="队长姓名"
                 prop="dzid"
                 leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_team_leader.png"
@@ -56,7 +39,7 @@
                   v-model="teamInfo.dzid"
                   placeholder="请输入队长姓名"
                 />
-              </u-form-item>
+              </u-form-item> -->
               <u-form-item
                 label="所在地区"
                 prop="szdq"
@@ -65,9 +48,6 @@
                 <u-input
                 v-model="teamInfo.szdq"
                   placeholder="请填写所在地区">
-                  <!-- <template slot="suffix"> -->
-                    <!-- <u-icon name="arrow-right" color="#595757;"></u-icon> -->
-                  <!-- </template> -->
                 </u-input>
               </u-form-item>
               <u-form-item
@@ -96,7 +76,6 @@
                   placeholder="请输入队伍简介"
                 ></u-textarea>
               </u-form-item>
-            <!-- </u-form> -->
           </view>
 
           <!-- 进队要求 -->
@@ -147,6 +126,9 @@
 <script>
 import Top from '@/components/top/Top';
 import config from '@/utils/config.js';
+import { mapGetters } from 'vuex'
+
+const UploadUrl = '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/upload_avatar.png'
 export default {
   components: {
     Top
@@ -154,7 +136,6 @@ export default {
   data() {
     return {
       fileList: [],
-      avatarUrl: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/upload_avatar.png',
       showError: false,
       teamInfo: {
         logo: '',
@@ -197,14 +178,6 @@ export default {
             trigger: ['blur'],
           },
         ],
-        dzid: [
-          {
-            type: 'string',
-            required: true,
-            message: '请输入队长姓名',
-            trigger: ['blur'],
-          },
-        ],
         szdq: [
           {
             required: true,
@@ -236,56 +209,26 @@ export default {
       }
     };
   },
-  methods: {
-    // 删除图片
-    deletePic(event) {
-      this.fileList.splice(event.index, 1);
-    }, 
-    // 新增图片
-    async afterRead(event) {
-      console.log(event)
-      // 当设置 mutiple 为 true 时, file 为数组格式，否则为对象格式
-      let lists = [].concat(event.file);
-      let fileListLen = this.fileList.length;
-      lists.map((item) => {
-        this.fileList.push({
-          ...item,
-          status: 'uploading',
-          message: '上传中',
-        });
-      });
-      for (let i = 0; i < lists.length; i++) {
-        const result = await this.uploadFilePromise(lists[i].url);
-        console.log(result)
-        let item = this.fileList[fileListLen];
-        this.fileList.splice(
-          fileListLen,
-          1,
-          Object.assign(item, {
-            status: 'success',
-            message: '',
-            url: result,
-          })
-        );
-        fileListLen++;
+  onLoad(option) {
+    const { teamId } = option
+    if (teamId) {
+      this.getTeamInfo(teamId)
+    }
+  },
+  computed: {
+    ...mapGetters(['userInfo']),
+    avatarUrl() {
+      if (this.teamInfo.logo) {
+        return this.teamInfo.logo
       }
-    },
-    uploadFilePromise(url) {
-      return new Promise((resolve, reject) => {
-        let a = uni.uploadFile({
-          url: `${httpUrl}/file/upload/uploadFile`, // 仅为示例，非真实的接口地址
-          filePath: url,
-          name: 'file',
-          formData: {
-            user: 'test',
-          },
-          success: (res) => {
-            setTimeout(() => {
-              resolve(res.data.data);
-            }, 1000);
-          },
-        });
-      });
+      return UploadUrl
+    }
+  },
+  methods: {
+    getTeamInfo(teamId) {
+      this.$api.teamDetail({ teamId }).then(res => {
+        this.teamInfo = res.data
+      })
     },
     uploadImage() {
       wx.chooseImage({
@@ -299,11 +242,9 @@ export default {
               url: `${config.httpUrl}/file/upload/uploadFile`,
               filePath,
               name: 'file',
-              header: {
-                'content-type': 'multipart/form-data',
-              },
               success: uploadFileRes => {
-                  console.log(uploadFileRes.data);
+                const res = JSON.parse(uploadFileRes.data)
+                this.teamInfo.logo = res.data.url
               },
               fail: err => {
                 console.log(err)
@@ -317,11 +258,11 @@ export default {
     },
     radioChange(name) {
       this.teamInfo.jdyq = name
-      if (name !== 1) {
+      if (name != 1) {
         this.teamInfo.mima = ''
         this.showError = false
       }
-      if (name === 1) {
+      if (name == 1) {
         this.rules.mima[0].required = true
       } else {
         this.rules.mima[0].required = false
@@ -338,12 +279,33 @@ export default {
           this.showError = true
           return
         }
-        this.$u.toast('success')
+        if (!this.teamInfo.logo) {
+          this.$u.toast('请上传头像')
+          return
+        }
+        if (!this.teamInfo.id) {
+          this.addTeam(this.teamInfo)
+        } else {
+          this.editTeam(this.teamInfo)
+        }
       }).catch(err => {
         this.$u.toast('请完善信息')
       })
+    },
+    addTeam(params) {
+      this.$api.addTeam({
+        ...this.teamInfo,
+        dzid: this.userInfo.id
+      }).then(res => {
+        uni.navigateBack()
+      })
+    },
+    editTeam(params) {
+      this.$api.editTeam(params).then(res => {
+        uni.navigateBack()
+      })
     }
-  },
+  }
 };
 </script>
 
@@ -363,15 +325,15 @@ export default {
 
   .form-wrapper {
     position: relative;
-    z-index: 100;
+    // z-index: 100;
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    padding: 155px 30px 50px;
+    padding: 260px 30px 50px;
 
     .form {
       position: relative;
-      z-index: 100;
+      // z-index: 100;
       background: linear-gradient(335deg,
           rgba(255, 255, 255, 0) 0%,
           #ffffff 100%);
@@ -404,28 +366,6 @@ export default {
       line-height: 100px;
       color: #fff;
       text-align: center;
-    }
-  }
-
-  .upload-avatar {
-    padding: 75px 40px 50px;
-    display: flex;
-    // /deep/ .u-upload {
-    //   flex-direction: row !important;
-    // }
-
-    .image {
-      width: 125px;
-      height: 125px;
-    }
-
-    .text {
-      position: absolute;
-      top: 50%;
-      left: 200px;
-      transform: translateY(-50%);
-      font-size: 36px;
-      color: #080808;
     }
   }
 }

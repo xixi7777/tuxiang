@@ -227,10 +227,6 @@ export default {
 			margin: 0 auto;
 			margin-bottom: 14px;
 			height: 80px;
-			image {
-				width: 100%;
-				height: 100%;
-			}
 			&.icon-0 {
 				width: 85px;
 			}
@@ -293,10 +289,6 @@ export default {
 			.list-image {
 				width: 302px;
 				height: 220px;
-				image {
-					height: 100%;
-					width: 100%;
-				}
 			}
             navigator {
                 width: 100%;

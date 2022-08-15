@@ -1,11 +1,11 @@
 <template>
     <view :class="['top', textLeft && 'text-left']" :style="{ background: backgroundColor }">
-        <navigator open-type="navigateBack" delta="1" hover-class="navigator-hover-class">
             <view class="back-icon">
-                <u-icon :color="backIconColor" size="20" name="arrow-left"></u-icon>
+                <navigator open-type="navigateBack" delta="1" hover-class="navigator-hover-class">
+                    <u-icon :color="backIconColor" size="20" name="arrow-left"></u-icon>
+                </navigator>
             </view>
             <text class="title text-ellipsis" v-if="title" style="line-height: 20px">{{ title }}</text>
-        </navigator>
     </view>
 </template>
 <script>

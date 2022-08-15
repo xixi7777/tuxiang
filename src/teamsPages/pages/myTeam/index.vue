@@ -17,121 +17,122 @@
       <image class="image" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_top_bg.png"></image>
     </view>
 
-    <!-- 顶部内容版块 -->
-    <view class="top-wrapper">
-      <!-- 团队信息 -->
-      <view class="info">
-        <view class="info-name">
-          <text class="name text-ellipse">烈性小鸟队</text>
-          <view class="team-btn">
-            <button>邀请</button>
-            <button>退团</button>
-          </view>
-        </view>
-        <view class="info-gender">
-          <view class="image-male image"> </view>
-          <view class="image-female image"> </view>
-          <text>S码</text>
-        </view>
-
-        <!-- 头像 -->
-        <view class="info-avatar">
-          <u-row>
-            <u-col :span="4.5">
-              <view class="avatar">
-                <image class="image" src="https://cdn.uviewui.com/uview/album/1.jpg"></image>
+    <view class="team-wrapper">
+      <view class="team-list" v-for="team in teams" :key="team.id">
+        <!-- 顶部内容版块 -->
+        <view class="top-wrapper">
+          <!-- 团队信息 -->
+          <view class="info">
+            <view class="info-name">
+              <text class="name text-ellipse">{{ team.title }}</text>
+              <view class="team-btn">
+                <button>邀请</button>
+                <button>退团</button>
               </view>
-            </u-col>
-            <u-col :span="7.5">
+            </view>
+            <view class="info-gender">
+              <view class="image-male image"> </view>
+              <view class="image-female image"> </view>
+              <!-- <text>S码</text> -->
+            </view>
+
+            <!-- 头像 -->
+            <view class="info-avatar">
+              <view class="avatar">
+                <image class="image" :src="team.logo" mode="aspectFill"></image>
+              </view>
               <view class="right">
                 <view>
                   <view class="name row-box">
-                    <text>名称</text>
-                    <text>肖战</text>
-                    <text>王一博</text>
+                    <!-- <text>名称</text> -->
+                    <!-- <text>肖战</text> -->
+                    <text>{{ team.dzxm }}</text>
                   </view>
                   <view class="role row-box">
-                    <text>成员</text>
-                    <text>副队长</text>
+                    <!-- <text>成员</text> -->
+                    <!-- <text>副队长</text> -->
                     <text>队长</text>
                   </view>
                 </view>
                 <view class="data-box">
                   <view class="row-box">
-                    <text class="num">4968</text>
-                    <text class="num">4968</text>
+                    <text class="num">{{ team.zrs }}</text>
+                    <text class="num">{{ team.zjf }}</text>
                   </view>
                   <view class="row-box">
                     <text>总人数</text>
                     <text>积分</text>
-                    <navigator url="/pages/editInfo/index" hover-class="navigator-hover-class">
-                      <view class="info-edit">信息编辑</view>
+                    <navigator :url="`/teamsPages/pages/createTeam/index?teamId=${team.id}`" hover-class="navigator-hover-class">
+                      <view class="info-edit">
+                        信息编辑
+                      </view>
                     </navigator>
                   </view>
                 </view>
               </view>
-            </u-col>
-          </u-row>
-        </view>
+            </view>
 
-        <!-- 简介 -->
-        <view class="info-introduce">
-          <text>河南省洛阳栾川老君山·鸡冠洞旅游区由老君山景区和鸡冠洞景区组成</text>
-        </view>
-      </view>
-
-      <!-- 功能区 -->
-      <view class="feature-wrapper">
-        <u-row>
-          <u-col :span="3" v-for="(item, index) in features" :key="item.name">
-            <navigator :url="item.url" hover-class="navigator-hover-class">
-              <view class="feature-item">
-                <image class="icon-image" :src="item.icon"> </image>
-                <text>{{ item.name }}</text>
-              </view>
-            </navigator>
-          </u-col>
-        </u-row>
-      </view>
-    </view>
-
-    <!-- 活动列表 -->
-    <view class="activity-group">
-      <view class="activity-item" v-for="(item, index) in list" :key="index">
-        <view class="activity-content">
-          <view class="left">
-            <image class="image" mode="scaleToFill" :src="item.url"></image>
-          </view>
-          <view class="right">
-            <view class="title"><text>{{ item.name }}</text></view>
-            <view class="place"><text>活动地点：</text><text class="place-name">{{ item.place }}</text></view>
-            <view class="date-box">
-              <view>活动时间：</view>
-              <view class="date">
-                <view class="date1">{{ item.date1 }}</view>
-                <view class="date2">{{ item.date2 }}</view>
-              </view>
+            <!-- 简介 -->
+            <view class="info-introduce">
+              <text>{{ team.note }}</text>
             </view>
           </view>
+        <!-- </view> -->
+
+          <!-- 功能区 -->
+          <view class="feature-wrapper">
+            <u-row>
+              <u-col :span="3" v-for="(item, index) in features" :key="index">
+                <navigator :url="item.option ? `${item.url}?teamId=${team.id}` :item.url" hover-class="navigator-hover-class">
+                  <view class="feature-item">
+                    <image class="icon-image" :src="item.icon"> </image>
+                    <text>{{ item.name }}</text>
+                  </view>
+                </navigator>
+              </u-col>
+            </u-row>
+          </view>
         </view>
-        <view class="btn-wrapper">
-          <view class="button">
-            <navigator url="" hover-class="navigator-hover-class"> 邀请好友 </navigator>
+
+        <!-- 活动列表 -->
+        <view class="activity-group">
+          <view class="activity-item" v-for="(item, index) in team.activities" :key="index">
+            <view class="activity-content">
+              <view class="left">
+                <image class="image" mode="aspectFill" :src="item.image"></image>
+              </view>
+              <view class="right">
+                <view class="title"><text>{{ item.name }}</text></view>
+                <view class="place"><text>活动地点：</text><text class="place-name">{{ item.address }}</text></view>
+                <view class="date-box">
+                  <view>活动时间：</view>
+                  <view class="date">
+                    <view class="date1">{{ item.beginTime }}</view>
+                    <view class="date2">{{ item.finishTime }}</view>
+                  </view>
+                </view>
+              </view>
+            </view>
+            <view class="btn-wrapper">
+              <view class="button">
+                <navigator url="" hover-class="navigator-hover-class"> 邀请好友 </navigator>
+              </view>
+              <view class="button">
+                <navigator :url="`/pages/signUpList/index?id=${item.id}`" hover-class="navigator-hover-class">
+                  报名列表
+                </navigator>
+              </view>
+              <view class="button">
+                <navigator url="" hover-class="navigator-hover-class"> 立即报名 </navigator>
+              </view>
+            </view>
+            <view v-if="index != list.length - 1">
+              <image class="decor left-decor"
+                src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
+              <image class="decor right-decor"
+                src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
+            </view>
           </view>
-          <view class="button">
-            <navigator :url="`/pages/signUpList/index?id=${item.id}`" hover-class="navigator-hover-class">
-              报名列表
-            </navigator>
-          </view>
-          <view class="button">
-            <navigator url="" hover-class="navigator-hover-class"> 立即报名 </navigator>
-          </view>
-        </view>
-        <view v-if="index != list.length - 1">
-          <image class="decor left-decor"
-            src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
-          <image class="decor right-decor"
-            src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
         </view>
       </view>
     </view>
@@ -142,11 +143,13 @@
 export default {
   data() {
     return {
+      team: {},
       features: [
         {
           name: '发起活动',
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/activity.png',
-          url: '/pages/initiateActivity/index',
+          option: true,
+          url: '/teamsPages/pages/addActivity/index',
         },
         {
           name: '排行榜',
@@ -156,6 +159,7 @@ export default {
         {
           name: '成员列表',
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/member.png',
+          option: true,
           url: '/teamsPages/pages/member/index',
         },
         {
@@ -164,34 +168,33 @@ export default {
           url: '/pages/mall/index',
         },
       ],
-      list: [
-        {
-          id: 1,
-          date1: '2022.05.12 13:00',
-          date2: '2022.05.12 21:00',
-          name: '夏令营夜爬老君山',
-          place: '老君山',
-          url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
-        },
-        {
-          id: 2,
-          date1: '2022.05.12 13:00',
-          date2: '2022.05.12 21:00',
-          name: '夏令营夜爬老君山',
-          place: '老君山',
-          url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
-        },
-        {
-          id: 3,
-          date1: '2022.05.12 13:00',
-          date2: '2022.05.12 21:00',
-          name: '夏令营夜爬老君山',
-          place: '老君山',
-          url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png',
-        },
-      ],
+      teams: []
     };
   },
+  onShow() {
+    this.getMyTeam()
+  },
+  methods: {
+    getMyTeam() {
+      this.$api.myTeamList({
+        openid: uni.getStorageSync('openid')
+      }).then(res => {
+        this.teams = res.data
+        this.getActivity()
+      })
+    },
+    getActivity() {
+      this.teams.forEach(item => {
+        this.$api.teamActivity({
+          teamId: item.id,
+          pageNum: 1,
+          pageSize: 1000
+        }).then(res => {
+          this.$set(item, 'activities', res.rows)
+        })
+      })
+    }
+  }
 };
 </script>
 
@@ -237,6 +240,10 @@ export default {
   }
 }
 
+.team-wrapper {
+  margin-top: 250px;
+}
+
 .top-wrapper {
   width: 690px;
   // height: 658px;
@@ -244,7 +251,6 @@ export default {
   box-sizing: border-box;
   background: rgba(255, 255, 255, 0.68);
   box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1);
-  margin-top: 250px;
   overflow: hidden;
 
   .info {
@@ -315,19 +321,24 @@ export default {
 
     .info-avatar {
       margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       .avatar {
         width: 190px;
         height: 190px;
         border-radius: 50%;
-        margin-right: 53px;
         overflow: hidden;
 
-        .image {
-          width: 190px;
-          height: 190px;
+        image {
           border-radius: 50%;
         }
+      }
+
+      .right {
+        flex: 1;
+        padding-left: 52px;
       }
 
       .data-box {
@@ -454,7 +465,7 @@ export default {
       .image {
         width: 224px;
         height: 224px;
-        border-radius: 13px;
+        border-radius: 16px;
         background: #d8d8d8;
         overflow: hidden;
       }

@@ -147,10 +147,12 @@ export default {
     // 获取详情
     teamDetail: data => {
         return request({
-            url: `/wechat/team/${data.id}`,
+            url: `/wechat/team/${data.teamId}`,
             method: 'GET',
             data,
-            header: {}
+            header: {
+                'content-type': 'application/json'
+            }
         })
     },
     // 团队列表
@@ -181,7 +183,9 @@ export default {
             url: '/wechat/team/memberList',
             method: 'GET',
             data,
-            header: {}
+            header: {
+                'content-type': 'application/json'
+            }
         })
     },
     // 添加团员
@@ -285,6 +289,50 @@ export default {
             data,
             header: {
                 'content-type': 'application/json'
+            }
+        })
+    },
+    // 我的团队列表
+    myTeamList: data => {
+        return request({
+            url: '/wechat/team/myTeamList',
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 团队活动列表
+    teamActivity: data => {
+        return request({
+            url: '/wechat/team/activity/list',
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 添加团队活动
+    addActivity: data => {
+        return request({
+            url: '/wechat/team/activity/add',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 创建活动关联产品列表
+    activityProduct: data => {
+        return request({
+            url: '/wechat/product/zdlist',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/x-www-form-urlencoded'
             }
         })
     }

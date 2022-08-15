@@ -25,7 +25,7 @@
     <view class="teams-group">
         <view class="team-item" v-for="(item, index) in teams" :key="index">
             <view class="avatar">
-              <image :src="item.logo"></image>
+              <image :src="item.logo" mode="aspectFill"></image>
                 <!-- <u-avatar :src="item.logo"></u-avatar> -->
             </view>
             <view class="name text-ellipsis"><text>{{ item.title }}</text></view>
@@ -95,7 +95,8 @@ export default {
       }
     }
   },
-  onLoad() {
+  onShow() {
+    this.teams = []
     this.getTeams()
   },
   onReachBottom() {
@@ -116,12 +117,12 @@ export default {
     },
     getTeams() {
       this.$api.teamList(this.query).then(res => {
-        this.teams = res.rows
+        this.teams = [...this.teams, ...res.rows]
         this.total = res.total
       })
     },
     addMember() {
-      this.$api.addMember(this.addParams).then(res => {
+      this.$api.addMember([this.addParams]).then(res => {
         if (res.code == 200) {
           uni.$u.toast('成功加入')
           this.showPwd = false

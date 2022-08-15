@@ -19,19 +19,25 @@
             <!-- 联系版块 -->
             <view class="contact-section">
                 <view class="contact-item">
-                    <image class="img" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_wx.png">
-                    </image>
-                    <view> <text>客服微信</text></view>
+                    <button class="open-type__button" open-type="contact" hover-class="none" plain>
+                        <image class="img" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_wx.png">
+                            </image>
+                        <view><text>客服微信</text></view>
+                    </button>
                 </view>
                 <view class="contact-item">
-                    <image class="img" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_phone.png">
-                    </image>
-                    <view><text>商家电话</text></view>
+                    <button class="open-type__button" open-type="contact" hover-class="none" plain>
+                        <image class="img" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_phone.png">
+                            </image>
+                        <view><text>商家电话</text></view>
+                    </button>
                 </view>
                 <view class="contact-item">
-                    <image class="img" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_edit.png">
-                    </image>
-                    <view><text>意见反馈</text></view>
+                    <button class="open-type__button" open-type="contact" hover-class="none" plain>
+                        <image class="img" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_edit.png">
+                            </image>
+                        <view><text>意见反馈</text></view>
+                    </button>
                 </view>
             </view>
             <!-- 详情内容 -->
@@ -40,10 +46,12 @@
                 <view class="detail-item">
                     <view class="item-line ">
                         <text class="item-title flex-padding">出行人信息</text>
-                        <text class="go-detail-txt">查看详情</text>
-                        <image class="go-detail-img"
-                            src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png">
-                        </image>
+                        <navigator style="width: auto;" :url="`/productPages/pages/traveler/index?readonly=${true}`" hover-class="navigator-hover-class">
+                            <text class="go-detail-txt">查看详情</text>
+                            <image class="go-detail-img"
+                                src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png">
+                            </image>
+                        </navigator>
                     </view>
                     <view class="item-line" v-for="(item, index) in cxrList" :key="index">
                         <image class="pre-img"
@@ -134,6 +142,7 @@
 
 <script>
 import _ from 'lodash'
+import { mapMutations } from 'vuex'
 export default {
     data() {
         return {
@@ -155,9 +164,12 @@ export default {
         }
     },
     methods: {
+        ...mapMutations(['setCxrSelectedList', 'setCxrList']),
         getDetail() {
             this.$api.orderDetail({ id: this.orderId }).then(res => {
                 this.orderDetail = res.data
+                this.setCxrList(this.orderDetail.cxrList)
+                this.setCxrSelectedList(this.orderDetail.cxrList)
             })
         },
         toRefund() {
@@ -209,7 +221,6 @@ export default {
     transform: translateZ(1px);
 
     .title-content {
-        padding-left: 70px;
         text-align: center;
     }
 
@@ -244,14 +255,16 @@ export default {
         background: linear-gradient(335deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);
         box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1000);
         border-radius: 20px;
-        font-size: 30px;
-        font-weight: 500;
-        color: #2A2A2A;
-        text-align: center;
-
+        .open-type__button {
+            color: #2A2A2A;
+            line-height: 50px;
+            font-size: 30px;
+            font-weight: 500;
+        }
         .img {
             width: 90px;
             height: 90px;
+            margin-top: 30px;
         }
     }
 

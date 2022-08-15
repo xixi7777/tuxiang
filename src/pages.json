@@ -61,14 +61,6 @@
 			}
 		},
 		{
-			"path": "pages/initiateActivity/index",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
 			"path": "pages/signUpList/index",
 			"style": {
 				"navigationBarTitleText": "",
@@ -181,6 +173,14 @@
 				},
 				{
 					"path": "pages/member/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/addActivity/index",
 					"style": {
 						"navigationBarTitleText": "",
 						"navigationStyle": "custom",

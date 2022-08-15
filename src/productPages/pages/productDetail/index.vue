@@ -344,10 +344,6 @@ export default {
             .anxinyou-icon {
                 width: 70px;
                 height: 60px;
-                image {
-                    width: 100%;
-                    height: 100%;
-                }
             }
             .anxinyou {
                 margin-left: 14px;

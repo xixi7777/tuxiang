@@ -55,7 +55,7 @@
                     <navigator :url="`/orderPages/pages/ordersDetail/index?id=${item.id}`" hover-class="navigator-hover-class">
                         <view class="info-box">
                             <view class="left">
-                                <image class="img" mode="scaleToFill" :src="item.url"></image>
+                                <image class="img" mode="scaleToFill" :src="item.productImg"></image>
                             </view>
                             <view class="right">
                                 <view class="title-box">
@@ -63,7 +63,7 @@
                                         <text>{{ item.spmc }}</text>
                                     </view>
                                     <view class="num-box">
-                                        <view class="price"> <text>{{ '￥' + item.price }}</text></view>
+                                        <view class="price"> <text>{{ '￥' + item.unitPrice }}</text></view>
                                         <view class="num"><text>× {{ item.gmsl }}</text></view>
                                     </view>
                                 </view>
@@ -96,8 +96,11 @@ export default {
             currentTab: 0,
             query: {
                 status: null,
-                openid: uni.getStorageSync('openid')
+                openid: uni.getStorageSync('openid'),
+                pageNum: 1,
+                pageSize: 10
             },
+            total: 0,
             listTabs: [
                 { label: '全部', value: '1' }, 
                 { label: '待付款', value: '2' },
@@ -109,6 +112,18 @@ export default {
     },
     onLoad(option) {
         this.query.status = ''+option.status || ''
+        this.orderList = []
+    },
+    onReachBottom() {
+        if (this.orderList.length === this.total) {
+            return
+        }
+        this.query.pageNum++
+        this.getOrderList()
+    },
+    onPullDownRefresh() {
+        this.query.pageNum = 1
+        this.getOrderList()
     },
     computed: {
         // ...mapGetters(['orderStatus'])
@@ -119,7 +134,8 @@ export default {
         },
         getOrderList: _.debounce(function() {
             this.$api.orderList(this.query).then(res => {
-                this.orderList = res.data
+                this.orderList = [...this.orderList, ...res.data.records]
+                this.total = res.data.total
             })
         }, 300),
         showCancelOrder(order) {

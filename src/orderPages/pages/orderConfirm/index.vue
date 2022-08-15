@@ -571,10 +571,6 @@ export default {
         width: 172px;
         height: 172px;
         margin: 0 auto;
-        image {
-            width: 100%;
-            height: 100%;
-        }
     }
     .content {
         margin-top: 85px;

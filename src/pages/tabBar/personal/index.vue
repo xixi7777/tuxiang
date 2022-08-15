@@ -15,12 +15,13 @@
             </view>
             <view class="right">
                 <view class="me-avatar">
-                    <u-avatar :src="userInfo.imageUrl"></u-avatar>
+                    <image mode="aspectFill" :src="userInfo.imageUrl"></image>
+                    <!-- <u-avatar :src="userInfo.imageUrl"></u-avatar> -->
                 </view>
-                <navigator url="/teamsPages/pages/myTeam/index" hover-class="navigator-hover-class">
+                <navigator url="/pages/editInfo/index" hover-class="navigator-hover-class">
                     <view class="fanhui">
-                        <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png">
-                        </cover-image>
+                        <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png">
+                        </image>
                     </view>
                 </navigator>
             </view>
@@ -201,11 +202,10 @@ export default {
 
         .me-avatar {
 
-            /deep/ .u-avatar,
-            /deep/ .u-avatar__image {
-                width: 130px !important;
-                height: 130px !important;
-
+            image {
+                width: 130px;
+                height: 130px;
+                border-radius: 50%;
             }
         }
 
@@ -307,10 +307,6 @@ export default {
                 width: 74px;
                 height: 65px;
                 margin: 0 auto;
-                image {
-                    width: 100%;
-                    height: 100%;
-                }
             }
         }
     }
@@ -335,10 +331,6 @@ export default {
         .about-icon {
             height: 40px;
             width: 44px;
-            image {
-                width: 100%;
-                height: 100%;
-            }
         }
 
         .about-title {
@@ -351,10 +343,6 @@ export default {
         .go {
             width: 17px;
             height: 30px;
-            image {
-                height: 100%;
-                width: 100%;
-            }
         }
 
         &:nth-child(2) {

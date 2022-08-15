@@ -5,13 +5,13 @@
         <view class="add-wrap">
             <view class="add-box">
                 <view><text>常用出行人信息</text></view>
-                <view class="button-wrapper">
+                <view class="button-wrapper" v-if="!readonly">
                     <u-button type="primary" shape="circle" @click="openAdd"><u-icon color="#fff" size="12" name="plus"></u-icon>添加</u-button>
                 </view>
             </view>
         </view>
         <view class="traveler-list">
-            <u-checkbox-group @change="checkboxGroupChange" wrap active-color="#17AA7D">
+            <u-checkbox-group :disabled="readonly" @change="checkboxGroupChange" wrap active-color="#17AA7D">
                 <view class="traveler-item" v-for="(item, index) in travelerList" :key="index">
                     <u-checkbox 
                         :name="item.zjhm"
@@ -21,8 +21,8 @@
                         <view class="name">{{ item.xm }}</view>
                         <view><text class="label">电话</text><text>{{ item.lxdh }}</text></view>
                         <view><text class="label">证件号</text><text>{{ item.zjhm }}</text></view>
-                        <view><text class="label">证件类型</text><text>{{ item.zjlx }}</text></view>
-                        <view><text class="label">人员类型</text><text>{{ item.cxlx === 1 ? '成人' : '儿童' }}</text></view>
+                        <view><text class="label">证件类型</text><text>{{ zjlxLabel(item) }}</text></view>
+                        <view><text class="label">人员类型</text><text>{{ cxlxLabel(item) }}</text></view>
                     </view>
                 </view>
             </u-checkbox-group>
@@ -44,7 +44,7 @@
                         <u-input type="number" border="bottom" v-model="form.lxdh" />
                     </u-form-item>
                     <u-form-item label="证件类型" prop="zjlx">
-                        <view class="picker-input" @click="showZjlxPicker">{{ zjlxLabel }} <u-icon name="arrow-right"></u-icon></view>
+                        <view class="picker-input" @click="showZjlxPicker">{{ zjlxText }} <u-icon name="arrow-right"></u-icon></view>
                         <u-picker 
                         :show="showZjlx"
                         :columns="[zjlxOptions]" 
@@ -75,6 +75,7 @@
 <script>
 import Top from '@/components/top/Top'
 import { mapMutations, mapGetters } from 'vuex';
+import _ from 'lodash'
 export default {
     components: {
         Top
@@ -85,6 +86,7 @@ export default {
             showZjlx: false,
             showCxlx: false,
             cxrChecked: [],
+            readonly: false,
             form: {
                 xm: '',
                 lxdh: '',
@@ -125,16 +127,16 @@ export default {
         cxlxText() {
             let label = ''
             this.cxlxOptions.forEach(item => {
-                if (item.value === this.form.cxlx) {
+                if (item.value == this.form.cxlx) {
                     label = item.label
                 }
             })
             return label
         },
-        zjlxLabel() {
+        zjlxText() {
             let label = ''
             this.zjlxOptions.forEach(item => {
-                if (item.value === this.form.cxlx) {
+                if (item.value == this.form.zjlx) {
                     label = item.label
                 }
             })
@@ -144,6 +146,9 @@ export default {
     created() {
         this.getCxlx()
         this.getZjlx()
+    },
+    onLoad(option) {
+        this.readonly = option.readonly || false
     },
     methods: {
         ...mapMutations(['setCxrSelectedList', 'setCxrList', 'setCxlxOptions', 'setZjlxOptions']),
@@ -200,6 +205,20 @@ export default {
                 this.travelerList.push(this.form)
                 this.setCxrList(this.travelerList)
             })
+        },
+        zjlxLabel(item) {
+            const target = _.find(this.zjlxOptions, i => i.value == item.zjlx)
+            if (target) {
+                return target.label
+            }
+            return ''
+        },
+        cxlxLabel(item) {
+            const target = _.find(this.cxlxOptions, i => i.value == item.cxlx)
+            if (target) {
+                return target.label
+            }
+            return ''
         }
     },
     watch: {
@@ -319,19 +338,6 @@ export default {
     .u-border-bottom {
         padding-left: 0 !important;
         border-bottom: 1px solid #e2e2e2;
-    }
-    .picker-input {
-        border-bottom: 1px solid #e2e2e2;
-        padding: 20px 6px 20px 0;
-        height: 42px;
-        line-height: 42px;
-        position: relative;
-        /deep/ .u-icon {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-        }
     }
     /deep/ .u-form-item__body__left {
         margin-bottom: 0 !important;

@@ -52,8 +52,8 @@
 </template>
 <script>
 import Top from '@/components/top/Top'
-import NumberInput from '@/components/numberInput/NumberInput'
-import Calendar from '@/components/calendar/Calendar'
+import NumberInput from '../comps/NumberInput'
+import Calendar from '../comps/Calendar'
 
 import _ from 'lodash'
 import moment from 'moment'
@@ -248,10 +248,6 @@ export default {
     .image {
         width: 155px;
         height: 155px;
-        image {
-            width: 100%;
-            height: 100%;
-        }
     }
     .product-title {
         max-width: 400px;
