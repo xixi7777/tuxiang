@@ -54,7 +54,7 @@
             </view>
         </view>
 
-        <view class="exchange-wrapper">
+        <view class="exchange-wrapper" v-if="skuList.length">
             <view class="header flex-box space-between">
                 <view class="start-city"><text>{{ product.cfd_dictLabel }}出发</text></view>
                 <!-- <view class="exchange-start flex-box">
@@ -64,7 +64,9 @@
             </view>
             <view class="exchange-date__wrapper">
                 <view class="more-choose">
-                    <navigator :url="`/productPages/pages/selectDate/index?product=${JSON.stringify(product)}`" hover-class="navigator-hover-class">更多班期</navigator>
+                    <navigator 
+                    :url="`/productPages/pages/selectDate/index?skubh=${defaultSelected.skubh}&kcrq=${defaultSelected.kcrq}`" 
+                    hover-class="navigator-hover-class">更多班期</navigator>
                 </view>
                 <view class="scroll-list-wrapper">
                     <scroll-view scroll-x="true" class="scroll">
@@ -81,13 +83,13 @@
             </view>
         </view>
 
-        <view class="product-detail">
+        <view class="product-detail" v-if="product.cpms">
             <view v-html="product.cpms"></view>
         </view>
 
         <view class="fixed-button">
             <view class="operation">
-                <button class="open-type__button" open-type="contact" @contact="contact" hover-class="none" plain>
+                <button class="open-type__button" open-type="contact" hover-class="none" plain>
                     <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/kefu.png"></image>
                     <text>客服</text>
                 </button>
@@ -99,7 +101,7 @@
                 </button>
             </view>
             <view class="button-wrapper">
-                <u-button type="primary" shape="circle" @click="toSelectDate">立即购买</u-button>
+                <u-button type="primary" :disabled="!defaultSelected.kcrq" shape="circle" @click="toSelectDate">立即购买</u-button>
             </view>
         </view>
     </view>
@@ -123,6 +125,7 @@ export default {
             product: {},
             currentNum: 0,
             skuList: [],
+            defaultSelected: {},
             cpbh: '',
             weekdays: {
                 1: '周一',
@@ -149,7 +152,7 @@ export default {
         },
         toSelectDate() {
             uni.navigateTo({
-                url: `/productPages/pages/selectDate/index`
+                url: `/productPages/pages/selectDate/index?skubh=${this.defaultSelected.skubh}&kcrq=${this.defaultSelected.kcrq}`
             })
         },
         getProductDetail(cpbh) {
@@ -167,15 +170,17 @@ export default {
                     endDate: moment().add(1, 'y').format('YYYY-MM-DD')
                 }).then(res => {
                     this.skuList = this.sortSkuByDate(res.data)
+                    this.skuList.forEach(item => {
+                        if (moment().format('YYYY-MM-DD') == moment(item.kcrq).format('YYYY-MM-DD')) {
+                            this.defaultSelected = item
+                        }
+                    })
             })
         },
         sortSkuByDate(list) {
             return list.sort((a, b) => {
                 return Date.parse(a.kcrq.replace(/-/g, '/')) - Date.parse(b.kcrq.replace(/-/g, '/'))
             })
-        },
-        contact(res) {
-            console.log(res)
         }
     }
 }

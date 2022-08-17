@@ -3,40 +3,44 @@
         <view class="spell-group">
             <view class="spell-item" v-for="(item, index) in list" :key="index">
                 <view class="header">
-                    <text class="start-date">出发日期：{{ item.date }}</text>
+                    <text class="start-date">出发日期：{{ item.cfrq }}</text>
                     <text class="sign-up">报名中</text>
                 </view>
                 <view class="content">
                     <view class="left">
-                        <view class="title"><text>{{ item.name }}</text></view>
-                        <view class="sign-date"><text>{{ item.registrationDate }}</text></view>
+                        <view class="title"><text>{{ item.cpmc }}</text></view>
+                        <view class="sign-date"><text>报名时间：{{ registerDate(item) }}</text></view>
                         <view>
-                            <text class="vip-price">会员价: 
+                            <text class="vip-price">{{ item.hdPriceName }}: 
                                 <text class="price-code">￥</text>
-                                <text class="price">{{ item.vipPrice }}</text>
+                                <text class="price">{{ item.hdPrice }}</text>
                             </text>
                             <text class="original-price">
-                                原价: {{ item.price }}
+                                原价: {{ item.yjPrice }}
                             </text>
                         </view>
                         <view>
-                            <text class="member">{{ item.members }}人发起</text>
+                            <text class="member">{{ item.teamRs }}人发起</text>
                         </view>
                         <view class="item-footer">
-                            <view class="grad">
+                            <view class="grad" @click="goDetail(item)">
                                 <text>立即抢位</text>
                             </view>
-                            <view class="icon-share">
-                                <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/share.png"></cover-image>
+                            <view class="grad-icon">
+                                <button class="open-type__button" open-type="share" hover-class="none" plain>
+                                    <image class="icon-share" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/share.png"></image>
+                                </button>
                             </view>
-                            <view class="icon-headset">
-                                <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/listen.png"></cover-image>
+                            <view class="grad-icon">
+                                <button class="open-type__button" open-type="contact" hover-class="none" plain>
+                                    <image class="icon-headset" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/listen.png"></image>
+                                </button>
                             </view>
                         </view>
                     </view>
                     <view class="right">
                         <view class="image">
-                            <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png"></cover-image>
+                            <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png"></image>
                         </view>
                     </view>
                 </view>
@@ -48,53 +52,43 @@
 export default {
     data() {
         return {
-            list: [
-                {
-                    date: '7月9日',
-                    name: '云南的第一场旅行',
-                    registrationDate: '7月9日-8月15日',
-                    vipPrice: 580,
-                    price: 120,
-                    members: 15,
-                    url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png'
-                },
-                {
-                    date: '7月9日',
-                    name: '云南的第一场旅行',
-                    registrationDate: '7月9日-8月15日',
-                    vipPrice: 580,
-                    price: 120,
-                    members: 15,
-                    url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png'
-                },
-                {
-                    date: '7月9日',
-                    name: '云南的第一场旅行云南的第一场旅行云南的第一场旅行云南的第一场旅行',
-                    registrationDate: '7月9日-8月15日',
-                    vipPrice: 580,
-                    price: 120,
-                    members: 15,
-                    url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png'
-                },
-                {
-                    date: '7月9日',
-                    name: '云南的第一场旅行',
-                    registrationDate: '7月9日-8月15日',
-                    vipPrice: 580,
-                    price: 120,
-                    members: 15,
-                    url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png'
-                },
-                {
-                    date: '7月9日',
-                    name: '云南的第一场旅行',
-                    registrationDate: '7月9日-8月15日',
-                    vipPrice: 580,
-                    price: 120,
-                    members: 15,
-                    url: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png'
-                }
-            ]
+            query: {
+                pageNum: 1,
+                pageSize: 10
+            },
+            total: 0,
+            list: []
+        }
+    },
+    onReachBottom() {
+        if (this.list.length === this.total) {
+            return
+        }
+        this.query.pageNum++
+        this.getList()
+    },
+    onPullDownRefresh() {
+        this.query.pageNum = 1
+        this.getList()
+    },
+    onShow() {
+        this.getList()
+    },
+    methods: {
+        registerDate(item) {
+            return `${uni.$u.timeFormat(item.bmBeginDate, 'mm/dd')}-${uni.$u.timeFormat(item.bmEndDate, 'mm/dd')}`
+        },
+        goDetail(item) {
+            uni.navigateTo({ url: `/productPages/pages/productDetail/index?cpbh=${item.cpbh}`})
+        },
+        getList() {
+            if (this.query.pageNum === 1) {
+                this.list = []
+            }
+            this.$api.mallLeagueVo(this.query).then(res => {
+                this.total = res.total
+                this.list = [...this.list, ...res.rows]
+            })
         }
     }
 }
@@ -205,6 +199,8 @@ export default {
                 .item-footer {
                     display: flex;
                     margin-top: 20px;
+                    justify-content: space-between;
+                    align-items: center;
                     .grad {
                         width: 183px;
                         height: 63px;
@@ -225,17 +221,18 @@ export default {
                             z-index: 2;
                         }
                     }
+                    .grad-icon {
+                        flex: 1;
+                    }
                     .icon-share {
                         width: 32px;
                         height: 34px;
-                        margin-left: 20px;
-                        margin-top: 10px;
+                        margin: 0 auto;
                     }
                     .icon-headset {
                         width: 37px;
                         height: 34px;
-                        margin-left: 54px;
-                        margin-top: 10px;
+                        margin: 0 auto;
                     }
                 }
             }

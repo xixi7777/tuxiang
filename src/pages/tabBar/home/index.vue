@@ -5,8 +5,10 @@
 		<view class="page-title">
 			<text>旅游</text>
 		</view>
-		<search></search>
-
+		<u-sticky offset-top="10">
+			<search @confirm="search" />
+		</u-sticky>
+		
 		<!-- swiper -->
 		<view class="banner-wrapper">
 			<view class="swiper-container">
@@ -66,8 +68,8 @@
 							<view class="list-image">
 								<image lazy-load :src="item.image"></image>
 							</view>
-							<view class="scroll-title"><text>{{ item.name }}</text></view>
-							<view class="price-wrapper"><text class="price-code">￥</text><text class="price">1180</text><text class="sale">七折</text></view>
+							<view class="scroll-title"><text>{{ item.cpmc }}</text></view>
+							<view class="price-wrapper"><text class="price-code">￥</text><text class="price">{{ item.price }}</text></view>
 						</navigator>
 					</view>
 				</scroll-view>
@@ -101,7 +103,7 @@
 					<view>
 						<view id="right" v-if="rightList.length">
 							<view v-for="(item,index) in rightList" :key="index" class="wf-item" @tap="itemTap(item)">
-								<WaterfallFlowItem :item="item" />
+								<WaterfallFlowItem v-if="item.image" :item="item" />
 							</view>
 						</view>
 					</view>
@@ -135,7 +137,6 @@ export default {
 	},
 	data() {
 		return {
-			keyword: null,
 			showPage: false,
 			current: 0,
 			wfList: [],
@@ -147,7 +148,7 @@ export default {
 			homeInfo: {}
 		}
 	},
-	onLoad() {
+	onShow() {
 		const openid = uni.getStorageSync('openid')
         if (!openid) {
             uni.reLaunch({
@@ -157,6 +158,9 @@ export default {
 			this.showPage = true
 			this.getConfig()
 		}
+	},
+	onPullDownRefresh() {
+		this.getConfig()
 	},
 	created() {
 		this.getUserInfo()
@@ -181,6 +185,9 @@ export default {
 	},
 	methods: {
 		...mapMutations(['setUserInfo']),
+		search(keyword) {
+			uni.navigateTo({ url: `/productPages/pages/recommend/index?search=${keyword}` })
+		},
 		getUserInfo() {
             const openid = uni.getStorageSync('openid')
             this.$api.getMallUser({ openid }).then(res => {
@@ -196,6 +203,7 @@ export default {
 			}).then(res => {
 				const keyValue = res.data['mall.system.bannl'].keyValue
 				this.homeInfo = JSON.parse(keyValue)
+				console.log(this.homeInfo)
 				this.wfList = _.get(this.homeInfo, ['hotproduct']) || []
 			})
 		}

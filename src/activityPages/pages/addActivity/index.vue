@@ -87,7 +87,6 @@
               <u-input
                 type="number"
                 v-model="form.headcount"
-                placeholder="请输入人数要求"
               />
             </u-form-item>
             <u-form-item
@@ -105,7 +104,6 @@
                 @confirm="confirmProduct"></u-picker>
             </u-form-item>
           </u-form>
-        <!-- </scroll-view> -->
       </view>
     </view>
 

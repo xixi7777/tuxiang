@@ -8,11 +8,13 @@
         <view class="hot-line">
             <view class="scroll-list-wrapper">
                 <scroll-view scroll-x="true" class="scroll">
-                    <view class="hot-item" v-for="(item, index) in hotLines" :key="index">
-                        <view class="hot-image">
-                            <image :src="item"></image>
-                        </view>
-                        <view class="item-footer"><text>热门路线</text></view>
+                    <view class="hot-item" v-for="(item, index) in rmxl" :key="index">
+                        <navigator :url="`/${item.url}`" hover-class="navigator-hover-class">
+                            <view class="hot-image">
+                                <image :src="item.image"></image>
+                            </view>
+                            <view class="item-footer"><text>{{ item.name }}</text></view>
+                        </navigator>
                     </view>
                 </scroll-view>
             </view>
@@ -21,26 +23,28 @@
         <view class="classics-wrapper">
             <text class="header">经典必去</text>
             <view class="list">
-                <view class="list__item" v-for="(item, index) in 4" :key="index">
+                <view class="list__item" v-for="(item, index) in jdbq" :key="index">
                     <view class="image">
                         <view class="top-icon">
                             <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/top1.png"></image>
                         </view>
-                        <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_2.png"></image>
+                        <image :src="item.image"></image>
                     </view>
                     <view class="desc">
-                        <view class="text-ellipsis title">
-                            <text>云南的第一场旅行-七日游十人团</text>
-                        </view>
-                        <view class="detail-info">
-                            <text>云南属于高原地区，景区距离相隔比较远，并且不在同一个方向。云南属于高原地区，景区距离相隔比较远，并且不在同一个方向</text>
-                        </view>
-                        <view class="actions">
-                            <view class="">
-                                <text class="price-code">￥</text>
-                                <text class="price">520</text>
+                        <view class="desc__content">
+                            <view class="text-ellipsis title">
+                                <text>{{ item.cpmc }}</text>
                             </view>
-                            <view class="trade-in">立即抢购</view>
+                            <view class="detail-info">
+                                <!-- <text>云南属于高原地区，景区距离相隔比较远，并且不在同一个方向。云南属于高原地区，景区距离相隔比较远，并且不在同一个方向</text> -->
+                            </view>
+                            <view class="actions">
+                                <view class="">
+                                    <text class="price-code">￥</text>
+                                    <text class="price">{{ item.price }}</text>
+                                </view>
+                                <view class="trade-in" @click="toProductDetail(item)">立即抢购</view>
+                            </view>
                         </view>
                     </view>
                 </view>
@@ -50,20 +54,43 @@
 </template>
 <script>
 import Top from '@/components/top/Top'
+import _ from 'lodash'
+const key = 'mall.system.phb'
 export default {
     components: {
         Top
     },
     data() {
         return {
-            hotLines: [
-                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png',
-                '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/hot_1.png'
-            ]
+            info: {},
+            list: []
+        }
+    },
+    onLoad() {
+        this.getConfig()
+    },
+    onPullDownRefresh() {
+		this.getConfig()
+	},
+    computed: {
+        jdbq() {
+            return _.get(this.info, ['jdbq']) || []
+        },
+        rmxl() {
+            return _.get(this.info, ['rmxl'])
+        }
+    },
+    methods: {
+        getConfig() {
+            this.$api.getConfigCache({
+                key
+            }).then(res => {
+                const keyValue = res.data[key].keyValue
+				this.info = JSON.parse(keyValue)
+            })
+        },
+        toProductDetail(product) {
+            uni.navigateTo({ url: `/productPages/pages/productDetail/index?${product.url}`})
         }
     }
 }
@@ -152,6 +179,13 @@ export default {
             .desc {
                 flex: 1;
                 padding-left: 24px;
+                height: 207px;
+                .desc__content {
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
+                    justify-content: space-between;
+                }
                 .title {
                     width: 391px;
                     font-size: 34px;

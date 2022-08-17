@@ -335,5 +335,38 @@ export default {
                 'content-type': 'application/x-www-form-urlencoded'
             }
         })
+    },
+    // 活动报名列表
+    activityUserList: data => {
+        return request({
+            url: '/wechat/team/activity/activityUserList',
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 活动报名
+    addUserInActivity: data => {
+        return request({
+            url: '/wechat/team/activity/addActivity',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 独立成团
+    mallLeagueVo: data => {
+        return request({
+            url: '/wechat/product/selectMallLeagueVo',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
     }
 }

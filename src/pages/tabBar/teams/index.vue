@@ -5,7 +5,7 @@
     <view class="page-title">
       <text>团队</text>
     </view>
-  <search></search>
+    <search @confirm="searchConfirm" />
 
     <view class="menu-wrapper">
         <u-row gutter="10">
@@ -106,16 +106,24 @@ export default {
     this.query.pageNum++
     this.getTeams()
   },
+  onPullDownRefresh() {
+    this.query.pageNum = 1
+    this.getTeams()
+  },
   computed: {
     ...mapGetters(['userInfo'])
   },
   methods: {
     moment,
-    resetQuery() {
+    searchConfirm(search) {
+      this.query.title = search
       this.query.pageNum = 1
       this.getTeams()
     },
     getTeams() {
+      if (this.query.pageNum === 1) {
+        this.teams = []
+      }
       this.$api.teamList(this.query).then(res => {
         this.teams = [...this.teams, ...res.rows]
         this.total = res.total

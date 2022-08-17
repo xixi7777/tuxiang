@@ -1,27 +1,41 @@
 <template>
   <view class="member-container">
     <top title="成员管理" />
-    <search></search>
+    <search @confirm="searchConfirm" />
 
     <view class="member-wrap">
       <scroll-view scroll-y="true" show-scrollbar="true">
         <view class="list">
           <view class="list-title">
             <view class="left"><text class="text">成员列表</text></view>
-            <image class="image" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/icon_edit.png" />
+            <!-- <u-icon v-if="!edit" @click="edit = true" size="28" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/icon_edit.png" /> -->
           </view>
 
           <view class="list-content">
             <view class="item item-title">
-              <text>姓名</text>
-              <text>职位</text>
-              <!-- <text>积分</text> -->
+              <view class="text__wrapper"><text>姓名</text></view>
+              <view class="text__wrapper text-right"><text>职位</text></view>
+              <!-- <view class="text__icon"><text>&nbsp;</text></view> -->
             </view>
-            <view v-for="(item, index) in list" :key="index" class="item item-con">
-              <text class="left">{{ item.nickName }}</text>
-              <text>{{ item.positionId_dictLabel }}</text>
-              <!-- <text>{{ item.point }}</text> -->
-            </view>
+            <!-- <view v-for="(item, index) in list" :key="index" class="item item-con">
+              <view class="text__wrapper"><text class="left">{{ item.nickName }}</text></view>
+              <view class="text__wrapper text-right"><text>{{ item.positionId_dictLabel }}</text></view>
+              <view class="text__icon"><u-icon size="22" name="minus-circle-fill" color="#e45656"></u-icon></view>
+            </view> -->
+            <u-swipe-action>
+              <u-swipe-action-item
+                :options="options"
+                v-for="(item, index) in list"
+                :disabled="item.userId == dzid"
+                :key="index"
+                @click="remove(item, index)"
+              >
+                <view class="item item-con">
+                  <view class="text__wrapper"><text class="left">{{ item.nickName }}</text></view>
+                <view class="text__wrapper text-right"><text>{{ item.positionId_dictLabel }}</text></view>
+                </view>
+              </u-swipe-action-item>
+            </u-swipe-action>
           </view>
         </view>
       </scroll-view>
@@ -32,6 +46,7 @@
 <script>
 import Top from '@/components/top/Top';
 import Search from '@/components/pageSearch/PageSearch';
+import { mapGetters } from 'vuex';
 export default {
   components: {
     Top,
@@ -39,17 +54,76 @@ export default {
   },
   data() {
     return {
-      list: []
+      list: [],
+      dzid: '',
+      edit: false,
+      query: {
+        teamId: '',
+        nickname: ''
+      }
     }
   },
   onLoad(option) {
-    this.getMembers(option.teamId)
+    this.query.teamId = option.teamId
+    this.dzid = option.dzid
+  },
+  computed: {
+    ...mapGetters(['userInfo']),
+    options() {
+      if (this.dzid != this.userInfo.id) {
+        return []
+      }
+      return [
+        {
+					icon: 'minus',
+					style: {
+						backgroundColor: '#e45656',
+						borderRadius: '50%',
+            padding: '6px',
+            width: '16px',
+            height: '16px',
+            marginLeft: '16px'
+					}
+        }
+      ]
+    }
   },
   methods: {
-    getMembers(teamId) {
-      this.$api.memberList({ teamId }).then(res => {
+    getMembers() {
+      this.$api.memberList(this.query).then(res => {
         this.list = res.rows
       })
+    },
+    searchConfirm(search) {
+      this.query.nickname = search
+    },
+    remove(user, index) {
+      uni.showModal({
+        title: '温馨提示',
+        content: '确定要移除此人吗？',
+        success: res => {
+          if (res.confirm) {
+            this.$api.removeMember({
+              loginUserId: this.userInfo.id,
+              userId: user.id,
+              teamId: this.query.teamId
+            }).then(res => {
+              this.list.splice(index, 1)
+            })
+          }
+        }
+      })
+    }
+  },
+  watch: {
+    query: {
+      immediate: true,
+      deep: true,
+      handler(n) {
+        if (n.teamId) {
+          this.getMembers()
+        }
+      }
     }
   }
 };
@@ -128,10 +202,26 @@ export default {
   }
 }
 
-.item {
-  margin-bottom: 25px;
+.list-content {
+  .item {
+    height: 80px;
+    align-items: center;
+    .text__wrapper {
+      text-align: left;
+      flex: 1;
+      line-height: 50px;
+      &.text-right {
+        text-align: right;
+      }
+    }
+    .text__icon {
+      width: 100px;
+      /deep/ .u-icon {
+        float: right;
+      }
+    }
+  }
 }
-
 .item-title {
   color: #929292;
 }

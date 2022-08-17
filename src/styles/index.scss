@@ -21,6 +21,7 @@
 .app-container {
     padding: 30px;
     position: relative;
+    min-height: 100vh;
 }
 .text-primary {
     color: $uni-color-primary;

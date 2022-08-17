@@ -26,15 +26,15 @@
             <view class="info-name">
               <text class="name text-ellipse">{{ team.title }}</text>
               <view class="team-btn">
-                <button>邀请</button>
-                <button>退团</button>
+                <button v-if="team.dzid == userInfo.id">邀请</button>
+                <button v-if="team.dzid != userInfo.id" @click="logoutTeam(team.id, team.userId)">退团</button>
               </view>
             </view>
-            <view class="info-gender">
+            <!-- <view class="info-gender">
               <view class="image-male image"> </view>
               <view class="image-female image"> </view>
-              <!-- <text>S码</text> -->
-            </view>
+              <text>S码</text>
+            </view> -->
 
             <!-- 头像 -->
             <view class="info-avatar">
@@ -44,12 +44,12 @@
               <view class="right">
                 <view>
                   <view class="name row-box">
-                    <!-- <text>名称</text> -->
-                    <!-- <text>肖战</text> -->
+                    <text>职务</text>
+                    <!-- <text></text> -->
                     <text>{{ team.dzxm }}</text>
                   </view>
                   <view class="role row-box">
-                    <!-- <text>成员</text> -->
+                    <text>{{ userInfo.id == team.dzid ? '队长' : '成员' }}</text>
                     <!-- <text>副队长</text> -->
                     <text>队长</text>
                   </view>
@@ -62,7 +62,7 @@
                   <view class="row-box">
                     <text>总人数</text>
                     <text>积分</text>
-                    <navigator :url="`/teamsPages/pages/createTeam/index?teamId=${team.id}`" hover-class="navigator-hover-class">
+                    <navigator v-if="team.dzid == userInfo.id" :url="`/teamsPages/pages/createTeam/index?teamId=${team.id}`" hover-class="navigator-hover-class">
                       <view class="info-edit">
                         信息编辑
                       </view>
@@ -81,16 +81,14 @@
 
           <!-- 功能区 -->
           <view class="feature-wrapper">
-            <u-row>
-              <u-col :span="3" v-for="(item, index) in features" :key="index">
-                <navigator :url="item.option ? `${item.url}?teamId=${team.id}` :item.url" hover-class="navigator-hover-class">
+            <view class="feature-item__content" v-for="(item, index) in features(team)" :key="index">
+              <navigator :url="item.option ? `${item.url}?teamId=${team.id}&dzid=${team.dzid}` :item.url" hover-class="navigator-hover-class">
                   <view class="feature-item">
                     <image class="icon-image" :src="item.icon"> </image>
                     <text>{{ item.name }}</text>
                   </view>
                 </navigator>
-              </u-col>
-            </u-row>
+            </view>
           </view>
         </view>
 
@@ -115,15 +113,13 @@
             </view>
             <view class="btn-wrapper">
               <view class="button">
-                <navigator url="" hover-class="navigator-hover-class"> 邀请好友 </navigator>
+                <u-button shape="circle" color="#17aa7d" open-type="share">邀请好友</u-button>
               </view>
               <view class="button">
-                <navigator :url="`/pages/signUpList/index?id=${item.id}`" hover-class="navigator-hover-class">
-                  报名列表
-                </navigator>
+                <u-button shape="circle" color="#74b9fd" @click="toSignUp">报名列表</u-button>
               </view>
               <view class="button">
-                <navigator url="" hover-class="navigator-hover-class"> 立即报名 </navigator>
+                <u-button shape="circle" color="#f8ab52" @click="joinActivity(team.id, item.id)">立即报名</u-button>
               </view>
             </view>
             <view v-if="index != list.length - 1">
@@ -140,16 +136,28 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
       team: {},
-      features: [
+      teams: []
+    };
+  },
+  onShow() {
+    this.getMyTeam()
+  },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
+  methods: {
+    features(team) {
+      let actions = [
         {
           name: '发起活动',
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/activity.png',
           option: true,
-          url: '/teamsPages/pages/addActivity/index',
+          url: '/activityPages/pages/addActivity/index',
         },
         {
           name: '排行榜',
@@ -166,15 +174,51 @@ export default {
           name: '服装商城',
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/mall.png',
           url: '/pages/mall/index',
-        },
-      ],
-      teams: []
-    };
-  },
-  onShow() {
-    this.getMyTeam()
-  },
-  methods: {
+        }
+      ]
+      if (team.dzid != this.userInfo.id) {
+        actions.shift()
+      }
+
+      return actions
+    },
+    toSignUp() {
+      uni.navigateTo({ url: '/activityPages/pages/enroll/index' })
+    },
+    logoutTeam(teamId, userId) {
+      uni.showModal({
+        title: '温馨提示',
+        content: '确定要退出团队吗？',
+        success: res => {
+          if (res.confirm) {
+            this.$api.removeMember({
+              loginUserId: this.userInfo.id,
+              userId,
+              teamId
+            }).then(res => {
+              uni.navigateBack()
+            })
+          }
+        }
+      })
+    },
+    joinActivity(teamId, activityId) {
+      uni.showModal({
+        title: '温馨提示',
+        content: '确定要报名参加此活动吗？',
+        success: res => {
+          if (res.confirm) {
+            this.$api.addUserInActivity({
+              activityId,
+              teamId,
+              openid: uni.getStorageSync('openid')
+            }).then(res => {
+              uni.$u.toast('已报名')
+            })
+          }
+        }
+      })
+    },
     getMyTeam() {
       this.$api.myTeamList({
         openid: uni.getStorageSync('openid')
@@ -404,6 +448,11 @@ export default {
     height: 125px;
     padding: 20px 50px;
     background: rgba(227, 234, 232, 0.22);
+    display: flex;
+    justify-content: space-between;
+    .feature-item__content {
+      flex: 1;
+    }
 
     .feature-item {
       display: flex;
@@ -502,28 +551,19 @@ export default {
   .btn-wrapper {
     text-align: center;
     padding: 18px;
+    display: flex;
+    justify-content: space-between;
 
     .button {
-      display: inline-block;
-      margin-right: 25px;
       width: 190px;
       height: 55px;
       line-height: 55px;
       border-radius: 32px;
       font-size: 30px;
       color: #fff;
-
-      &:nth-child(1) {
-        background: #17aa7d;
-      }
-
-      &:nth-child(2) {
-        background: #74b9fd;
-      }
-
-      &:nth-child(3) {
-        background: #f8ab52;
-        margin-right: 0;
+      /deep/ .u-button {
+        height: 100%;
+        width: 100%;
       }
     }
   }

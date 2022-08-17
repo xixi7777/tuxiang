@@ -1,24 +1,25 @@
 <template>
     <view class="app-container">
-        <view class="app-top-background home"></view>
-        <view class="page-title">
-            <navigator open-type="navigateBack" delta="1" hover-class="navigator-hover-class">
-                <u-icon color="#006848" size="20" name="arrow-left" class="arrow-left"></u-icon>
-            </navigator>
-		</view>
-		<search></search>
+        <view class="recommend-header">
+            <view class="app-top-background home"></view>
+            <view class="page-title">
+                <navigator open-type="navigateBack" delta="1" hover-class="navigator-hover-class">
+                    <u-icon color="#006848" size="20" name="arrow-left" class="arrow-left"></u-icon>
+                </navigator>
+            </view>
+            <search v-model="query.cpmc" @confirm="searchConfirm" />
 
-        <view class="header-filter">
-            <view class="title">热门推荐</view>
-            <!-- <view class="empty"></view> -->
-            <view class="sort-wrapper">
-                <view class="sort">
-                    <view class="sort-item">
-                        <text>线路 / 天数</text>
-                        <u-icon name="arrow-down-fill" size="16"></u-icon>
+            <view class="header-filter">
+                <view class="title">热门推荐</view>
+                <view class="sort-wrapper">
+                    <view class="sort">
+                        <view class="sort-item">
+                            <text>线路 / 天数</text>
+                            <u-icon name="arrow-down-fill" size="16"></u-icon>
+                        </view>
+                        <view class="sort-item"><text>自由行</text></view>
+                        <view class="sort-item"><text>飞机游</text></view>
                     </view>
-                    <view class="sort-item"><text>自由行</text></view>
-                    <view class="sort-item"><text>飞机游</text></view>
                 </view>
             </view>
         </view>
@@ -63,24 +64,57 @@
 <script>
 import Search from '@/components/pageSearch/PageSearch'
 
+import _ from 'lodash'
 export default {
     components: {
         Search
     },
     data() {
         return {
-            list: []
+            list: [],
+            total: 0,
+            query: {
+                pageNum: 1,
+                pageSize: 10,
+                cpmc: ''
+            }
         }
     },
-    onLoad() {
-        this.getProductList()
+    onLoad(option) {
+        this.query.cpmc = option.search || ''
+    },
+    onReachBottom() {
+        if (this.total === this.list.length) {
+            return
+        }
+        this.query.pageNum++
+    },
+    onPullDownRefresh() {
+        this.query.pageNum = 1
     },
     methods: {
-        getProductList() {
-			this.$api.selectProductListVo().then(res => {
-				this.list = res.data
+        searchConfirm(search) {
+            this.query.cpmc = search
+            this.query.pageNum = 1
+        },
+        getProductList: _.debounce(function() {
+            this.$api.selectProductListVo(this.query).then(res => {
+				this.list = [...this.list, ...res.rows]
+                this.total = res.total
 			})
-		}
+        }, 300)
+    },
+    watch: {
+        query: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                if (n.pageNum === 1) {
+                    this.list = []
+                }
+                this.getProductList()
+            }
+        }
     }
 }
 </script>
@@ -90,12 +124,19 @@ export default {
         display: inline-block;
     }
 }
+.recommend-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 30px;
+    z-index: 99;
+}
 .header-filter {
     margin-top: 56px;
     display: flex;
     align-items: center;
     &>.title {
-        // width: 144px;
         font-size: 36px;
         font-weight: 600;
         color: #17AA7D;
@@ -123,11 +164,7 @@ export default {
         display: flex;
         justify-content: flex-end;
         .sort-item {
-            // flex: 1;
             padding-left: 60px;
-            &:first-child {
-                // width: 220px;
-            }
             text {
                 font-size: 30px;
                 color: #333;
@@ -144,7 +181,7 @@ export default {
     }
 }
 .list-wrapper {
-    margin-top: 100px;
+    margin-top: 450px;
     .list-item {
         margin: 22px auto;
         display: flex;

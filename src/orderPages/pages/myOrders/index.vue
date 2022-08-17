@@ -119,11 +119,9 @@ export default {
             return
         }
         this.query.pageNum++
-        this.getOrderList()
     },
     onPullDownRefresh() {
         this.query.pageNum = 1
-        this.getOrderList()
     },
     computed: {
         // ...mapGetters(['orderStatus'])
@@ -150,6 +148,9 @@ export default {
             immediate: true,
             deep: true,
             handler(n) {
+                if (n.pageNum === 1) {
+                    this.orderList = []
+                }
                 if (n.openid) {
                     this.getOrderList()
                 }

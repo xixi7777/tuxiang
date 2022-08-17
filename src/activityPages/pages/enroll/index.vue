@@ -19,19 +19,18 @@
           >
 
           <view class="center"
-            ><text>{{ item.name }}</text></view
+            ><text>{{ item.xm }}</text></view
           >
           <view
             :class="[
               'right',
               {
                 paid: item.status == 1,
-                unpaid: item.status == 2,
-                pay_failed: item.status == 3,
+                unpaid: item.status == 0,
               },
             ]"
           >
-            <text>{{ getStatusText(item.status) }}</text>
+            <text>{{ item.zfzt ? '已支付' : '未支付' }}</text>
           </view>
         </view>
       </scroll-view>
@@ -46,29 +45,12 @@ export default {
   },
   data() {
     return {
-      list: [
-        //0，取消支付；1，已支付；2，未支付；3，支付失败
-        {
-          name: '广河',
-          status: 0,
-        },
-        {
-          name: '广河',
-          status: 1,
-        },
-        {
-          name: '广河',
-          status: 1,
-        },
-        {
-          name: '广河',
-          status: 2,
-        },
-        {
-          name: '广河',
-          status: 3,
-        },
-      ],
+      list: [],
+      total: 0,
+      query: {
+        pageNum: 1,
+        pageSize: 10
+      },
       topImageUrl: [
         '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_top1.png',
         '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_top2.png',
@@ -76,27 +58,38 @@ export default {
       ],
     };
   },
+  onShow() {
+    this.getList()
+  },
+  onReachBottom() {
+    if (this.list.length === this.total) {
+      return
+    }
+    this.query.pageNum++
+    this.getList()
+  },
+  onPullDownRefresh() {
+    this.query.pageNum = 1
+    this.getList()
+  },
   methods: {
-    getStatusText(status) {
-      switch (status) {
-        case 0:
-          return '取消支付';
-          break;
-        case 1:
-          return '已支付';
-          break;
-        case 2:
-          return '未支付';
-          break;
-        case 3:
-          return '支付失败';
-          break;
-        default:
-          return '取消支付';
-          break;
-      }
+    getList() {
+      this.$api.activityUserList({
+        openid: uni.getStorageSync('openid'),
+        ...this.query
+      }).then(res => {
+        this.list = [...this.list, ...res.rows]
+        this.total = res.total
+      })
     },
   },
+  watch: {
+    'query.pageNum'(n) {
+      if (n === 1) {
+        this.list = []
+      }
+    }
+  }
 };
 </script>
 <style lang="scss" scope>

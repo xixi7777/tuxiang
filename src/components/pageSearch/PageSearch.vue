@@ -1,11 +1,18 @@
 <template>
-    <view class="page-search">
-        <view class="search-icon">
-            <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/search.png"></cover-image>
-        </view>
-        <input class="input"
-        placeholder="请输入你想要的内容" />
-    </view>
+    <!-- <view class="search-wrapper"> -->
+        <!-- <u-sticky offset-top="40"> -->
+            <view class="page-search">
+                <view class="search-icon">
+                    <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/search.png"></image>
+                </view>
+                <input 
+                class="input"
+                v-model="inputVal" 
+                @confirm="confirm"
+                placeholder="请输入你想要的内容" />
+            </view>
+        <!-- </u-sticky> -->
+    <!-- </view> -->
 </template>
 <script>
 export default {
@@ -17,14 +24,27 @@ export default {
     },
     data() {
         return {
-
+            inputVal: ''
+        }
+    },
+    methods: {
+        confirm(e) {
+            this.$emit('confirm', this.inputVal)
+        }
+    },
+    watch: {
+        value: {
+            immediate: true,
+            handler(n) {
+                this.inputVal = n
+            }
         }
     }
 }
 </script>
 <style lang="scss" scoped>
 .page-search {
-    margin-top: 50px;
+    // margin-top: 50px;
     position: relative;
     width: 690px;
     height: 80px;
