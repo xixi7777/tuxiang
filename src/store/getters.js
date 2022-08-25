@@ -9,5 +9,6 @@ export default {
     orderStatus: state => state.orderStatus,
     zjlxOptions: state => state.zjlxOptions,
     cxlxOptions: state => state.cxlxOptions,
-    userInfo: state => state.userInfo
+    userInfo: state => state.userInfo,
+    isIndividual: state => state.isIndividual
 }

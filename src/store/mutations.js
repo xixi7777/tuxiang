@@ -32,5 +32,8 @@ export default {
     },
     setUserInfo(state, userInfo) {
         state.userInfo = userInfo
+    },
+    setIndividual(state, individual) {
+        state.isIndividual = individual
     }
 }

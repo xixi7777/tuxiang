@@ -9,7 +9,7 @@
 
     <view class="menu-wrapper">
         <u-row gutter="10">
-            <u-col span="4" v-for="(m, index) in menus" :key="index">
+            <u-col span="6" v-for="(m, index) in menus" :key="index">
                 <navigator :url="m.url" hover-class="navigator-hover-class">
                     <view :class="['menu-item', `menu-item__${index+1}`]">
                         <view class="icon-box">
@@ -26,14 +26,13 @@
         <view class="team-item" v-for="(item, index) in teams" :key="index">
             <view class="avatar">
               <image :src="item.logo" mode="aspectFill"></image>
-                <!-- <u-avatar :src="item.logo"></u-avatar> -->
             </view>
             <view class="name text-ellipsis"><text>{{ item.title }}</text></view>
             <view class="desc text-ellipsis"><text>{{ item.note }}</text></view>
             <view class="member-num">{{ item.zrs }}</view>
             <view class="members">团队人数</view>
             <view class="date"><text>{{ moment(item.createTime).format('YYYY年MM月DD日') }}</text></view>
-            <view class="button">
+            <view class="button" v-if="userInfo.id != item.dzid">
                 <u-button type="primary" shape="circle" text="申请加入" @click="joinTeam(item)"></u-button>
             </view>
         </view>
@@ -72,12 +71,12 @@ export default {
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/chuangjiantuandui.png',
           title: '创建团队',
           url: '/teamsPages/pages/createTeam/index',
-        },
-        {
-          icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/store.png',
-          title: '逛商场',
-          url: '/pages/mall/index',
-        },
+        }
+        // {
+        //   icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/store.png',
+        //   title: '逛商场',
+        //   url: '/pages/mall/index',
+        // },
       ],
       teams: [],
       total: 0,
@@ -163,6 +162,9 @@ export default {
 <style lang="scss" scoped>
 .menu-wrapper {
   margin-top: 60px;
+  /deep/ .u-row {
+    justify-content: center !important;
+  }
   .menu-item {
     width: 210px;
     height: 142px;
@@ -170,6 +172,7 @@ export default {
     text-align: center;
     backdrop-filter: blur(10px);
     border: 1px solid transparent;
+    margin: 0 auto;
     .icon-box {
       margin: 0 auto;
       margin-top: 20px;

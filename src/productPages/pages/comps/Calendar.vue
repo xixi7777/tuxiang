@@ -28,7 +28,7 @@
                 <view class="item" v-for="(item, index) in dates" :key="index">
                     <view 
                     :class="['day', 
-                    !item.isCurM && 'not-current',
+                    (!item.isCurM || disabled) && 'not-current',
                     isSelected(item.year, item.month, item.date) && 'is-selected'
                     ]"
                     @click="selectDate(item)">
@@ -56,6 +56,10 @@ export default {
         defaultSelectDate: {
             type: String,
             default: ''
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -203,6 +207,9 @@ export default {
             return y == this.choose.year && m == this.choose.month && d == this.choose.date
         },
         selectDate(date) {
+            if (this.disabled) {
+                return
+            }
             this.$emit('select-date', date)
             this.choose = date
         }

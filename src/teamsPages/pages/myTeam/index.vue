@@ -95,22 +95,24 @@
         <!-- 活动列表 -->
         <view class="activity-group">
           <view class="activity-item" v-for="(item, index) in team.activities" :key="index">
-            <view class="activity-content">
-              <view class="left">
-                <image class="image" mode="aspectFill" :src="item.image"></image>
-              </view>
-              <view class="right">
-                <view class="title"><text>{{ item.name }}</text></view>
-                <view class="place"><text>活动地点：</text><text class="place-name">{{ item.address }}</text></view>
-                <view class="date-box">
-                  <view>活动时间：</view>
-                  <view class="date">
-                    <view class="date1">{{ item.beginTime }}</view>
-                    <view class="date2">{{ item.finishTime }}</view>
+            <navigator hover-class="navigator-hover-class" :url="`/productPages/pages/productDetail/index?cpbh=${item.cpbh}&teamId=${team.id}&activityId=${item.id}`">
+              <view class="activity-content">
+                  <view class="left">
+                    <image class="image" mode="aspectFill" :src="item.image"></image>
                   </view>
-                </view>
+                  <view class="right">
+                    <view class="title"><text>{{ item.name }}</text></view>
+                    <view class="place"><text>活动地点：</text><text class="place-name">{{ item.address }}</text></view>
+                    <view class="date-box">
+                      <view>活动时间：</view>
+                      <view class="date">
+                        <view class="date1">{{ item.beginTime }}</view>
+                        <view class="date2">{{ item.finishTime }}</view>
+                      </view>
+                    </view>
+                  </view>
               </view>
-            </view>
+            </navigator>
             <view class="btn-wrapper">
               <view class="button">
                 <u-button shape="circle" color="#17aa7d" open-type="share">邀请好友</u-button>
@@ -122,7 +124,7 @@
                 <u-button shape="circle" color="#f8ab52" @click="joinActivity(team.id, item.id)">立即报名</u-button>
               </view>
             </view>
-            <view v-if="index != list.length - 1">
+            <view v-if="index < team.activities.length-1">
               <image class="decor left-decor"
                 src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
               <image class="decor right-decor"
@@ -159,22 +161,22 @@ export default {
           option: true,
           url: '/activityPages/pages/addActivity/index',
         },
-        {
-          name: '排行榜',
-          icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/rankings.png',
-          url: '/productPages/pages/leaderboard/index',
-        },
+        // {
+        //   name: '排行榜',
+        //   icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/rankings.png',
+        //   url: '/productPages/pages/leaderboard/index',
+        // },
         {
           name: '成员列表',
           icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/member.png',
           option: true,
           url: '/teamsPages/pages/member/index',
         },
-        {
-          name: '服装商城',
-          icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/mall.png',
-          url: '/pages/mall/index',
-        }
+        // {
+        //   name: '服装商城',
+        //   icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/mall.png',
+        //   url: '/pages/mall/index',
+        // }
       ]
       if (team.dzid != this.userInfo.id) {
         actions.shift()

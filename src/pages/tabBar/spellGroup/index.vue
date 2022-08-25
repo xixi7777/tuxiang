@@ -1,5 +1,5 @@
 <template>
-    <view class="app-container">
+    <view class="app-container" :style="{backgroundImage: `url(${bgImage})`}">
         <view class="spell-group">
             <view class="spell-item" v-for="(item, index) in list" :key="index">
                 <view class="header">
@@ -27,7 +27,14 @@
                                 <text>立即抢位</text>
                             </view>
                             <view class="grad-icon">
-                                <button class="open-type__button" open-type="share" hover-class="none" plain>
+                                <button 
+                                :data-cpbh="item.cpbh"
+                                data-image="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png"
+                                class="open-type__button" 
+                                id="product_share" 
+                                open-type="share" 
+                                hover-class="none" 
+                                plain>
                                     <image class="icon-share" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/share.png"></image>
                                 </button>
                             </view>
@@ -40,7 +47,7 @@
                     </view>
                     <view class="right">
                         <view class="image">
-                            <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/yunnan.png"></image>
+                            <image :src="image(item)"></image>
                         </view>
                     </view>
                 </view>
@@ -56,6 +63,7 @@ export default {
                 pageNum: 1,
                 pageSize: 10
             },
+            bgImage: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/spell_bg.png',
             total: 0,
             list: []
         }
@@ -73,13 +81,26 @@ export default {
     },
     onShow() {
         this.getList()
+        this.getConfig()
     },
     methods: {
+        getConfig() {
+            this.$api.getConfigCache({ key: 'mall.system.phb' })
+            .then(res => {
+                let keyValue = res.data['mall.system.phb'].keyValue
+				keyValue = JSON.parse(keyValue)
+                this.bgImage = keyValue.pt.image
+            })
+        },
         registerDate(item) {
             return `${uni.$u.timeFormat(item.bmBeginDate, 'mm/dd')}-${uni.$u.timeFormat(item.bmEndDate, 'mm/dd')}`
         },
+        image(item) {
+            const images = item.image.split(',')
+            return images[0]
+        },
         goDetail(item) {
-            uni.navigateTo({ url: `/productPages/pages/productDetail/index?cpbh=${item.cpbh}`})
+            uni.navigateTo({ url: `/productPages/pages/productDetail/index?individual=true&cpbh=${item.cpbh}&cxrq=${item.cfrq}`})
         },
         getList() {
             if (this.query.pageNum === 1) {
@@ -95,7 +116,7 @@ export default {
 </script>
 <style lang="scss" scoped>
     .app-container {
-        background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/spell_bg.png);
+        // background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/spell_bg.png);
         background-size: 100% 596px;
         background-attachment: fixed;
         background-repeat: no-repeat;

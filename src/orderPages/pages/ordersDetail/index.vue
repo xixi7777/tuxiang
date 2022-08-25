@@ -26,14 +26,14 @@
                     </button>
                 </view>
                 <view class="contact-item">
-                    <button class="open-type__button" open-type="contact" hover-class="none" plain>
+                    <button class="open-type__button" @click="phoneShow = true" hover-class="none" plain>
                         <image class="img" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_phone.png">
                             </image>
                         <view><text>商家电话</text></view>
                     </button>
                 </view>
                 <view class="contact-item">
-                    <button class="open-type__button" open-type="contact" hover-class="none" plain>
+                    <button class="open-type__button" @click="feedbackShow = true" hover-class="none" plain>
                         <image class="img" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_edit.png">
                             </image>
                         <view><text>意见反馈</text></view>
@@ -80,7 +80,7 @@
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png">
                         </image>
                         <text class="key">手机号</text>
-                        <text class="value">86 {{ orderDetail.lxrdh }}</text>
+                        <text class="value">{{ orderDetail.lxrdh }}</text>
                     </view>
                     <!-- <view class="item-line">
                         <image class="pre-img"
@@ -110,7 +110,7 @@
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_supplier.png">
                         </image>
                         <text class="key">供应商</text>
-                        <text class="value value-focus text-ellipsis">恒大国旅</text>
+                        <text class="value value-focus text-ellipsis">{{ orderDetail.gys_dictLabel }}</text>
                     </view>
                     <view class="item-line">
                         <image class="pre-img"
@@ -122,7 +122,7 @@
                         <image class="pre-img"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_date.png"></image>
                         <text class="key">时间</text>
-                        <text class="value">2022.06.23 22:40:39</text>
+                        <text class="value">{{ orderDetail.createTime }}</text>
                     </view>
                     <!-- <view>
                         <image class="decor left-decor"
@@ -137,6 +137,26 @@
                 <u-button shape="circle" @click="toRefund">申请退款</u-button>
             </view>
         </view>
+
+        <u-modal 
+        :show="phoneShow" 
+        title="提示" 
+        :content='`确定拨打电话${phoneNumber}`'
+        @cancel="phoneShow = false"
+        @confirm="confirmCall"
+        closeOnClickOverlay
+        showCancelButton>
+        </u-modal>
+
+        <u-modal 
+        :show="feedbackShow" 
+        title="意见反馈" 
+        @cancel="feedbackShow = false"
+        @confirm="confirmFeedback"
+        closeOnClickOverlay
+        showCancelButton>
+            <u-textarea auto-focus v-model="feedback"></u-textarea>
+        </u-modal>
     </view>
 </template>
 
@@ -146,13 +166,20 @@ import { mapMutations } from 'vuex'
 export default {
     data() {
         return {
+            phoneShow: false,
+            feedbackShow: false,
             appraise: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             orderId: '',
-            orderDetail: {}
+            orderDetail: {},
+            phoneNumber: '',
+            feedback: ''
         }
     },
     onLoad(option) {
         this.orderId = option.id
+    },
+    created() {
+        this.getPhoneNumber()
     },
     computed: {
         cxrList() {
@@ -165,6 +192,11 @@ export default {
     },
     methods: {
         ...mapMutations(['setCxrSelectedList', 'setCxrList']),
+        getPhoneNumber() {
+            this.$api.getSysConfigCache({ key: 'mall.system.phone' }).then(res => {
+                this.phoneNumber = res.data['mall.system.phone']
+            })
+        },
         getDetail() {
             this.$api.orderDetail({ id: this.orderId }).then(res => {
                 this.orderDetail = res.data
@@ -174,6 +206,28 @@ export default {
         },
         toRefund() {
             uni.navigateTo({ url: `/orderPages/pages/refund/index?id=${this.orderId}` })
+        },
+        confirmCall() {
+            wx.makePhoneCall({
+                phoneNumber: this.phoneNumber,
+                success: res => {
+                    this.phoneShow = flase
+                }
+            })
+        },
+        confirmFeedback() {
+            this.feedback = this.feedback.trim()
+            if (!this.feedback) {
+                uni.$u.toast('请填写您的意见反馈')
+                return
+            }
+            this.$api.insertFeedback({
+                openid: uni.getStorageSync('openid'),
+                yjnr: this.feedback,
+                ddh: this.orderDetail.ddbh
+            }).then(rest => {
+                this.feedbackShow = false
+            })
         }
     },
     watch: {
@@ -405,7 +459,10 @@ export default {
 
     .btn-refund {
         background: rgba(0, 0, 0, 0.0600);
-        color: #000000;
+        color: #000;
     }
+}
+/deep/ .u-textarea {
+    border: 1px solid #BDBDBD;
 }
 </style>

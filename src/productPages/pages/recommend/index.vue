@@ -7,7 +7,7 @@
                     <u-icon color="#006848" size="20" name="arrow-left" class="arrow-left"></u-icon>
                 </navigator>
             </view>
-            <search v-model="query.cpmc" @confirm="searchConfirm" />
+            <search class="mt-10" v-model="query.search" @confirm="searchConfirm" />
 
             <view class="header-filter">
                 <view class="title">热门推荐</view>
@@ -17,8 +17,13 @@
                             <text>线路 / 天数</text>
                             <u-icon name="arrow-down-fill" size="16"></u-icon>
                         </view>
-                        <view class="sort-item"><text>自由行</text></view>
-                        <view class="sort-item"><text>飞机游</text></view>
+                        <view 
+                        :class="['sort-item', query.xlflCode == item && 'selected']" 
+                        @click="selectXlflCode(item)"
+                        v-for="(item, index) in nav" 
+                        :key="index">
+                            <text>{{ item }}</text>
+                        </view>
                     </view>
                 </view>
             </view>
@@ -31,10 +36,10 @@
                         <view class="left">
                             <text class="top-left" v-if="item.cfd">{{ item.cfd_dictLabel }}出发</text>
                             <text class="bottom" v-if="item.ywts">多日游玩</text>
-                            <view class="image">
-                                <cover-image v-if="item.cpzt" :src="item.cpzt"></cover-image>
-                                <cover-image v-else src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_2.png"></cover-image>
-                            </view>
+                            <!-- <view class="image"> -->
+                                <image lazy-load v-if="item.cpzt" :src="cpzt(item)"></image>
+                                <image lazy-load v-else src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_2.png"></image>
+                            <!-- </view> -->
                         </view>
                         <view class="right">
                             <view class="desc">
@@ -73,15 +78,19 @@ export default {
         return {
             list: [],
             total: 0,
+            search: '',
+            nav: ['自由行', '跟团游'],
             query: {
                 pageNum: 1,
                 pageSize: 10,
-                cpmc: ''
+                search: '',
+                xlflCode: ''
             }
         }
     },
     onLoad(option) {
-        this.query.cpmc = option.search || ''
+        this.query.search = option.search || ''
+        this.query.xlflCode = option.xlflCode || ''
     },
     onReachBottom() {
         if (this.total === this.list.length) {
@@ -93,8 +102,17 @@ export default {
         this.query.pageNum = 1
     },
     methods: {
+        selectXlflCode(item) {
+            this.query.pageNum = 1
+            if (this.query.xlflCode == item) this.query.xlflCode = ''
+            else this.query.xlflCode = item
+        },
+        cpzt(item) {
+            const images = item.cpzt.split(',')
+            return images[0]
+        },
         searchConfirm(search) {
-            this.query.cpmc = search
+            this.query.search = search
             this.query.pageNum = 1
         },
         getProductList: _.debounce(function() {
@@ -131,6 +149,9 @@ export default {
     right: 0;
     padding: 30px;
     z-index: 99;
+    .home {
+        height: 360px;
+    }
 }
 .header-filter {
     margin-top: 56px;
@@ -177,11 +198,16 @@ export default {
                 margin-left: 2px;
                 margin-top: 2px;
             }
+            &.selected {
+                text {
+                    color: #17AA7D;
+                }
+            }
         }
     }
 }
 .list-wrapper {
-    margin-top: 450px;
+    margin-top: 350px;
     .list-item {
         margin: 22px auto;
         display: flex;

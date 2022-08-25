@@ -9,5 +9,6 @@ export default {
     orderStatus: [],
     zjlxOptions: [],
     cxlxOptions: [],
-    userInfo: {}
+    userInfo: {},
+    isIndividual: false
 }

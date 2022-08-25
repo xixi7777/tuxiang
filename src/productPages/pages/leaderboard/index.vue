@@ -2,7 +2,8 @@
     <view class="app-container">
         <top background-color="#000421" backIcon-color="#fff"/>
         <view class="biwan">
-            <cover-image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/biwan.png"></cover-image>
+            <cover-image v-if="!phbtp" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/biwan.png"></cover-image>
+            <cover-image v-else :src="phbtp"></cover-image>
         </view>
 
         <view class="hot-line">
@@ -11,7 +12,7 @@
                     <view class="hot-item" v-for="(item, index) in rmxl" :key="index">
                         <navigator :url="`/${item.url}`" hover-class="navigator-hover-class">
                             <view class="hot-image">
-                                <image :src="item.image"></image>
+                                <image :src="item.image" lazy-load></image>
                             </view>
                             <view class="item-footer"><text>{{ item.name }}</text></view>
                         </navigator>
@@ -28,7 +29,7 @@
                         <view class="top-icon">
                             <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/top1.png"></image>
                         </view>
-                        <image :src="item.image"></image>
+                        <image :src="item.image" lazy-load></image>
                     </view>
                     <view class="desc">
                         <view class="desc__content">
@@ -78,6 +79,9 @@ export default {
         },
         rmxl() {
             return _.get(this.info, ['rmxl'])
+        },
+        phbtp() {
+            return _.get(this.info, ['phbtp', 'image']) || ''
         }
     },
     methods: {

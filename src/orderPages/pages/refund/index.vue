@@ -20,7 +20,7 @@
                 <view class="info-box">
                     <view class="order-product">
                         <view class="left">
-                            <image class="img" mode="scaleToFill" :src="order.cpzp"></image>
+                            <image lazy-load class="img" mode="scaleToFill" :src="productImg"></image>
                         </view>
                         <view class="right">
                             <view class="title">
@@ -54,7 +54,7 @@
                         <u-icon size="20" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png"></u-icon>
                         <text class="key">成人</text>
                     </view>
-                    <view class="item-price">￥ {{ order.crj || 0}} * {{ adult.length }}</view>
+                    <view class="item-price">￥ {{ adult[0].price || 0}} * {{ adult.length }}</view>
                 </view>
 
                 <view class="item-line item-line__title" v-if="children.length">
@@ -62,7 +62,7 @@
                         <u-icon size="20" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png"></u-icon>
                         <text class="key">儿童</text>
                     </view>
-                    <view class="item-price">￥ {{ order.etj || 0}} * {{ children.length }}</view>
+                    <view class="item-price">￥ {{ children[0].price || 0}} * {{ children.length }}</view>
                 </view>
 
                 <view>
@@ -179,6 +179,12 @@ export default {
                 return refund.dictLabel
             }
 
+            return ''
+        },
+        productImg() {
+            if (_.get(this.order, ['productImg'])) {
+                return this.order.productImg.split(',')[0]
+            }
             return ''
         }
     },

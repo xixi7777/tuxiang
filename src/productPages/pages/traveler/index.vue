@@ -146,12 +146,20 @@ export default {
     created() {
         this.getCxlx()
         this.getZjlx()
+        this.getCxrList()
     },
     onLoad(option) {
         this.readonly = option.readonly || false
     },
     methods: {
         ...mapMutations(['setCxrSelectedList', 'setCxrList', 'setCxlxOptions', 'setZjlxOptions']),
+        getCxrList() {
+            this.$api.cxrList({
+                openid: uni.getStorageSync('openid')
+            }).then(res => {
+                this.travelerList = res.data
+            })
+        },
         getCxlx() {
             this.$api.orderConfigType({ code: 'mall_order_people' }).then(res => {
                 this.setCxlxOptions(res.data)
@@ -163,6 +171,10 @@ export default {
             })
         },
         checkboxGroupChange(values) {
+            if (!values.length) {
+                this.setCxrSelectedList([])
+                return
+            }
             const list = []
             this.travelerList.forEach(item => {
                 if (values.includes(item.zjhm)) {
@@ -194,7 +206,7 @@ export default {
                 lxdh: '',
                 zjlx: '',
                 zjhm: '',
-                cxlx: 1,
+                cxlx: '',
                 bz: ''
             }
             this.$refs.uForm.resetFields()

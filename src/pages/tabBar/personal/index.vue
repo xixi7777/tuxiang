@@ -6,7 +6,7 @@
 
         <view class="person-wrapper">
             <view class="left">
-                <view class="name text-ellipse"><text>Hi~, 我是{{ userInfo.nickName }}</text></view>
+                <view class="name text-ellipsis"><text>Hi~, 我是{{ userInfo.nickName }}</text></view>
                 <view class="team"><text>所属团队: {{ userInfo.team ? userInfo.team : '暂未加入团队' }}</text>
                     <view class="leader" v-if="userInfo.teamzw_dictLabel">
                         <text>{{ userInfo.teamzw_dictLabel }}</text>
@@ -57,7 +57,7 @@
                 <view class="title"><text>更多功能</text></view>
                 <view class="order-type">
                     <view class="item" v-for="(item, index) in functions" :key="index">
-                        <button class="open-type__button" :open-type="item.openType" hover-class="none" plain>
+                        <button class="open-type__button" @click="toOthers(item.url)" hover-class="none" plain>
                             <view class="function-icon">
                                     <image :src="item.icon"></image>
                             </view>
@@ -69,7 +69,17 @@
 
             <view class="order-wrapper about">
                 <view class="about-list" v-for="(item, index) in about" :key="index">
-                    <button class="open-type__button" :open-type="item.openType" hover-class="none" plain>
+                    <button v-if="item.openType" class="open-type__button" :open-type="item.openType" hover-class="none" plain>
+                        <view class="about-icon">
+                            <image :src="item.icon"></image>
+                        </view>
+                        <view class="about-title"><text>{{ item.title }}</text></view>
+                        <view class="go">
+                            <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png">
+                            </image>
+                        </view>
+                    </button>
+                    <button v-else class="open-type__button" @click="goPage(item)" hover-class="none" plain>
                         <view class="about-icon">
                             <image :src="item.icon"></image>
                         </view>
@@ -89,6 +99,7 @@ import { mapGetters, mapMutations } from 'vuex'
 export default {
     data() {
         return {
+            policy: '',
             orderTypes: [
                 { label: '全部', value: '1', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dingdanorder.png' },
                 { label: '待付款', value: '2', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/qianbao.png' },
@@ -96,13 +107,13 @@ export default {
                 { label: '退款', value: '4', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/tuikuanshouhou.png' }
             ],
             functions: [
-                { title: '积分明细', openType: '', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/jifenmingxi.png' },
-                { title: '我的收藏', openType: '', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/wodeshoucang.png' },
-                { title: '分享好友', openType: 'share', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang.png' }
+                { title: '积分明细', url: '/otherPages/pages/collection/index?integral=1', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/jifenmingxi.png' },
+                { title: '我的收藏', url: '/otherPages/pages/collection/index?type=0', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/wodeshoucang.png' },
+                { title: '分享好友', url: '/otherPages/pages/collection/index?type=1', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang.png' }
             ],
             about: [
-                { title: '关于我们', openType: '', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/guanyuwomen.png' },
-                { title: '用户协议', openType: '', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/xieyi.png' },
+                { title: '关于我们', url: '/otherPages/pages/policy/index?key=mall.system.we', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/guanyuwomen.png' },
+                { title: '用户协议', url: '/otherPages/pages/policy/index?key=mall.system.policy', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/xieyi.png' },
                 { title: '联系客服', openType: 'contact', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/kefu.png' }
             ]
         }
@@ -110,12 +121,28 @@ export default {
     computed: {
         ...mapGetters(['orderStatus', 'userInfo'])
     },
+    onShow() {
+        this.getOrderTypes()
+        this.getUserInfo()
+    },
     methods: {
         ...mapMutations(['setOrderStatus', 'setUserInfo']),
         getOrderTypes() {
             this.$api.orderConfigType({ code: 'mall_order_status' }).then(res => {
                 this.setOrderStatus(res.data)
             })
+        },
+        getUserInfo() {
+            const openid = uni.getStorageSync('openid')
+            this.$api.getMallUser({ openid }).then(res => {
+                this.setUserInfo(res.data)
+            })
+        },
+        goPage(item) {
+            uni.navigateTo({ url: item.url })
+        },
+        toOthers(url) {
+            uni.navigateTo({ url })
         }
     }
 }
@@ -151,6 +178,7 @@ export default {
             font-size: 46px;
             letter-spacing: 3px;
             font-weight: bold;
+            max-width: 500px;
         }
 
         .team {

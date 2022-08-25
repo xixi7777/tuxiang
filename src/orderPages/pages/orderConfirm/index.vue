@@ -95,7 +95,7 @@
             <view class="content-item travel-info">
                 <view class="item-line"> <text class="item-title">出行信息</text> </view>
                 <u-form ref="formGoOut">
-                    <view class="item-line" v-for="item in travelers" :key="item.zjhm">
+                    <view class="item-line" v-for="(item, index) in travelers" :key="index" @click="addTravelers">
                         <image class="pre-img"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png"></image>
                         <text class="key">出行人</text>
@@ -107,7 +107,7 @@
                         placeholder="请添加1个出行人" 
                         border="none">
                         </u-input>
-                        <u-icon name="plus" color="#17AA7D" size="20" @click="addTravelers"></u-icon>
+                        <u-icon name="plus" color="#17AA7D" size="20"></u-icon>
                     </view>
                 </u-form>
 
@@ -179,22 +179,22 @@ export default {
                         type: 'string',
                         required: true,
                         message: '请输入真实姓名',
-                        trigger: ['blur'],
+                        trigger: ['blur', 'change'],
                     },
                 ],
                 lxrdh: [
                     {
                         required: true,
                         message: '请输入手机号',
-                        trigger: ['blur'],
+                        trigger: ['blur', 'change'],
                     },
                     {
                         validator: (rule, value, callback) => {
+                            console.log(uni.$u.test.mobile(value))
                             return uni.$u.test.mobile(value);
                         },
-                        message: '手机号码不正确',
-                        trigger: ['blur'],
-                    },
+                        message: '手机号码格式不正确'
+                    }
                 ]
             },
             show: false
@@ -220,7 +220,17 @@ export default {
             if (this.cxrSelectedList.length) {
                 return this.cxrSelectedList
             }
-            return [{ zjhm: '5555555555', xm: '' }]
+            const arr = []
+            for (let i = 0; i < this.count; i++) {
+                arr.push({
+                    lxdh: '',
+                    zjlx: '',
+                    zjhm: '',
+                    cxlx: '',
+                    bz: ''
+                })
+            }
+            return arr
         },
         crCount() {
             return this.cxrSelectedList.filter(item => item.cxlx == 1).length || 0
@@ -229,7 +239,8 @@ export default {
             return this.cxrSelectedList.filter(item => item.cxlx == 2).length || 0
         },
         totalPrice() {
-            return this.count * (_.get(this.selectedSku, ['crj']) || 0)
+            return this.detailTotal
+            // return this.count * (_.get(this.selectedSku, ['crj']) || 0)
         },
         detailTotal() {
             return this.crCount * (_.get(this.selectedSku, ['crj']) || 0) + this.etCount * (_.get(this.selectedSku, ['etj']) || 0)
@@ -243,12 +254,16 @@ export default {
         submit() {
             this.$refs.contactForm.validate().then(res => {
                 const cxrList = this.travelers.filter(item => !!item.zjhm)
-                console.log(cxrList)
                 if (!cxrList.length) {
                     uni.$u.toast('请至少添加一位出行人！')
                     return
                 }
                 
+                if (cxrList.length != this.orderInfo.count) {
+                    uni.$u.toast('出行人个数与购买数量不一致！')
+                    return
+                }
+
                 const params = {
                     spbh: this.orderInfo.product.cpbh,
                     spmc: this.orderInfo.product.cpmc,
@@ -256,6 +271,8 @@ export default {
                     skumc: this.orderInfo.skuName,
                     cxrq: this.orderInfo.sku.kcrq,
                     gmsl: this.orderInfo.count,
+                    teamId: this.orderInfo.teamId,
+                    activityId: this.orderInfo.activityId,
                     openid: uni.getStorageSync('openid'),
                     ...this.contact,
                     cxrList

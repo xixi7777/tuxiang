@@ -12,7 +12,7 @@
       <scroll-view scroll-y="true" show-scrollbar="true" class="scroll-view">
         <view class="list-item" v-for="(item, index) in list" :key="index">
           <view class="left" v-if="index <= 2">
-            <image class="image" :src="topImageUrl[index]" />
+            <image lazy-load class="image" :src="topImageUrl[index]" />
           </view>
           <view class="left" v-if="index > 2"
             ><text class="text">{{ index }}</text></view

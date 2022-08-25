@@ -24,12 +24,21 @@ export default {
             }
         })
     },
-    // 查询单个系统缓存key
+    /**
+     * 查询单个系统缓存key
+     * @param {object} data 
+     * key:
+     * mall.system.phone: 客服电话
+     * @returns 
+     */
     getSysConfigCache: data => {
         return request({
             url: '/wechat/user/getSysConfigCache',
             method: 'POST',
-            data
+            data,
+            header: {
+                'content-type': 'application/x-www-form-urlencoded'
+            }
         })
     },
     // 查找字典数据
@@ -41,6 +50,15 @@ export default {
         })
     },
     // 查询单个商城缓存key
+    /**
+     * 查询系统配置
+     * @param {object} data 
+     * key: 
+     * mall.system.policy: 用户协议
+     * mall.system.bannl: 首页配置
+     * mall.system.phb: 排行榜配置
+     * @returns 
+     */
     getConfigCache: data => {
         return request({
             url: '/wechat/user/getConfigCache',
@@ -67,7 +85,10 @@ export default {
         return request({
             url: '/wechat/user/getScList',
             method: 'POST',
-            data
+            data,
+            header: {
+                'content-type': 'application/x-www-form-urlencoded'
+            }
         })
     },
     // 新增收藏或分享
@@ -77,7 +98,7 @@ export default {
             method: 'POST',
             data,
             header: {
-                'content-type': 'application/json'
+                'content-type': 'application/x-www-form-urlencoded'
             }
         })
     },
@@ -86,7 +107,10 @@ export default {
         return request({
             url: '/wechat/user/getIntegralList',
             method: 'POST',
-            data
+            data,
+            header: {
+                'content-type': 'application/x-www-form-urlencoded'
+            }
         })
     },
     // 查询产品列表
@@ -363,6 +387,28 @@ export default {
         return request({
             url: '/wechat/product/selectMallLeagueVo',
             method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 新增意见反馈
+    insertFeedback: data => {
+        return request({
+            url: '/wechat/user/insertMallYjfk',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 出行人列表
+    cxrList: data => {
+        return request({
+            url: '/wechat/order/getCxrListByOpenid',
+            method: 'GET',
             data,
             header: {
                 'content-type': 'application/json'

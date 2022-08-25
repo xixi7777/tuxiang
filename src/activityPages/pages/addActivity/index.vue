@@ -13,7 +13,7 @@
           >
             <u-form-item prop="image">
               <view class="upload-avatar" @click="uploadImage">
-                <image class="image" :src="uploadUrl" mode="aspectFill"></image>
+                <image class="image" :src="uploadUrl" mode="aspectFill" lazy-load></image>
                 <text class="text text-sm">上传活动图片</text>
               </view>
             </u-form-item>
@@ -45,10 +45,10 @@
               <view class="picker-input no-border" @click="beginTimeShow = true">{{ form.beginTime }}</view>
               <u-datetime-picker
                 :show="beginTimeShow"
-                :minDate="new Date().getTime()"
+                :minDate="new Date(moment().add(1, 'd').format('YYYY-MM-DD')).getTime()"
                 @cancel="beginTimeShow = false"
                 @confirm="confirmBeginTime"
-                mode="datetime"
+                mode="date"
               ></u-datetime-picker>
             </u-form-item>
             <u-form-item
@@ -59,10 +59,10 @@
               <view class="picker-input no-border" @click="finishTimeShow = true">{{ form.finishTime }}</view>
               <u-datetime-picker
                 :show="finishTimeShow"
+                :minDate="new Date(moment(form.beginTime).add(1, 'd').format('YYYY-MM-DD')).getTime()"
                 @cancel="finishTimeShow = false"
-                :minDate="new Date(form.beginTime).getTime()"
                 @confirm="confirmFinishTime"
-                mode="datetime"
+                mode="date"
               ></u-datetime-picker>
             </u-form-item>
             <u-form-item
@@ -73,10 +73,11 @@
               <view class="picker-input no-border" @click="deadlineTimeShow = true">{{ form.deadlineTime }}</view>
               <u-datetime-picker
                 :show="deadlineTimeShow"
-                :minDate="new Date(form.beginTime).getTime()"
+                :minDate="new Date(moment().format('YYYY-MM-DD')).getTime()"
+                :maxDate="new Date(moment(form.beginTime).add(-1, 'd').format('YYYY-MM-DD')).getTime()"
                 @cancel="deadlineTimeShow = false"
                 @confirm="confirmDeadlineTime"
-                mode="datetime"
+                mode="date"
               ></u-datetime-picker>
             </u-form-item>
             <u-form-item
@@ -117,6 +118,7 @@
 import Top from '@/components/top/Top';
 import { mapGetters } from 'vuex';
 import config from '@/utils/config'
+import moment from 'moment'
 export default {
   components: {
     Top,
@@ -224,21 +226,22 @@ export default {
     this.getProducts()
   },
   methods: {
+    moment,
     getProducts() {
       this.$api.activityProduct().then(res => {
         this.productList = res.data
       })
     },
     confirmBeginTime(e) {
-      this.form.beginTime = uni.$u.timeFormat(e.value, 'yyyy-mm-dd hh:MM')
+      this.form.beginTime = uni.$u.timeFormat(e.value, 'yyyy-mm-dd')
       this.beginTimeShow = false
     },
     confirmFinishTime(e) {
-      this.form.finishTime = uni.$u.timeFormat(e.value, 'yyyy-mm-dd hh:MM')
+      this.form.finishTime = uni.$u.timeFormat(e.value, 'yyyy-mm-dd')
       this.finishTimeShow = false
     },
     confirmDeadlineTime(e) {
-      this.form.deadlineTime = uni.$u.timeFormat(e.value, 'yyyy-mm-dd hh:MM')
+      this.form.deadlineTime = uni.$u.timeFormat(e.value, 'yyyy-mm-dd')
       this.deadlineTimeShow = false
     },
     uploadImage() {

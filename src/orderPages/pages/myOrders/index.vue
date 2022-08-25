@@ -30,24 +30,24 @@
         </view>
 
         <view class="order-wrapper">
-            <view class="outer booking">
+            <!-- <view class="outer booking">
                 <view class="left">
                     <view class="title">预约订单在这里</view>
                     <view class="desc">预约商品订单，请点击查看</view>
                 </view>
                 <view class="right">
-                    <image class="img" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow_r.png">
+                    <image class="img" lazy-load src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow_r.png">
                     </image>
                 </view>
-            </view>
+            </view> -->
             <view class="order-list">
                 <view class="outer order-item" v-for="item in orderList" :key="item.id">
                     <view class="status-box">
                         <view class="left">
-                            <image class="logo"
+                            <image class="logo" lazy-load
                                 src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/logo.png" />
                             <text>途享旅程</text>
-                            <image class="img"
+                            <image class="img" lazy-load
                                 src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png" />
                         </view>
                         <view class="right"><text>{{ item.ddzt_dictLabel }}</text></view>
@@ -55,7 +55,7 @@
                     <navigator :url="`/orderPages/pages/ordersDetail/index?id=${item.id}`" hover-class="navigator-hover-class">
                         <view class="info-box">
                             <view class="left">
-                                <image class="img" mode="scaleToFill" :src="item.productImg"></image>
+                                <image class="img" lazy-load mode="scaleToFill" :src="productImg(item)"></image>
                             </view>
                             <view class="right">
                                 <view class="title-box">
@@ -78,8 +78,8 @@
                         <text class="total-price">总价{{ '￥' + item.price }}</text>
                         <text>实付款<text class="pay-price">{{ '￥' + item.realPrice }}</text></text>
                     </view>
-                    <view class="btn-box" v-if="showCancelOrder(item)">
-                        <u-button shape="circle" @click="toRefund(item)">取消订单</u-button>
+                    <view class="btn-box">
+                        <u-button v-if="showCancelOrder(item)" shape="circle" @click="toRefund(item)">取消订单</u-button>
                     </view>
                 </view>
             </view>
@@ -130,6 +130,13 @@ export default {
         tabChange(item) {
             this.query.status = item.value
         },
+        productImg(pro) {
+            if (!pro.productImg) {
+                return ''
+            }
+            const images = pro.productImg.split(',')
+            return images[0]
+        },
         getOrderList: _.debounce(function() {
             this.$api.orderList(this.query).then(res => {
                 this.orderList = [...this.orderList, ...res.data.records]
@@ -137,7 +144,7 @@ export default {
             })
         }, 300),
         showCancelOrder(order) {
-            return [5].includes(order.ddzt)
+            return [5].includes(order.ddzt*1)
         },
         toRefund(order) {
             uni.navigateTo({ url: `/orderPages/pages/refund/index?id=${order.id}` })

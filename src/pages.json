@@ -193,6 +193,27 @@
 					}
 				}
 			]
+		},
+		{
+			"root": "otherPages",
+			"pages": [
+				{
+					"path": "pages/policy/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/collection/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				}
+			]
 		}
 	],
 	"tabBar": {

@@ -15,9 +15,11 @@
 				<u-swiper
 				:list="slide"
 				:current="current"
+				keyName="image"
 				radius="10"
 				:autoplay="false"
 				@change="swiperChange"
+				@click="navigateToList"
 				>
 				</u-swiper>
 			</view>
@@ -37,7 +39,10 @@
 		<view class="travel-group">
 			<scroll-view scroll-x="true" class="scroll">
                 <view class="travel-item" v-for="(item, index) in nav" :key="index">
-                    <navigator hover-class="navigator-hover-class" :url="item.url">
+                    <navigator 
+					hover-class="navigator-hover-class" 
+					:open-type="item.url.includes('tabBar')?'switchTab':'navigate'"
+					:url="item.url">
 						<view class="image-list">
 							<view class="icon-wrapper">
 								<image lazy-load mode="heightFix" class="icon" :src="item.image"></image>
@@ -54,7 +59,7 @@
 			<view class="top">
 				<text class="title">排行榜</text>
 				<view class="more">
-					<navigator url="/productPages/pages/leaderboard/index" hover-class="navigator-hover-class">
+					<navigator :url="rank[0].url" hover-class="navigator-hover-class">
 						<text>查看全部</text>
 						<image class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
 					</navigator>
@@ -81,7 +86,7 @@
 			<view class="top">
 				<text class="title">热门推荐</text>
 				<view class="more">
-					<navigator url="/productPages/pages/recommend/index" hover-class="navigator-hover-class">
+					<navigator :url="hot[0].url" hover-class="navigator-hover-class">
 						<text>更多</text>
 						<image lazy-load class="more-icon" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/more.png"></image>
 					</navigator>
@@ -94,7 +99,9 @@
 					<view>
 						<view id="left" v-if="leftList.length">
 							<view v-for="(item,index) in leftList" :key="index" class="wf-item" @tap="itemTap(item)">
-								<WaterfallFlowItem :item="item" />
+								<navigator :url="`/productPages/pages/recommend/index?${item.url}`" hover-class="navigator-hover-class">
+									<WaterfallFlowItem v-if="item.image" :item="item" />
+								</navigator>
 							</view>
 						</view>
 					</view>
@@ -103,20 +110,22 @@
 					<view>
 						<view id="right" v-if="rightList.length">
 							<view v-for="(item,index) in rightList" :key="index" class="wf-item" @tap="itemTap(item)">
-								<WaterfallFlowItem v-if="item.image" :item="item" />
+								<navigator :url="`/productPages/pages/recommend/index?${item.url}`" hover-class="navigator-hover-class">
+									<WaterfallFlowItem v-if="item.image" :item="item" />
+								</navigator>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
 
-			<view class="footer-wrapper">
+			<!-- <view class="footer-wrapper">
 				<view class="list" v-for="(item, index) in footers" :key="index">
 					<view class="image">
 						<cover-image :src="item"></cover-image>
 					</view>
 				</view>
-			</view>
+			</view> -->
 		</view >
 	</view>
 </template>
@@ -129,6 +138,7 @@ import Search from '@/components/pageSearch/PageSearch'
 import { waterfallMixins } from '@/mixins/waterfallMixins';
 import _ from 'lodash'
 import { mapMutations } from 'vuex'
+import urlLoader from '@dcloudio/uni-cli-shared/lib/url-loader';
 export default {
 	mixins: [waterfallMixins],
 	components: {
@@ -167,8 +177,7 @@ export default {
 	},
 	computed: {
 		slide() {
-			const slide = _.get(this.homeInfo, ['slide']) || []
-			return slide.map(item => item.image)
+			return _.get(this.homeInfo, ['slide']) || []
 		},
 		nav() {
 			return _.get(this.homeInfo, ['nav']) || []
@@ -197,13 +206,20 @@ export default {
 		swiperChange({current}) {
 			this.current = current
 		},
+		navigateToList(index) {
+			let url = this.slide[index].url
+			if (url.includes('tabBar')) {
+				uni.switchTab({ url })
+			} else {
+				uni.navigateTo({ url })
+			}
+		},
 		getConfig() {
 			this.$api.getConfigCache({
 				key: 'mall.system.bannl'
 			}).then(res => {
 				const keyValue = res.data['mall.system.bannl'].keyValue
 				this.homeInfo = JSON.parse(keyValue)
-				console.log(this.homeInfo)
 				this.wfList = _.get(this.homeInfo, ['hotproduct']) || []
 			})
 		}

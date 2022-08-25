@@ -21,10 +21,10 @@
             <view class="product-name p-h-20">
                 <text>{{ product.cpmc }}</text>
             </view>
-            <!-- <view class="consult p-h-20 flex-box">
-                <view class="consult-item"><text>咨询下单赠红包</text></view>
-                <view class="consult-item"><text>动车返回{{ product.cfd_dictLabel }}</text></view>
-            </view> -->
+            <view class="consult p-h-20 flex-box">
+                <view class="consult-item"><text>{{ product.cpbq_dictLabel }}</text></view>
+                <!-- <view class="consult-item"><text>动车返回{{ product.cfd_dictLabel }}</text></view> -->
+            </view>
             <u-line dashed color="#D7D7D7"></u-line>
             <view class="service flex-box p-h-20">
                 <view class="service-title"><text>服务</text></view>
@@ -35,7 +35,7 @@
                     </view>
                     <view class="flex-box">
                         <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/check.png" size="10"></u-icon>
-                        <text>无自费</text>
+                        <text>{{ product.fwbq_dictLabel }}</text>
                     </view>
                 </view>
             </view>
@@ -65,18 +65,20 @@
             <view class="exchange-date__wrapper">
                 <view class="more-choose">
                     <navigator 
-                    :url="`/productPages/pages/selectDate/index?skubh=${defaultSelected.skubh}&kcrq=${defaultSelected.kcrq}`" 
+                    :url="`/productPages/pages/selectDate/index?skubh=${defaultSelected.skubh}&kcrq=${defaultSelected.kcrq}&teamId=${teamId}&activityId=${activityId}`" 
                     hover-class="navigator-hover-class">更多班期</navigator>
                 </view>
                 <view class="scroll-list-wrapper">
                     <scroll-view scroll-x="true" class="scroll">
-                        <view :class="['dates-item', isSelected(item) && 'is-active']" v-for="(item, index) in skuList" :key="index">
-                            <navigator :url="`/productPages/pages/selectDate/index?skubh=${item.skubh}&kcrq=${item.kcrq}`" hover-class="navigator-hover-class">
-                                <text>{{ moment(item.kcrq).format('MM-DD') }}</text>
-                                <text>{{ weekdays[moment(item.kcrq).isoWeekday()] }}</text>
-                                <text>￥{{ item.crj }}</text>
-                                <text>余位: {{ item.stock }}</text>
-                            </navigator>
+                        <view 
+                        :class="['dates-item', isSelected(item) && 'is-active']" 
+                        v-for="(item, index) in skuList" 
+                        :key="index"
+                        @click="toSelect(item)">
+                            <text>{{ moment(item.kcrq).format('MM-DD') }}</text>
+                            <text>{{ weekdays[moment(item.kcrq).isoWeekday()] }}</text>
+                            <text>￥{{ item.crj }}</text>
+                            <text>余位: {{ item.stock }}</text>
                         </view>
                     </scroll-view>
                 </view>
@@ -84,7 +86,7 @@
         </view>
 
         <view class="product-detail" v-if="product.cpms">
-            <view v-html="product.cpms"></view>
+            <view v-html="productDesc"></view>
         </view>
 
         <view class="fixed-button">
@@ -95,7 +97,7 @@
                 </button>
             </view>
             <view class="operation">
-                <button class="open-type__button" open-type="share" hover-class="none" plain>
+                <button id="product_share" class="open-type__button" open-type="share" hover-class="none" plain>
                     <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang_detail.png"></image>
                     <text>分享</text>
                 </button>
@@ -110,14 +112,22 @@
 import Top from '@/components/top/Top'
 import _ from 'lodash'
 import moment from 'moment'
-import { mapMutations  } from 'vuex'
+import { mapMutations, mapGetters } from 'vuex'
+import graceRichText from '@/utils/formatRichText'
 export default {
     components: {
         Top
     },
     onLoad(option) {
-        this.getProductDetail(option.cpbh)
-        this.cpbh = option.cpbh
+        const { cpbh, cxrq, teamId, activityId, individual } = option
+
+        this.getProductDetail(cpbh)
+
+        this.cpbh = cpbh
+        this.individualCxrq = cxrq || ''
+        this.teamId = teamId || ''
+        this.activityId = activityId || ''
+        this.setIndividual(individual || false)
     },
     data() {
         return {
@@ -127,6 +137,9 @@ export default {
             skuList: [],
             defaultSelected: {},
             cpbh: '',
+            teamId: '',
+            activityId: '',
+            individualCxrq: '',
             weekdays: {
                 1: '周一',
                 2: '周二',
@@ -139,20 +152,36 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['isIndividual']),
         images() {
             const images = _.get(this.product, ['cpzt']) || ''
             return images.split(',')
+        },
+        productDesc() {
+            if (_.get(this.product, ['cpms'])) {
+                return graceRichText.format(_.get(this.product, ['cpms']));
+            }
+            return ''
         }
     },
     methods: {
-        ...mapMutations(['setOrderProduct']),
+        ...mapMutations(['setOrderProduct', 'setIndividual']),
         moment,
         isSelected(item) {
-            return moment().format('YYYY-MM-DD') == moment(item.kcrq).format('YYYY-MM-DD')
+            return this.defaultSelected.kcrq == moment(item.kcrq).format('YYYY-MM-DD')
+        },
+        toSelect(item) {
+            if (this.isIndividual && this.defaultSelected.kcrq != item.kcrq) {
+                return
+            } 
+            this.defaultSelected = item
+            // uni.navigateTo({
+            //     url: `/productPages/pages/selectDate/index?skubh=${item.skubh}&kcrq=${item.kcrq}&teamId=${this.teamId}&activityId=${this.activityId}`
+            // })
         },
         toSelectDate() {
             uni.navigateTo({
-                url: `/productPages/pages/selectDate/index?skubh=${this.defaultSelected.skubh}&kcrq=${this.defaultSelected.kcrq}`
+                url: `/productPages/pages/selectDate/index?skubh=${this.defaultSelected.skubh}&kcrq=${this.defaultSelected.kcrq}&teamId=${this.teamId}&activityId=${this.activityId}`
             })
         },
         getProductDetail(cpbh) {
@@ -171,7 +200,8 @@ export default {
                 }).then(res => {
                     this.skuList = this.sortSkuByDate(res.data)
                     this.skuList.forEach(item => {
-                        if (moment().format('YYYY-MM-DD') == moment(item.kcrq).format('YYYY-MM-DD')) {
+                        const date = this.individualCxrq || moment().format('YYYY-MM-DD')
+                        if (date == moment(item.kcrq).format('YYYY-MM-DD')) {
                             this.defaultSelected = item
                         }
                     })

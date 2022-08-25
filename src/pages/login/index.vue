@@ -6,11 +6,17 @@
         <button class="primary-button" shape="circle" @click="login">微信一键登录</button>
         <!-- <button class="primary-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">微信一键登录</button> -->
         <view class="radio">
-            <radio-group @change="handleChange">
+            <radio-group @change="handleChange" style="display: flex; align-items: center; justify-content: center;">
                 <radio :value="true" color="#17AA7D"></radio>
-                <text>我已阅读并同意
-                    <text class="text-primary">《途享旅程用户协议》</text>
-                    <text class="text-primary ml-10">隐私政策</text></text>
+                <view style="display: flex;">
+                    我已阅读并同意
+                    <view class="text-primary">
+                        <navigator url="/otherPages/pages/policy/index?type=policy" hover-class="navigator-hover-class">《途享旅程用户协议》</navigator>
+                    </view>
+                    <!-- <view class="text-primary ml-10">
+                        <navigator url="/otherPages/pages/policy/index?type=policy" hover-class="navigator-hover-class"> 隐私政策</navigator>
+                    </view> -->
+                </view>
             </radio-group>
             <button @click="login" ref="getUserInfo" style="opacity: 0; width: 0, height: 1px;"></button>
         </view>
@@ -25,7 +31,7 @@
 			<button
 				slot="confirmButton"
 				shape="circle"
-                open-type="getPhoneNumber" 
+                open-type="getPhoneNumber"  
                 type="success"
                 @getphonenumber="getPhoneNumber"
                 class="phone-button"

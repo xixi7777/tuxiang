@@ -28,11 +28,15 @@
         </view>
 
         <view class="calendar-wrapper">
-            <Calendar :sku-list="skuList" @select-date="selectDate" :default-select-date="calendarDefaultDate" />
+            <Calendar 
+            :disabled="isIndividual" 
+            :sku-list="skuList" 
+            @select-date="selectDate" 
+            :default-select-date="calendarDefaultDate" />
         </view>
 
         <view class="person-type">
-            <text v-for="(item, index) in personTypes" :key="index">{{ item }}</text>
+            <!-- <text v-for="(item, index) in personTypes" :key="index">{{ item }}</text> -->
         </view>
 
         <view class="quantity-wrapper">
@@ -66,6 +70,8 @@ export default {
     },
     data() {
         return {
+            teamId: '',
+            activityId: '',
             defaultSkubh: '',
             calendarDefaultDate: '',
             personTypes: ['成人', '儿童'],
@@ -87,9 +93,11 @@ export default {
         this.defaultSkubh = skubh || ''
         this.calendarDefaultDate = kcrq || ''
         this.productStockParam.skubh = skubh
+        this.teamId = option.teamId || ''
+        this.activityId = option.activityId
     },
     computed: {
-        ...mapGetters(['orderProduct']),
+        ...mapGetters(['orderProduct', 'isIndividual']),
         productImage() {
             let images = _.get(this.orderProduct, ['cpzt']) || ''
             images = images.split(',')
@@ -110,7 +118,6 @@ export default {
             return _.get(this.orderProduct, ['cpmc'])
         },
         buyDisabled() {
-            // return false
             return !this.count || !this.selectedSku.kcrq
         },
         totalPrice() {
@@ -161,9 +168,9 @@ export default {
         selectProductStock: _.debounce(function() {
             this.$api.selectProductStock(this.productStockParam).then(res => {
                 this.skuList = res.data
-                if (this.defaultSkubh) {
+                if (this.calendarDefaultDate) {
                     this.skuList.forEach(sku => {
-                        if (sku.skubh === this.defaultSkubh) {
+                        if(sku.kcrq == this.calendarDefaultDate) {
                             this.selectedSku = sku
                         }
                     })
@@ -175,7 +182,9 @@ export default {
                 product: this.orderProduct,
                 count: this.count,
                 sku: this.selectedSku,
-                skuName: this.skuName
+                skuName: this.skuName,
+                teamId: this.teamId,
+                activityId: this.activityId
             })
             uni.navigateTo({ 
                 url: '/orderPages/pages/orderConfirm/index'
@@ -291,6 +300,9 @@ export default {
                 color: #000;
                 font-weight: 300;
                 background: rgba(0,0,0,0.0600);
+                &.is-disabled {
+                    color: rgba(0,0,0,0.2000);
+                }
                 &.is-active {
                     color: #fff;
                     background: #17AA7D;
