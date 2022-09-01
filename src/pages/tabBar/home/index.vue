@@ -3,11 +3,9 @@
 		<!-- <tab-bar :current="0"></tab-bar> -->
         <view class="app-top-background home"></view>
 		<view class="page-title">
-			<text>旅游</text>
+			<text>途享旅游</text>
 		</view>
-		<u-sticky offset-top="10">
-			<search @confirm="search" />
-		</u-sticky>
+		<search @confirm="search" />
 		
 		<!-- swiper -->
 		<view class="banner-wrapper">
@@ -16,7 +14,7 @@
 				:list="slide"
 				:current="current"
 				keyName="image"
-				radius="10"
+				imgMode="widthFix"
 				:autoplay="false"
 				@change="swiperChange"
 				@click="navigateToList"
@@ -37,7 +35,6 @@
 
 		<!-- trip example -->
 		<view class="travel-group">
-			<scroll-view scroll-x="true" class="scroll">
                 <view class="travel-item" v-for="(item, index) in nav" :key="index">
                     <navigator 
 					hover-class="navigator-hover-class" 
@@ -51,7 +48,6 @@
 						<text>{{ item.name }}</text>
 					</navigator>
                 </view>
-            </scroll-view>
 		</view>
 
 		<!-- recommend -->
@@ -155,7 +151,7 @@ export default {
 				'//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/foot_1.png',
 				'//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/foot_2.png'
 			],
-			homeInfo: {}
+			homeInfo: {},
 		}
 	},
 	onShow() {
@@ -231,25 +227,32 @@ export default {
 	/deep/
 	.banner-wrapper {
 		margin-top: 30px;
-		height: 380px;
-		border-radius: 30px;
-		padding: 20px;
-		background: rgba(255,255,255,0.5);
-		border: 1px solid #FFFFFF;
-		box-shadow: 0px 17px 37px 0px rgba(28,157,122,0.2000);
 		.swiper-container {
-			height: 380px;
+			.u-swiper {
+				background-color: transparent !important;
+			}
 			.u-swiper,
-			.u-swiper__wrapper,
+			.u-swiper__wrapper {
+				height: 470px !important;
+			}
+			.u-swiper__wrapper__item__wrapper {
+				background: rgba(255,255,255,0.5);
+				padding: 20px;
+				border-radius: 30px;
+				box-shadow: 0px 20px 20px 0px rgba(28,157,122,0.2000);
+				// height: 430px !important;
+				margin-bottom: 50px;
+			}
 			.u-swiper__wrapper__item__wrapper__image {
-				height: 100% !important;
+				border-radius: 30px;
+				height: 380px !important;
 			}
 		}
 	}
 	.cus-indicator {
 		@include flex(row);
 		justify-content: center;
-		margin-top: 30px;
+		margin-top: -10px;
 		&__dot {
 			height: 10px;
 			width: 10px;
@@ -268,12 +271,9 @@ export default {
 	.travel-group {
 		margin-top: 36px;
 		padding: 0 20px;
-		.travel-item {
-            display: inline-block;
-            &:not(:first-child) {
-                margin-left: 80px;
-            }
-		}
+		margin-bottom: 50px;
+		display: flex;
+		justify-content: space-between;
 		.icon-wrapper {
 			width: 76px;
 			margin: 0 auto;
@@ -296,7 +296,6 @@ export default {
 		align-items: flex-end;
 	}
 	.recommend {
-		margin-top: 50px;
 		.top {
 			margin-bottom: 31px;
 		}
@@ -331,6 +330,8 @@ export default {
 			box-shadow: 0px 17px 23px 6px rgba(138,132,167,0.1);
 			border-radius: 20px;
 			display: inline-block;
+			height: 350px;
+			margin-bottom: 50px;
 			&:not(:first-child) {
 				margin-left: 20px;
 			}

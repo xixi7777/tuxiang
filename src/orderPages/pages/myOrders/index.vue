@@ -29,7 +29,7 @@
             }"></u-tabs>
         </view>
 
-        <view class="order-wrapper">
+        <view class="order-wrapper" v-if="orderList.length">
             <!-- <view class="outer booking">
                 <view class="left">
                     <view class="title">预约订单在这里</view>
@@ -50,7 +50,12 @@
                             <image class="img" lazy-load
                                 src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png" />
                         </view>
-                        <view class="right"><text>{{ item.ddzt_dictLabel }}</text></view>
+                        <view class="right">
+                            <text :class="[!item.zfzt && item.ddzt === 0 && 'wait-payment']">
+                                <template v-if="!item.zfzt && item.ddzt === 0">待付款</template>
+                                <template v-else>{{ item.ddzt_dictLabel }}</template>
+                            </text>
+                        </view>
                     </view>
                     <navigator :url="`/orderPages/pages/ordersDetail/index?id=${item.id}`" hover-class="navigator-hover-class">
                         <view class="info-box">
@@ -76,14 +81,22 @@
                     </navigator>
                     <view class="price-box">
                         <text class="total-price">总价{{ '￥' + item.price }}</text>
-                        <text>实付款<text class="pay-price">{{ '￥' + item.realPrice }}</text></text>
+                        <text v-if="item.zfzt === 0 && item.ddzt === 0" class="wait-payment">待付款</text>
+                        <text v-else>实付款<text class="pay-price">{{ '￥' + item.realPrice }}</text></text>
                     </view>
-                    <view class="btn-box">
-                        <u-button v-if="showCancelOrder(item)" shape="circle" @click="toRefund(item)">取消订单</u-button>
+                    <view class="btn-box" v-if="item.ddzt === 0 && item.zfzt === 0">
+                        <u-button plain type="warning" shape="circle" @click="cancelOrder(item)" text="取消订单"></u-button>
+                    </view>
+                    <view class="btn-box" v-if="item.ddzt === 0 && item.zfzt === 0">
+                        <u-button type="primary" shape="circle" @click="paymentOrder(item)" text="立即支付"></u-button>
+                    </view>
+                    <view class="btn-box" v-if="item.ddzt === 5 && item.zfzt === 1">
+                        <u-button plain type="warning" shape="circle" @click="toRefund(item)" text="申请退款"></u-button>
                     </view>
                 </view>
             </view>
         </view>
+        <u-empty v-else mode="order"></u-empty>
     </view>
 </template>
 
@@ -143,11 +156,22 @@ export default {
                 this.total = res.data.total
             })
         }, 300),
-        showCancelOrder(order) {
-            return [5].includes(order.ddzt*1)
-        },
         toRefund(order) {
             uni.navigateTo({ url: `/orderPages/pages/refund/index?id=${order.id}` })
+        },
+        cancelOrder(order) {
+            uni.showModal({
+                title: '提示',
+                content: '是否取消该订单？',
+                success: res => {
+                    if (res.confirm) {
+
+                    }
+                }
+            })
+        },
+        paymentOrder(order) {
+            
         }
     },
     watch: {
@@ -387,18 +411,15 @@ export default {
         margin-top: 20px;
 
         /deep/ .u-button {
-            display: inline-block;
             width: 200px;
             height: 68px;
             line-height: 68px;
             font-size: 28px;
-            color: #666666;
-            border-radius: 48px;
-            border: 1px solid #BDBDBD;
-            text-align: center;
-            background: rgba(23,170,125,0);
+            display: inline-block;
         }
     }
 }
-
+.wait-payment {
+    color: #FF5323;
+}
 </style>>

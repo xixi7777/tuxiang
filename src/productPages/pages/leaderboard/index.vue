@@ -1,9 +1,9 @@
 <template>
-    <view class="app-container">
+    <view class="app-container" :style="{backgroundImage: `url(${phbtpImage})`}">
         <top background-color="#000421" backIcon-color="#fff"/>
         <view class="biwan">
-            <cover-image v-if="!phbtp" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/biwan.png"></cover-image>
-            <cover-image v-else :src="phbtp"></cover-image>
+            <cover-image :src="phbtpText"></cover-image>
+            <!-- <cover-image v-else src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/biwan.png"></cover-image> -->
         </view>
 
         <view class="hot-line">
@@ -23,7 +23,7 @@
 
         <view class="classics-wrapper">
             <text class="header">经典必去</text>
-            <view class="list">
+            <view class="list" v-if="jdbq.length">
                 <view class="list__item" v-for="(item, index) in jdbq" :key="index">
                     <view class="image">
                         <view class="top-icon">
@@ -50,6 +50,7 @@
                     </view>
                 </view>
             </view>
+            <u-empty mode="list" v-else></u-empty>
         </view>
     </view>
 </template>
@@ -80,8 +81,11 @@ export default {
         rmxl() {
             return _.get(this.info, ['rmxl'])
         },
-        phbtp() {
-            return _.get(this.info, ['phbtp', 'image']) || ''
+        phbtpText() {
+            return _.get(this.info, ['phbtp', 1, 'image']) || '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/biwan.png'
+        },
+        phbtpImage() {
+            return _.get(this.info, ['phbtp', 0, 'image']) || '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/paihangbang_bg.png'
         }
     },
     methods: {
@@ -102,8 +106,8 @@ export default {
 <style lang="scss" scoped>
 .app-container {
     background: #000421;
-    background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/paihangbang_bg.png);
-    background-position: 0 150px;
+    // background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/paihangbang_bg.png);
+    background-position: 0 0;
     background-size: 100% 818px;
     background-repeat: no-repeat;
 }

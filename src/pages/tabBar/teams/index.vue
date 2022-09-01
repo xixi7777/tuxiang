@@ -41,13 +41,14 @@
     :show="showPwd" 
     title="入团密码"
     closeOnClickOverlay
-    :showConfirmButton="false"
+    showCancelButton
+    @confirm="addMember"
+    @cancel="close"
     @close="close">
         <view class="modal-content">
-            <u-input type="password" v-model="addParams.pwd" focus border="bottom" />
-            <u-button type="primary" shape="circle" text="确认" @click="addMember"></u-button>
+            <u-input type="password" v-model="addParams.pwd" border="bottom" />
         </view>
-	</u-modal>
+    </u-modal>
   </view>
 </template>
 <script>
@@ -88,9 +89,9 @@ export default {
         dzsjh: ''
       },
       addParams: {
-        userId: null,
         teamCode: null,
-        pwd: null
+        pwd: null,
+        activityId: null
       }
     }
   },
@@ -129,18 +130,20 @@ export default {
       })
     },
     addMember() {
-      this.$api.addMember([this.addParams]).then(res => {
-        if (res.code == 200) {
-          uni.$u.toast('成功加入')
-          this.showPwd = false
-        }
+      this.$api.joinTeam({
+        ...this.addParams,
+        openid: uni.getStorageSync('openid')
+      }).then(res => {
+        uni.$u.toast('你已成功加入团队')
+        this.query.pageNum = 1
+        this.getTeams()
+        this.showPwd = false
       })
     },
     joinTeam(team) {
       this.addParams = {
         ...this.addParams,
-        teamCode: team.teamCode,
-        userId: this.userInfo.id
+        teamCode: team.teamCode
       }
       if (team.jdyq == 0) {
         this.addMember()
@@ -288,5 +291,9 @@ export default {
   /deep/ .u-border-bottom {
       border-bottom: 1px solid #e2e2e2;
   }
+}
+.button__wrapper {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

@@ -1,7 +1,13 @@
 <template>
-    <view class="app-container" :style="{backgroundImage: `url(${bgImage})`}">
+    <view class="app-container">
+        <view class="swiper__wrapper">
+            <u-swiper
+                :list="bgImage"
+                keyName="image"
+            ></u-swiper>
+        </view>
         <view class="spell-group">
-            <view class="spell-item" v-for="(item, index) in list" :key="index">
+            <view class="spell-item" v-for="(item, index) in list" :key="index" @click="goDetail(item)">
                 <view class="header">
                     <text class="start-date">出发日期：{{ item.cfrq }}</text>
                     <text class="sign-up">报名中</text>
@@ -63,7 +69,7 @@ export default {
                 pageNum: 1,
                 pageSize: 10
             },
-            bgImage: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/spell_bg.png',
+            bgImage: [],
             total: 0,
             list: []
         }
@@ -89,7 +95,8 @@ export default {
             .then(res => {
                 let keyValue = res.data['mall.system.phb'].keyValue
 				keyValue = JSON.parse(keyValue)
-                this.bgImage = keyValue.pt.image
+                this.bgImage = keyValue.pt
+                console.log(this.bgImage)
             })
         },
         registerDate(item) {
@@ -116,10 +123,21 @@ export default {
 </script>
 <style lang="scss" scoped>
     .app-container {
-        // background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/spell_bg.png);
-        background-size: 100% 596px;
-        background-attachment: fixed;
-        background-repeat: no-repeat;
+        position: relative;
+        /deep/
+        .swiper__wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 596px;
+            z-index: -1;
+            .u-swiper,
+			.u-swiper__wrapper,
+			.u-swiper__wrapper__item__wrapper__image {
+				height: 100% !important;
+			}
+        }
     }
     .spell-group {
         margin-top: 455px; 

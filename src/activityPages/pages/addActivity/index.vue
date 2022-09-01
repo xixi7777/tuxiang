@@ -18,6 +18,20 @@
               </view>
             </u-form-item>
             <u-form-item
+              label="关联活动"
+              leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_connected.png"
+              prop="cpbh"
+            >
+              <view class="picker-input no-border" @click="showProductList">{{ productName }} <u-icon name="arrow-right"></u-icon> </view>
+                <u-picker 
+                :show="productShow"
+                :defaultIndex="0"
+                :columns="[productList]" 
+                keyName="keyName"
+                @cancel="productShow = false" 
+                @confirm="confirmProduct"></u-picker>
+            </u-form-item>
+            <u-form-item
               label="活动名称"
               prop="name"
               leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_activity_name.png"
@@ -27,7 +41,7 @@
                 v-model="form.name"
               />
             </u-form-item>
-            <u-form-item
+            <!-- <u-form-item
               label="活动地点"
               prop="address"
               leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_place.png"
@@ -36,7 +50,7 @@
                 type="text"
                 v-model="form.address"
               />
-            </u-form-item>
+            </u-form-item> -->
             <u-form-item
               label="开始时间"
               prop="beginTime"
@@ -90,20 +104,6 @@
                 v-model="form.headcount"
               />
             </u-form-item>
-            <u-form-item
-              label="关联活动"
-              leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_connected.png"
-              prop="cpbh"
-            >
-              <view class="picker-input no-border" @click="showProductList">{{ productName }} <u-icon name="arrow-right"></u-icon> </view>
-                <u-picker 
-                :show="productShow"
-                :defaultIndex="0"
-                :columns="[productList]" 
-                keyName="keyName"
-                @cancel="productShow = false" 
-                @confirm="confirmProduct"></u-picker>
-            </u-form-item>
           </u-form>
       </view>
     </view>
@@ -148,7 +148,7 @@ export default {
         image: [
           {
             type: 'string',
-            required: true,
+            required: false,
             message: '请上传活动图片',
             trigger: ['change'],
           }
@@ -161,14 +161,14 @@ export default {
             trigger: ['blur'],
           }
         ],
-        address: [
-          {
-            type: 'string',
-            required: true,
-            message: '请输入活动地点',
-            trigger: ['blur'],
-          }
-        ],
+        // address: [
+        //   {
+        //     type: 'string',
+        //     required: true,
+        //     message: '请输入活动地点',
+        //     trigger: ['blur'],
+        //   }
+        // ],
         beginTime: [
           {
             type: 'string',

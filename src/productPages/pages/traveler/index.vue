@@ -11,7 +11,12 @@
             </view>
         </view>
         <view class="traveler-list">
-            <u-checkbox-group :disabled="readonly" @change="checkboxGroupChange" wrap active-color="#17AA7D">
+            <u-checkbox-group 
+            :disabled="readonly" 
+            @change="checkboxGroupChange" 
+            wrap 
+            :iconColor="readonly?'#17AA7D':'#fff'"
+            active-color="#17AA7D">
                 <view class="traveler-item" v-for="(item, index) in travelerList" :key="index">
                     <u-checkbox 
                         :name="item.zjhm"
@@ -87,6 +92,7 @@ export default {
             showCxlx: false,
             cxrChecked: [],
             readonly: false,
+            cxrIds: [],
             form: {
                 xm: '',
                 lxdh: '',
@@ -144,12 +150,13 @@ export default {
         }
     },
     created() {
-        this.getCxlx()
-        this.getZjlx()
         this.getCxrList()
     },
     onLoad(option) {
         this.readonly = option.readonly || false
+        if (option.cxrIds) {
+            this.cxrIds = option.cxrIds.split(',')
+        }
     },
     methods: {
         ...mapMutations(['setCxrSelectedList', 'setCxrList', 'setCxlxOptions', 'setZjlxOptions']),
@@ -157,7 +164,14 @@ export default {
             this.$api.cxrList({
                 openid: uni.getStorageSync('openid')
             }).then(res => {
-                this.travelerList = res.data
+                if (res.data.length) {
+                    this.travelerList = res.data
+                    if (this.cxrIds.length) {
+                        this.checkboxGroupChange(this.cxrIds)
+                    } else {
+                        this.setCxrList(this.travelerList)
+                    }
+                }
             })
         },
         getCxlx() {
@@ -171,17 +185,17 @@ export default {
             })
         },
         checkboxGroupChange(values) {
-            if (!values.length) {
-                this.setCxrSelectedList([])
-                return
-            }
-            const list = []
             this.travelerList.forEach(item => {
-                if (values.includes(item.zjhm)) {
-                    list.push(item)
-                }
+                item.checked = false
             })
-            this.setCxrSelectedList(list)
+            values.forEach(item => {
+                this.travelerList.forEach(l => {
+                    if (l.zjhm == item) {
+                        this.$set(l, 'checked', true)
+                    }
+                })
+            })
+            this.setCxrList(this.travelerList) 
         },
         openAdd() {
             this.modalVisible = true
@@ -234,26 +248,37 @@ export default {
         }
     },
     watch: {
-        cxrSelectedList: {
-            immediate: true,
-            deep: true,
-            handler(n) {
-                this.travelerList = this.cxrList
-                if (n.length) {
-                    this.travelerList.forEach(item => {
-                        n.forEach(sub => {
-                            if (item.zjhm == sub.zjhm) {
-                                this.$set(item, 'checked', true)
-                            }
-                        })
-                    })
-                }
-            }
-        },
         modalVisible: {
             handler(n) {
                 if (!n && this.$refs.uForm) {
                     this.resetForm()
+                }
+            }
+        },
+        cxrList: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                if (n.length) {
+                    this.travelerList = this.cxrList
+                }
+            }
+        },
+        cxlxOptions: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                if (!n.length) {
+                    this.getCxlx()
+                }
+            }
+        },
+        zjlxOptions: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                if (!n.length) {
+                    this.getZjlx()
                 }
             }
         }
@@ -296,6 +321,11 @@ export default {
 .traveler-list {
     /deep/ .u-checkbox-group {
         display: block;
+        .u-checkbox__icon-wrap--disabled--checked {
+            .u-icon__icon {
+                color: #17AA7D !important;
+            }
+        }
     }
 }
 .traveler-item {

@@ -46,7 +46,7 @@
                 <view class="detail-item">
                     <view class="item-line ">
                         <text class="item-title flex-padding">出行人信息</text>
-                        <navigator style="width: auto;" :url="`/productPages/pages/traveler/index?readonly=${true}`" hover-class="navigator-hover-class">
+                        <navigator style="width: auto;" :url="`/productPages/pages/traveler/index?readonly=${true}&cxrIds=${cxrIds}`" hover-class="navigator-hover-class">
                             <text class="go-detail-txt">查看详情</text>
                             <image class="go-detail-img"
                                 src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png">
@@ -133,8 +133,14 @@
                 </view>
             </view>
 
-            <view class="bottom-btn" v-if="showRefund">
-                <u-button shape="circle" @click="toRefund">申请退款</u-button>
+            <view class="bottom-btn" v-show="showRefund || showPayment">
+                <view class="button-line" v-if="showPayment">
+                    <u-button shape="circle" plain type="warning" text="取消订单" @click="cancelOrder"></u-button>
+                    <u-button shape="circle" type="primary" text="立即支付" @click="addOrder"></u-button>
+                </view>
+                <view class="button-line" v-if="showRefund">
+                    <u-button plain type="warning" text="申请退款" shape="circle" @click="toRefund"></u-button>
+                </view>
             </view>
         </view>
 
@@ -155,7 +161,7 @@
         @confirm="confirmFeedback"
         closeOnClickOverlay
         showCancelButton>
-            <u-textarea auto-focus v-model="feedback"></u-textarea>
+            <u-textarea v-model="feedback"></u-textarea>
         </u-modal>
     </view>
 </template>
@@ -172,7 +178,8 @@ export default {
             orderId: '',
             orderDetail: {},
             phoneNumber: '',
-            feedback: ''
+            feedback: '',
+            cxrIds: ''
         }
     },
     onLoad(option) {
@@ -186,8 +193,10 @@ export default {
             return _.get(this.orderDetail, ['cxrList']) || []
         },
         showRefund() {
-            const status = _.get(this.orderDetail, ['ddzt'])
-            return [5].includes(status)
+            return _.get(this.orderDetail, ['ddzt']) === 5 && _.get(this.orderDetail, ['zfzt']) === 1
+        },
+        showPayment() {
+            return _.get(this.orderDetail, ['ddzt']) === 0 && _.get(this.orderDetail, ['zfzt']) === 0
         }
     },
     methods: {
@@ -199,9 +208,10 @@ export default {
         },
         getDetail() {
             this.$api.orderDetail({ id: this.orderId }).then(res => {
-                this.orderDetail = res.data
-                this.setCxrList(this.orderDetail.cxrList)
-                this.setCxrSelectedList(this.orderDetail.cxrList)
+                this.orderDetail = res.data || {}
+                const cxrList = _.get(this.orderDetail, ['cxrList']) || []
+                const ids = cxrList.map(item => item.zjhm)
+                this.cxrIds = ids.join(',')
             })
         },
         toRefund() {
@@ -227,6 +237,31 @@ export default {
                 ddh: this.orderDetail.ddbh
             }).then(rest => {
                 this.feedbackShow = false
+            })
+        },
+        addOrder() {
+            this.$api.paidByOrderNo({
+                orderNo: this.detail.ddbh
+            }).then(res => {
+                this.payment(res.data)
+            })
+        },
+        cancelOrder(order) {
+
+        },
+        payment(param) {
+            wx.requestPayment({
+                timeStamp: param.timeStamp,
+                nonceStr: param.nonceStr,
+                package: param.packageValue,
+                signType: param.signType,
+                paySign: param.paySign,
+                success: res => {
+                    this.getDetail()
+                },
+                fail: err => {
+                    uni.$u.toast('支付失败')
+                }
             })
         }
     },
@@ -398,37 +433,6 @@ export default {
     }
 }
 
-.appraise {
-    .appraise-txt {
-        font-size: 26px;
-        color: #666;
-        margin-bottom: 40px;
-
-        .ordinary {
-            margin: 0 65px 0 270px;
-        }
-    }
-
-    .appraise-item {
-        display: inline-block;
-        width: 45px;
-        height: 45px;
-        line-height: 60px;
-        margin-right: 17px;
-        background-image: url('//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_like.png');
-        background-position: 0 0;
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-        text-align: center;
-        font-size: 20px;
-        color: #fff;
-
-        &.active {
-            background-image: url('//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/orders_like_active.png');
-        }
-    }
-}
-
 .bottom-btn {
     position: fixed;
     z-index: 10;
@@ -438,28 +442,19 @@ export default {
     background: #FFFFFF;
     box-shadow: 0px -6px 10px 0px rgba(0, 0, 0, 0.0600);
     padding: 15px 30px;
-    text-align: right;
+    .button-line {
+        text-align: right;
+    }
 
     /deep/ .u-button {
         display: inline-block;
         width: 240px;
-        height: 90px;
-        line-height: 90px;
-        font-size: 32px;
-        font-weight: 500;
-        background: rgba(0,0,0,0.0600);
-        border: none;
-    }
-
-    .btn-proto {
-        background: #17AA7D;
-        color: #FFFFFF;
-        margin-right: 30px;
-    }
-
-    .btn-refund {
-        background: rgba(0, 0, 0, 0.0600);
-        color: #000;
+        height: 80px;
+        line-height: 80px;
+        font-size: 28px;
+        &:not(:last-child) {
+            margin-right: 20px;
+        }
     }
 }
 /deep/ .u-textarea {

@@ -6,7 +6,7 @@
         <!-- upload -->
         <view class="form upload-avatar" @click="uploadImage">
             <image class="image circle" :src="avatarUrl" mode="aspectFill"></image>
-          <text class="text">上传头像</text>
+          <text class="text">上传团队Logo</text>
         </view>
 
           <u-form

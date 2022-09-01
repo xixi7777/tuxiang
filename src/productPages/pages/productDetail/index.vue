@@ -21,21 +21,17 @@
             <view class="product-name p-h-20">
                 <text>{{ product.cpmc }}</text>
             </view>
-            <view class="consult p-h-20 flex-box">
-                <view class="consult-item"><text>{{ product.cpbq_dictLabel }}</text></view>
-                <!-- <view class="consult-item"><text>动车返回{{ product.cfd_dictLabel }}</text></view> -->
+            <view class="consult p-h-20 flex-box" v-if="cpbqLabel.length">
+                <view class="consult-item" v-for="(item, index) in cpbqLabel" :key="index"><text>{{ item }}</text></view>
+                <!-- <view class="consult-item"><text>{{ product.cfd_dictLabel }}</text></view> -->
             </view>
             <u-line dashed color="#D7D7D7"></u-line>
-            <view class="service flex-box p-h-20">
+            <view class="service flex-box p-h-20" v-if="fwbqLabel.length">
                 <view class="service-title"><text>服务</text></view>
                 <view class="btn-group flex-box">
-                    <view class="flex-box">
+                    <view class="flex-box" v-for="(item, index) in fwbqLabel" :key="index">
                         <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/check.png" size="10"></u-icon>
-                        <text>二次确认</text>
-                    </view>
-                    <view class="flex-box">
-                        <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/check.png" size="10"></u-icon>
-                        <text>{{ product.fwbq_dictLabel }}</text>
+                        <text>{{ item }}</text>
                     </view>
                 </view>
             </view>
@@ -78,7 +74,7 @@
                             <text>{{ moment(item.kcrq).format('MM-DD') }}</text>
                             <text>{{ weekdays[moment(item.kcrq).isoWeekday()] }}</text>
                             <text>￥{{ item.crj }}</text>
-                            <text>余位: {{ item.stock }}</text>
+                            <text>余 {{ item.stock }}</text>
                         </view>
                     </scroll-view>
                 </view>
@@ -162,13 +158,25 @@ export default {
                 return graceRichText.format(_.get(this.product, ['cpms']));
             }
             return ''
+        },
+        fwbqLabel() {
+            if (this.product.fwbq_dictLabel) {
+                return this.product.fwbq_dictLabel.split(',')
+            }
+            return []
+        },
+        cpbqLabel() {
+            if (this.product.cpbq_dictLabel) {
+                return this.product.cpbq_dictLabel.split(',')
+            }
+            return []
         }
     },
     methods: {
         ...mapMutations(['setOrderProduct', 'setIndividual']),
         moment,
         isSelected(item) {
-            return this.defaultSelected.kcrq == moment(item.kcrq).format('YYYY-MM-DD')
+            return this.defaultSelected.id == item.id
         },
         toSelect(item) {
             if (this.isIndividual && this.defaultSelected.kcrq != item.kcrq) {
@@ -187,7 +195,10 @@ export default {
         getProductDetail(cpbh) {
             this.$api.selectProductVo({ cpbh }).then(res => {
                 this.product = res.data
-                this.setOrderProduct(this.product)
+                this.setOrderProduct({
+                    ...this.product,
+                    fjfwOptions: res.fjfw
+                })
                 this.getDefaultSku(res.data.cpbh, res.skubh)
             })
         },
@@ -210,6 +221,7 @@ export default {
         sortSkuByDate(list) {
             return list.sort((a, b) => {
                 return Date.parse(a.kcrq.replace(/-/g, '/')) - Date.parse(b.kcrq.replace(/-/g, '/'))
+                
             })
         }
     }

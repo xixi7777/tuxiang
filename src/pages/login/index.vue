@@ -49,11 +49,17 @@ export default {
             userInfo: {},
             openid: '',
             jsCode: '',
-            appid: ''
+            appid: '',
+            jumpPage: ''
         }
     },
-    onLoad() {
+    onLoad(option) {
         this.getAppBaseInfo()
+        if (!option.teamCode) {
+            this.jumpPage = '/pages/tabBar/home/index'
+        } else {
+            this.jumpPage = `/teamsPages/pages/myTeam/index?teamCode=${option.code}*activityId=${activityId}`
+        }
     },
     methods: {
         getAppBaseInfo() {
@@ -82,8 +88,9 @@ export default {
 
                 this.editUserInfo(openid, this.userInfo, decryptedData.phoneNumber)
                 uni.reLaunch({
-                    url: '/pages/tabBar/home/index'
+                    url: this.jumpPage
                 });
+                // uni.navigateBack()
             })
         },
         handleChange(evt) {

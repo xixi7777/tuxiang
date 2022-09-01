@@ -48,7 +48,12 @@ export default {
             this.input(this.inputValue)
         },
         input(value) {
-            this.$emit('input', value)
+            if(!/^[0-9]+$/.test(value)) {
+                value = value.replace(/\D/g,'')
+            }
+            if(value < 0) value = 0
+            this.inputValue = value
+            this.$emit('input', value*1)
         }
     },
     watch: {

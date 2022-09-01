@@ -52,13 +52,16 @@ export default {
     },
     computed: {
         title() {
-            if (this.type) {
+            if (this.type == 1) {
                 return '我的收藏'
+            }
+            if (this.type == 0) {
+                return '我的分享'
             }
             if (this.integral) {
                 return '积分明细'
             }
-            return '我的分享'
+            return ''
         }
     },
     methods: {

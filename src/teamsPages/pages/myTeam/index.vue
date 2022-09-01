@@ -26,8 +26,12 @@
             <view class="info-name">
               <text class="name text-ellipse">{{ team.title }}</text>
               <view class="team-btn">
-                <button v-if="team.dzid == userInfo.id">邀请</button>
-                <button v-if="team.dzid != userInfo.id" @click="logoutTeam(team.id, team.userId)">退团</button>
+                <button 
+                open-type="share" 
+                id="invite_team" 
+                :data-teamCode="team.teamCode"
+                :data-image="item.logo">邀请</button>
+                <button @click="quitTeam(team)">退团</button>
               </view>
             </view>
             <!-- <view class="info-gender">
@@ -43,12 +47,12 @@
               </view>
               <view class="right">
                 <view>
-                  <view class="name row-box">
+                  <view class="name row-box position">
                     <text>职务</text>
                     <!-- <text></text> -->
                     <text>{{ team.dzxm }}</text>
                   </view>
-                  <view class="role row-box">
+                  <view class="role row-box position">
                     <text>{{ userInfo.id == team.dzid ? '队长' : '成员' }}</text>
                     <!-- <text>副队长</text> -->
                     <text>队长</text>
@@ -115,7 +119,14 @@
             </navigator>
             <view class="btn-wrapper">
               <view class="button">
-                <u-button shape="circle" color="#17aa7d" open-type="share">邀请好友</u-button>
+                <u-button 
+                shape="circle" 
+                color="#17aa7d" 
+                open-type="share" 
+                id="share_activity" 
+                :data-activityId="item.id"
+                :data-teamCode="team.teamCode"
+                :data-image="item.image">邀请好友</u-button>
               </view>
               <view class="button">
                 <u-button shape="circle" color="#74b9fd" @click="toSignUp">报名列表</u-button>
@@ -134,6 +145,18 @@
         </view>
       </view>
     </view>
+    <u-modal
+    :show="showPwd" 
+    title="入团密码"
+    closeOnClickOverlay
+    showCancelButton
+    @confirm="addMember"
+    @cancel="close"
+    @close="close">
+        <view class="modal-content">
+            <u-input type="password" v-model="joinParams.pwd" border="bottom" />
+        </view>
+    </u-modal>
   </view>
 </template>
 
@@ -142,17 +165,65 @@ import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
+      showPwd: false,
       team: {},
-      teams: []
+      teams: [],
+      defaultTeam: {},
+      joinParams: {
+        teamCode: null,
+        activityId: null,
+        pwd: null
+      }
     };
   },
-  onShow() {
+  created() {
     this.getMyTeam()
   },
   computed: {
     ...mapGetters(['userInfo'])
   },
+  onPullDownRefresh() {
+    this.getMyTeam()
+  },
+  onLoad(option) {
+    const { teamCode, activityId } = option
+    if (this.teamCode) {
+      if (!uni.getStorageSync('openid')) {
+        uni.navigateTo({ url: `/pages/login/index?teamCode=${teamCode}&activityId=${activityId}` })
+      }
+      this.joinParams.teamCode = teamCode || null
+      this.joinParams.activityId = activityId || null
+      this.joinTeamByShare()
+    }
+  },
   methods: {
+    joinTeamByShare(teamCode, activityId) {
+      this.$api.teamDetail({ teamCode })
+      .then(res => {
+        const team = res.data
+        if (team.jdyq == 0) {
+          this.addMember()
+          return
+        }
+        if (team.jdyq == 1) {
+          this.showPwd = true
+          return
+        }
+      })
+    },
+    addMember() {
+      this.$api.joinTeam({
+        ...this.joinParams,
+        openid: uni.getStorageSync('openid')
+      }).then(res => {
+        uni.$u.toast('你已成功加入团队')
+        this.showPwd = false
+      })
+    },
+    close() {
+      this.showPwd = false
+      this.joinParams.pwd = null
+    },
     features(team) {
       let actions = [
         {
@@ -187,18 +258,30 @@ export default {
     toSignUp() {
       uni.navigateTo({ url: '/activityPages/pages/enroll/index' })
     },
-    logoutTeam(teamId, userId) {
+    quitTeam(team) {
       uni.showModal({
         title: '温馨提示',
         content: '确定要退出团队吗？',
         success: res => {
           if (res.confirm) {
-            this.$api.removeMember({
+            let hasDis = 0
+            let msg = '你已成功退出团队'
+            if (this.userInfo.id == team.dzid) {
+              hasDis = 1
+              msg = '你已解散该团队'
+            }
+            this.$api.quitTeam({
               loginUserId: this.userInfo.id,
-              userId,
-              teamId
+              teamId: team.id,
+              hasDis
             }).then(res => {
-              uni.navigateBack()
+              uni.showToast({
+								icon: 'none',
+								title: msg,
+                mask: true,
+                duration: 2000
+							})
+              this.getMyTeam()
             })
           }
         }
@@ -215,7 +298,8 @@ export default {
               teamId,
               openid: uni.getStorageSync('openid')
             }).then(res => {
-              uni.$u.toast('已报名')
+              uni.$u.toast('已成功报名')
+              this.getMyTeam()
             })
           }
         }
@@ -225,8 +309,21 @@ export default {
       this.$api.myTeamList({
         openid: uni.getStorageSync('openid')
       }).then(res => {
-        this.teams = res.data
-        this.getActivity()
+        if (res.data && res.data.length) {
+          this.teams = res.data
+          this.getActivity()
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: '你暂未加入任何团队！',
+            showCancel: false,
+            success: res => {
+              if (res.confirm) {
+                uni.switchTab({ url: '/pages/tabBar/teams/index' })
+              }
+            }
+          })
+        }
       })
     },
     getActivity() {
@@ -426,6 +523,12 @@ export default {
           box-shadow: 0px 2px 4px 0px rgba(23, 170, 125, 0.6);
           border-radius: 100px 0px 0px 100px;
         }
+        &.position text{
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          width: 50%;
+        }
       }
 
       .name {
@@ -569,5 +672,9 @@ export default {
       }
     }
   }
+}
+.button__wrapper {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

@@ -34,7 +34,10 @@
                     </view>
                     <view class="info-num">
                         <text>数量: </text>
-                        <text>{{ count }}</text>
+                    </view>
+                    <view class="info-num" v-for="(item, index) in orderCount" :key="item.value">
+                        <text>{{ item.label }}×{{ item.count }}</text>
+                        <text v-if="index < orderCount.length-1"></text>
                     </view>
                     <view class="info-explain">
                         <view class="explain-item">即时确认：此订单支付完成即为预订成功</view>
@@ -76,22 +79,6 @@
                         src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
                 </view>
             </view>
-            <!-- <view class="content-item check-box">
-                <view class="item-line">
-                    <text class="item-title">下单之后再填写出行信息</text>
-
-                    <u-checkbox-group v-model="checkboxValue1" @change="checkboxChange">
-                        <u-checkbox activeColor="#17AA7D" :key="index" shape="circle">
-                        </u-checkbox>
-                    </u-checkbox-group>
-                </view>
-                <view>
-                    <image class="decor left-decor"
-                        src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
-                    <image class="decor right-decor"
-                        src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
-                </view>
-            </view> -->
             <view class="content-item travel-info">
                 <view class="item-line"> <text class="item-title">出行信息</text> </view>
                 <u-form ref="formGoOut">
@@ -115,14 +102,19 @@
 
             <u-popup :show="show" mode="bottom" @close="close">
                 <view class='detail-box'>
-                    <view class="row" v-if="crCount">
-                        <text>成人</text><text class="num">￥ {{ selectedSku.crj || 0 }} × {{ crCount }}</text>
+                    <view class="row" v-for="(item, index) in orderCount" :key="index">
+                        <text>{{ item.label }}</text><text class="num text-primary">{{ `￥${item.price} × ${item.count} `}}</text>
                     </view>
-                    <view class="row" v-if="etCount">
-                        <text>儿童</text><text class="num">￥ {{ selectedSku.etj || 0 }} × {{ etCount }}</text>
-                    </view>
+                    <template v-if="orderExtra.length">
+                        <view class="row">
+                            <text class="text-primary">附加服务</text>
+                        </view>
+                        <view class="row" v-for="(item, index) in orderExtra" :key="index">
+                            <text>{{ item.fwmc }}</text><text class="num text-primary">{{ `￥${item.price} × ${item.count} `}}</text>
+                        </view>
+                    </template>
                     <view class="row">
-                        <text>合计</text><text class="num">￥ {{ detailTotal }}</text>
+                        <text>合计</text><text class="num text-primary">￥ {{ detailTotal }}</text>
                     </view>
                 </view>
             </u-popup>
@@ -168,6 +160,8 @@ export default {
     data() {
         return {
             successModal: false,
+            travelers: [],
+            cxrIds: '',
             contact: {
                 lxrxm: '',
                 lxrdh: '',
@@ -201,12 +195,9 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['cxrSelectedList', 'orderProduct', 'orderInfo']),
+        ...mapGetters(['cxrList', 'orderProduct', 'orderInfo']),
         productName() {
             return _.get(this.orderProduct, ['cpmc'])
-        },
-        count() {
-            return _.get(this.orderInfo, ['count']) || 0
         },
         selectedSku() {
             return _.get(this.orderInfo, ['sku']) || {}
@@ -216,13 +207,41 @@ export default {
             images = images.split(',')
             return images[0]
         },
-        travelers() {
-            if (this.cxrSelectedList.length) {
-                return this.cxrSelectedList
-            }
-            const arr = []
-            for (let i = 0; i < this.count; i++) {
-                arr.push({
+        totalCount() {
+            return _.sumBy(this.orderCount, 'count')
+        },
+        orderCount() {
+            return _.get(this.orderInfo, ['orderCount'])
+        },
+        orderExtra() {
+            return _.get(this.orderInfo, ['orderExtra'])
+        },
+        totalPrice() {
+            return this.detailTotal || 0
+        },
+        totalCountPrice() {
+            return this.orderCount.reduce((prev, curr) => {
+                return prev += curr.count*curr.price
+            }, 0)
+        },
+        totalExtra() {
+            return this.orderExtra.reduce((prev, curr) => {
+                return prev += curr.count*curr.price
+            }, 0)
+        },
+        detailTotal() {
+            return (this.totalCountPrice + this.totalExtra).toFixed(2)
+        }
+    },
+    onShow() {
+        const n = this.cxrList
+        const selectedList = n.filter(item => item.checked)
+        this.travelers = selectedList
+        this.cxrIds = selectedList.map(item => item.zjhm).join(',')
+        if (selectedList.length < this.totalCount) {
+            const len = selectedList.length
+            for (let i = len; i < this.totalCount; i++) {
+                this.travelers.push({
                     lxdh: '',
                     zjlx: '',
                     zjhm: '',
@@ -230,20 +249,6 @@ export default {
                     bz: ''
                 })
             }
-            return arr
-        },
-        crCount() {
-            return this.cxrSelectedList.filter(item => item.cxlx == 1).length || 0
-        },
-        etCount() {
-            return this.cxrSelectedList.filter(item => item.cxlx == 2).length || 0
-        },
-        totalPrice() {
-            return this.detailTotal
-            // return this.count * (_.get(this.selectedSku, ['crj']) || 0)
-        },
-        detailTotal() {
-            return this.crCount * (_.get(this.selectedSku, ['crj']) || 0) + this.etCount * (_.get(this.selectedSku, ['etj']) || 0)
         }
     },
     methods: {
@@ -259,7 +264,7 @@ export default {
                     return
                 }
                 
-                if (cxrList.length != this.orderInfo.count) {
+                if (cxrList.length != this.totalCount) {
                     uni.$u.toast('出行人个数与购买数量不一致！')
                     return
                 }
@@ -270,7 +275,7 @@ export default {
                     skubh: this.orderInfo.sku.skubh,
                     skumc: this.orderInfo.skuName,
                     cxrq: this.orderInfo.sku.kcrq,
-                    gmsl: this.orderInfo.count,
+                    gmsl: this.totalCount,
                     teamId: this.orderInfo.teamId,
                     activityId: this.orderInfo.activityId,
                     openid: uni.getStorageSync('openid'),
@@ -278,11 +283,11 @@ export default {
                     cxrList
                 }
                 this.$api.addOrder(params).then(res => {
-                    if (res.code === 200) {
-                        this.payment(res.data)
-                    } else {
-                        uni.$u.toast(res.msg)
-                    }
+                    this.payment(res.data)
+                    // if (res.code === 200) {
+                    // } else {
+                    //     uni.$u.toast(res.msg)
+                    // }
                 })
             })
         },
@@ -305,9 +310,9 @@ export default {
             this.show = false
         },
         addTravelers() {
-            uni.navigateTo({ url: '/productPages/pages/traveler/index' })
+            uni.navigateTo({ url: `/productPages/pages/traveler/index?cxrIds=${this.cxrIds}` })
         }
-    },
+    }
 }
 </script>
 
@@ -507,8 +512,6 @@ export default {
 .detail-box {
     box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1000);
     padding: 50px 30px;
-    height: 300px;
-
     .close {
         text-align: right;
         font-size: 66px;
@@ -572,7 +575,7 @@ export default {
 
     .btn {
         margin: 0;
-        width: 400px;
+        width: 350px;
         height: 90px;
         background: #17AA7D;
         border-radius: 45px;

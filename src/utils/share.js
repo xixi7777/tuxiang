@@ -24,6 +24,27 @@ export default {
                 const path = `/productPages/pages/productDetail/index?cpbh=${cpbh}`
                 this.shareProduct(path, cpbh, image)
             }
+            if (target.id && target.id == 'invite_team') {
+                const teamCode = target.dataset.teamCode
+                const image = target.dataset.image || imageUrl
+                const path = `/teamsPages/pages/myTeam/index?teamCode=${teamCode}`
+                return {
+                    title: '途享旅程',
+                    path,
+                    imageUrl: image
+                }
+            }
+            if (target.id && target.id == 'share_activity') {
+                const activityId = target.dataset.activityId
+                const teamCode = target.dataset.teamCode
+                const image = target.dataset.image || imageUrl
+                const path = `/teamsPages/pages/myTeam/index?teamCode=${teamCode}&activityId=${activityId}`
+                return {
+                    title: '途享旅程',
+                    path,
+                    imageUrl: image
+                }
+            }
         }
 
         return {

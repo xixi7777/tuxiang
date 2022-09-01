@@ -414,5 +414,48 @@ export default {
                 'content-type': 'application/json'
             }
         })
+    },
+    // 获取团队详情
+    teamDetail: data => {
+        return request({
+            url: '/wechat/team/getTeamInfo',
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 加入团队
+    joinTeam: data => {
+        return request({
+            url: '/wechat/team/joinTeam',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 订单支付
+    paidByOrderNo: data => {
+        return request({
+            url: `/wechat/order/pay?orderNo=${data.orderNo}`,
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    quitTeam: data => {
+        return request({
+            url: '/wechat/team/quitTeam',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
     }
 }

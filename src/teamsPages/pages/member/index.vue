@@ -8,25 +8,18 @@
         <view class="list">
           <view class="list-title">
             <view class="left"><text class="text">成员列表</text></view>
-            <!-- <u-icon v-if="!edit" @click="edit = true" size="28" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/icon_edit.png" /> -->
           </view>
 
           <view class="list-content">
             <view class="item item-title">
               <view class="text__wrapper"><text>姓名</text></view>
               <view class="text__wrapper text-right"><text>职位</text></view>
-              <!-- <view class="text__icon"><text>&nbsp;</text></view> -->
             </view>
-            <!-- <view v-for="(item, index) in list" :key="index" class="item item-con">
-              <view class="text__wrapper"><text class="left">{{ item.nickName }}</text></view>
-              <view class="text__wrapper text-right"><text>{{ item.positionId_dictLabel }}</text></view>
-              <view class="text__icon"><u-icon size="22" name="minus-circle-fill" color="#e45656"></u-icon></view>
-            </view> -->
             <u-swipe-action>
               <u-swipe-action-item
                 :options="options"
                 v-for="(item, index) in list"
-                :disabled="item.userId == dzid"
+                :disabled="item.positionId != 'team_leader'"
                 :key="index"
                 @click="remove(item, index)"
               >

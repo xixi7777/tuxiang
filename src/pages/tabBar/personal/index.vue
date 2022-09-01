@@ -108,8 +108,8 @@ export default {
             ],
             functions: [
                 { title: '积分明细', url: '/otherPages/pages/collection/index?integral=1', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/jifenmingxi.png' },
-                { title: '我的收藏', url: '/otherPages/pages/collection/index?type=0', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/wodeshoucang.png' },
-                { title: '分享好友', url: '/otherPages/pages/collection/index?type=1', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang.png' }
+                { title: '我的收藏', url: '/otherPages/pages/collection/index?type=1', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/wodeshoucang.png' },
+                { title: '分享好友', url: '/otherPages/pages/collection/index?type=0', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/fenxiang.png' }
             ],
             about: [
                 { title: '关于我们', url: '/otherPages/pages/policy/index?key=mall.system.we', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/guanyuwomen.png' },

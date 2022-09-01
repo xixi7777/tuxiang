@@ -9,7 +9,7 @@
             <view>
                 <view class="product-title text-ellipsis"><text>{{ name }}</text></view>
                 <view class="product-price">
-                    <text>￥ {{ totalPrice }}</text>
+                    <text>￥ {{ selectedSku.crj }}</text>
                 </view>
             </view>
         </view>
@@ -35,14 +35,33 @@
             :default-select-date="calendarDefaultDate" />
         </view>
 
-        <view class="person-type">
-            <!-- <text v-for="(item, index) in personTypes" :key="index">{{ item }}</text> -->
+        <view class="quantity-wrapper">
+            <view class="quantity-list">
+                <view class="title"><text>购买数量</text></view>
+            </view>
+            <view class="quantity-list" v-for="(item, index) in orderCount" :key="index">
+                <view>
+                    <text>{{ item.label }}</text>
+                    <text class="price">￥{{ item.price }}</text>
+                </view>
+                <view class="quantity-input">
+                    <NumberInput v-model="item.count" :max="countMax(item.value)" />
+                </view>
+            </view>
         </view>
 
-        <view class="quantity-wrapper">
-            <view><text>购买数量</text></view>
-            <view class="quantity-input">
-                <NumberInput v-model="count" :max="countMax" />
+        <view class="quantity-wrapper" v-if="orderExtra.length">
+            <view class="quantity-list">
+                <view class="title"><text>附加服务</text></view>
+            </view>
+            <view class="quantity-list" v-for="(item, index) in orderExtra" :key="index">
+                <view>
+                    <text>{{ item.fwmc }}</text>
+                    <text class="price">￥{{ item.price }}</text>
+                </view>
+                <view class="quantity-input">
+                    <NumberInput v-model="item.count" />
+                </view>
             </view>
         </view>
 
@@ -74,12 +93,12 @@ export default {
             activityId: '',
             defaultSkubh: '',
             calendarDefaultDate: '',
-            personTypes: ['成人', '儿童'],
             skuggList: [],
             skuList: [],
-            count: 0,
             skuXm: {},
             selectedSku: {},
+            orderCount: [],
+            orderExtra: [],
             productStockParam: {
                 cpbh: '',
                 skubh: '',
@@ -97,7 +116,10 @@ export default {
         this.activityId = option.activityId
     },
     computed: {
-        ...mapGetters(['orderProduct', 'isIndividual']),
+        ...mapGetters(['orderProduct', 'isIndividual', 'cxlxOptions']),
+        fjfwOptions() {
+            return _.get(this.orderProduct, ['fjfwOptions']) || []
+        },
         productImage() {
             let images = _.get(this.orderProduct, ['cpzt']) || ''
             images = images.split(',')
@@ -118,18 +140,39 @@ export default {
             return _.get(this.orderProduct, ['cpmc'])
         },
         buyDisabled() {
-            return !this.count || !this.selectedSku.kcrq
+            return !_.sumBy(this.orderCount, 'count') || !this.selectedSku.kcrq
+        },
+        crj() {
+            return _.get(this.selectedSku, ['crj'])*1 || 0
+        },
+        etj() {
+            return _.get(this.selectedSku, ['etj'])*1 || 0
+        },
+        totalCountPrice() {
+            return this.orderCount.reduce((prev, curr) => {
+                return prev += curr.count*curr.price
+            }, 0)
+        },
+        totalExtra() {
+            return this.orderExtra.reduce((prev, curr) => {
+                return prev += curr.count*curr.price
+            }, 0)
         },
         totalPrice() {
-            const crj = _.get(this.selectedSku, ['crj'])*1 || 0
-            return crj * this.count
-        },
-        countMax() {
-            return _.get(this.selectedSku, ['stock']) || -1
+            return (this.totalCountPrice + this.totalExtra).toFixed(2)
         }
     },
     methods: {
-        ...mapMutations(['setOrderInfo']),
+        ...mapMutations(['setOrderInfo', 'setCxlxOptions']),
+        getCxlxOptions() {
+            this.$api.orderConfigType({ code: 'mall_order_people' }).then(res => {
+                this.setCxlxOptions(res.data)
+            })
+        },
+        countMax(key) {
+            const stock = _.get(this.selectedSku, ['stock'])
+            return stock - _.sumBy(this.orderCount.filter(item => item.value !== key), 'count')
+        },
         selectDate(date) {
             this.selectedSku = date
         },
@@ -180,7 +223,8 @@ export default {
         confirmOrder() {
             this.setOrderInfo({
                 product: this.orderProduct,
-                count: this.count,
+                orderCount: this.orderCount,
+                orderExtra: this.orderExtra,
                 sku: this.selectedSku,
                 skuName: this.skuName,
                 teamId: this.teamId,
@@ -211,6 +255,49 @@ export default {
                         cpbh: n.cpbh
                     }
                 }
+            }
+        },
+        cxlxOptions: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                if (!n.length) {
+                    this.getCxlxOptions()
+                } else {
+                    this.orderCount = []
+                    n.forEach(item => {
+                        this.orderCount.push({
+                            ...item,
+                            count: 0
+                        })
+                    })
+                }
+            }
+        },
+        fjfwOptions: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                this.orderExtra = []
+                n.forEach(item => {
+                    this.orderExtra.push({
+                        ...item,
+                        count: 0
+                    })
+                })
+            }
+        },
+        selectedSku: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                this.orderCount.forEach(item => {
+                    if (item.value == 1) {
+                        this.$set(item, 'price', n.crj)
+                    } else if (item.value == 2) {
+                        this.$set(item, 'price', n.etj)
+                    }
+                })
             }
         }
     }
@@ -332,19 +419,27 @@ export default {
     }
 }
 .quantity-wrapper {
-    margin-top: 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text {
-        font-size: 32px;
-        font-family: SourceHanSansCN-Bold, SourceHanSansCN;
-        font-weight: bold;
-        color: #006848;
-        line-height: 47px;
-    }
-    .quantity-input {
-        width: 272px;
+    margin-top: 20px;
+    .quantity-list {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .title {
+            font-size: 32px;
+            font-family: SourceHanSansCN-Bold, SourceHanSansCN;
+            font-weight: bold;
+            color: #006848;
+            line-height: 47px;
+        }
+        .price {
+            color: #17AA7D;
+            font-size: 26px;
+            margin-left: 20px;
+        }
+        .quantity-input {
+            width: 272px;
+        }
     }
 }
 .app-container {

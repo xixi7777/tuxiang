@@ -23,13 +23,16 @@ export default class Request {
 				method,
 				header,
 				success: res => {
+					console.log(res)
 					if (res.data.code === 200) {
 						resolve(res.data)
 					} else {
-						if (res.data.code && (res.data.code === 401 || res.data.code === 403)) {
+						if (res.data.code === 401 || res.data.code === 403) {
 							uni.showToast({
 								icon: 'none',
-								title: '登录身份已过期，请重新登录'
+								title: '登录身份已过期，请重新登录',
+								mask: true,
+								duration: 2000
 							})
 							uni.removeStorageSync('userinfo')
 							uni.removeStorageSync('openid')
@@ -39,19 +42,27 @@ export default class Request {
 								})
 							})
 						} else {
-							uni.showToast({
-								title: `${res.data.msg}`,
-								icon: 'none'
-							})
-							reject(res.data.msg)
+							setTimeout(() => {
+								uni.showToast({
+									title: res.data.msg,
+									icon: 'none',
+									mask: true,
+									duration: 2000
+								})
+							}, 500)
+							reject(res.data)
 						}
 					}
 				},
 				fail: err => {
-					uni.showToast({
-						title: `${err.data.msg}`,
-						icon: 'none'
-					})
+					setTimeout(() => {
+						uni.showToast({
+							title: err.data.msg,
+							icon: 'none',
+							mask: true,
+							duration: 2000
+						})
+					}, 500)
 					reject(err.data)
 				},
 				complete: () => {
