@@ -232,13 +232,13 @@
 				"pagePath": "pages/tabBar/spellGroup/index",
 				"iconPath": "static/icon/spell_group.png",
 				"selectedIconPath": "static/icon/spell_group_selected.png",
-				"text": "拼团"
+				"text": "独立成团"
 			},
 			{
 				"pagePath": "pages/tabBar/teams/index",
 				"iconPath": "static/icon/teams.png",
 				"selectedIconPath": "static/icon/teams_selected.png",
-				"text": "团队"
+				"text": "旅行团队"
 			},
 			{
 				"pagePath": "pages/tabBar/personal/index",

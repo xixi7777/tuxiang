@@ -14,9 +14,15 @@
         </view>
 
         <view class="desc-wrapper">
-            <view class="desc-header flex-box p-h-20">
-                <view><text>￥{{ product.price }}</text></view>
-                <view><u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/info.png" size="20"></u-icon></view>
+            <view class="desc-header flex-box space-between align_baseline p-h-20">
+                <view>
+                    <text class="price">￥{{ product.yhjPrice ? product.price-product.yhjPrice : product.price }}</text>
+                    <text class="plummet_price text-line_through text-sm" v-if="product.yhjPrice">￥{{ product.price }}</text>
+                    <!-- <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/info.png" size="20" /> -->
+                </view>
+                <view>
+                    <text v-if="product.yhjPrice" class="subsidy_price text-sm">补贴{{ product.yhjPrice }}元</text>
+                </view>
             </view>
             <view class="product-name p-h-20">
                 <text>{{ product.cpmc }}</text>
@@ -52,7 +58,7 @@
 
         <view class="exchange-wrapper" v-if="skuList.length">
             <view class="header flex-box space-between">
-                <view class="start-city"><text>{{ product.cfd_dictLabel }}出发</text></view>
+                <view class="start-city"><text>{{ product.cfd }}出发</text></view>
                 <!-- <view class="exchange-start flex-box">
                     <text>切换出发地 (35个)</text>
                     <u-icon name="arrow-right" size="14" class="ml-20"></u-icon>
@@ -74,7 +80,7 @@
                             <text>{{ moment(item.kcrq).format('MM-DD') }}</text>
                             <text>{{ weekdays[moment(item.kcrq).isoWeekday()] }}</text>
                             <text>￥{{ item.crj }}</text>
-                            <text>余 {{ item.stock }}</text>
+                            <text v-if="item.stock <= 10">余 {{ item.stock }}</text>
                         </view>
                     </scroll-view>
                 </view>
@@ -312,7 +318,7 @@ export default {
         border-radius: 20px;
         padding-top: 30px;
         .desc-header {
-            text {
+            .price {
                 font-size: 50px;
                 font-weight: bold;
                 color: #17AA7D;
@@ -457,12 +463,12 @@ export default {
                 white-space: nowrap;
             }
             .dates-item {
-                width: 160px;
+                // width: 160px;
                 background: rgba(0,0,0,.1);
                 border-radius: 20px;
                 opacity: 0.5;
                 text-align: center;
-                padding: 16px 0;
+                padding: 16px 40px;
                 display: inline-block;
                 text {
                     color: #000;

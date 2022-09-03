@@ -448,6 +448,7 @@ export default {
             }
         })
     },
+    // 退团/解散
     quitTeam: data => {
         return request({
             url: '/wechat/team/quitTeam',

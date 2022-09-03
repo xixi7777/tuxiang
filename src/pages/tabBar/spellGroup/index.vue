@@ -7,26 +7,28 @@
             ></u-swiper>
         </view>
         <view class="spell-group">
-            <view class="spell-item" v-for="(item, index) in list" :key="index" @click="goDetail(item)">
-                <view class="header">
+            <view class="spell-item" v-for="(item, index) in list" :key="index">
+                <view class="header" @click="goDetail(item)">
                     <text class="start-date">出发日期：{{ item.cfrq }}</text>
                     <text class="sign-up">报名中</text>
                 </view>
                 <view class="content">
                     <view class="left">
-                        <view class="title"><text>{{ item.cpmc }}</text></view>
-                        <view class="sign-date"><text>报名时间：{{ registerDate(item) }}</text></view>
-                        <view>
-                            <text class="vip-price">{{ item.hdPriceName }}: 
-                                <text class="price-code">￥</text>
-                                <text class="price">{{ item.hdPrice }}</text>
-                            </text>
-                            <text class="original-price">
-                                原价: {{ item.yjPrice }}
-                            </text>
-                        </view>
-                        <view>
-                            <text class="member">{{ item.teamRs }}人发起</text>
+                        <view @click="goDetail(item)">
+                            <view class="title"><text>{{ item.cpmc }}</text></view>
+                            <view class="sign-date"><text>报名时间：{{ registerDate(item) }}</text></view>
+                            <view>
+                                <text class="vip-price">{{ item.hdPriceName }}: 
+                                    <text class="price-code">￥</text>
+                                    <text class="price">{{ item.hdPrice }}</text>
+                                </text>
+                                <text class="original-price">
+                                    原价: {{ item.yjPrice }}
+                                </text>
+                            </view>
+                            <view>
+                                <text class="member">{{ item.teamRs }}人发起</text>
+                            </view>
                         </view>
                         <view class="item-footer">
                             <view class="grad" @click="goDetail(item)">
@@ -51,7 +53,7 @@
                             </view>
                         </view>
                     </view>
-                    <view class="right">
+                    <view class="right" @click="goDetail(item)">
                         <view class="image">
                             <image :src="image(item)"></image>
                         </view>

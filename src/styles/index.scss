@@ -82,6 +82,9 @@
     &.center {
         justify-content: center;
     }
+    &.align_baseline {
+        align-items: baseline;
+    }
 }
 .p-h-20 {
     padding: 0 20px;
@@ -189,4 +192,29 @@ image {
     -webkit-box-orient:vertical;
     -webkit-line-clamp:2;
     font-weight: bold;
+}
+.text-sm {
+    font-size: 22px;
+}
+
+.text-line_through {
+    text-decoration: line-through;
+}
+.no-pt {
+    padding-top: 0;
+}
+.subsidy_price {
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 20px;
+    border: 1px solid #FF5C35;
+    color: #FF5C35;
+    padding: 0 12px;
+}
+.plummet_price {
+    font-weight: 300;
+    color: #7F776F;
+    line-height: 44px;
+    margin-left: 10px;
 }

@@ -66,7 +66,7 @@
                   <view class="row-box">
                     <text>总人数</text>
                     <text>积分</text>
-                    <navigator v-if="team.dzid == userInfo.id" :url="`/teamsPages/pages/createTeam/index?teamId=${team.id}`" hover-class="navigator-hover-class">
+                    <navigator v-if="team.dzid == userInfo.id" :url="`/teamsPages/pages/createTeam/index?teamCode=${team.teamCode}`" hover-class="navigator-hover-class">
                       <view class="info-edit">
                         信息编辑
                       </view>

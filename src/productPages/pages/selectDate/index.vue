@@ -37,7 +37,7 @@
 
         <view class="quantity-wrapper">
             <view class="quantity-list">
-                <view class="title"><text>购买数量</text></view>
+                <view class="title"><text>购买数量 <text class="text-error text-sm" v-if="selectedSku.stock <= 10">(余 {{ selectedSku.stock }})</text></text></view>
             </view>
             <view class="quantity-list" v-for="(item, index) in orderCount" :key="index">
                 <view>
@@ -160,7 +160,20 @@ export default {
         },
         totalPrice() {
             return (this.totalCountPrice + this.totalExtra).toFixed(2)
-        }
+        },
+        // remainStock() {
+        //     let child = 0
+        //     let adult = 0
+        //     this.orderCount.forEach(item => {
+        //         if (item.value === 1) {
+        //             child++
+        //         }
+        //         if (item.value === 2) {
+        //             adult++
+        //         }
+        //     })
+        //     return this.selectedSku.stock - child - adult
+        // }
     },
     methods: {
         ...mapMutations(['setOrderInfo', 'setCxlxOptions']),

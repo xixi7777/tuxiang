@@ -54,19 +54,28 @@
                             </view>
                             <view class="right">
                                 <view class="desc">
+                                    <view class="plummet_icon" v-if="item.yhjPrice">
+                                        <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/jiagezhijiang.png"></image>
+                                    </view>
                                     <view class="desc-title ellipsis-column-2">
                                         <text>{{ item.cpmc }}</text>
                                     </view>
-                                    <view class="price-wrapper">
-                                        <text class="price-code">￥</text>
-                                        <text class="price">{{ item.price || 0 }}</text>
+                                    <view class="price-wrapper flex-box space-between align_baseline">
+                                        <view>
+                                            <text class="price-code">￥</text>
+                                            <text class="price">{{ item.yhjPrice ? item.price-item.yhjPrice : item.price }}</text>
+                                            <text class="plummet_price text-line_through text-sm" v-if="item.yhjPrice">￥{{ item.price }}</text>
+                                        </view>
+                                        <view>
+                                            <text v-if="item.yhjPrice" class="subsidy_price text-sm">补贴{{ item.yhjPrice }}元</text>
+                                        </view>
                                     </view>
                                     <view class="desc-footer">
                                         <view class="footer-icon">
                                             <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dianpu.png"></u-icon>
                                             <text>{{ item.gys_dictLabel }}</text>
                                         </view>
-                                        <view><text class="sold-text">已售{{ item.stock || 0 }}</text></view>
+                                        <view><text v-if="item.isShowNum" class="sold-text">已售{{ item.stock || 0 }}</text></view>
                                     </view>
                                 </view>
                             </view>
@@ -283,19 +292,22 @@ export default {
             .desc {
                 padding-bottom: 24px;
                 border-bottom: 1px solid #ddd;
+                .plummet_icon {
+                    width: 110px;
+                    height: 38px;
+                }
                 .desc-title {
-                    
                     color: #2A2A2A;
                     line-height: 48px;
                     font-size: 32px;
                 }
                 .price-wrapper {
-                    margin-top: 35px;
+                    margin-top: 30px;
                 }
                 .desc-footer {
                     display: flex;
                     justify-content: space-between;
-                    margin-top: 18px;
+                    margin-top: 10px;
                     text {
                         font-size: 26px;
                         font-weight: 300;

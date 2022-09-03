@@ -33,11 +33,7 @@
                         </view>
                     </view>
                     <view class="info-num">
-                        <text>数量: </text>
-                    </view>
-                    <view class="info-num" v-for="(item, index) in orderCount" :key="item.value">
-                        <text>{{ item.label }}×{{ item.count }}</text>
-                        <text v-if="index < orderCount.length-1"></text>
+                            数量: <text v-for="(item, index) in orderCount" :key="item.value">{{ item.label }}×{{ item.count }}<text v-if="index < orderCount.length-1">, </text></text>
                     </view>
                     <view class="info-explain">
                         <view class="explain-item">即时确认：此订单支付完成即为预订成功</view>
@@ -112,6 +108,13 @@
                         <view class="row" v-for="(item, index) in orderExtra" :key="index">
                             <text>{{ item.fwmc }}</text><text class="num text-primary">{{ `￥${item.price} × ${item.count} `}}</text>
                         </view>
+                    </template>
+                    <template v-if="yhjPrice">
+                        <view class="row">
+                            <text>优惠</text>
+                            <text class="num text-primary">{{ yhjPrice }}</text>
+                        </view>
+                    
                     </template>
                     <view class="row">
                         <text>合计</text><text class="num text-primary">￥ {{ detailTotal }}</text>
@@ -199,6 +202,9 @@ export default {
         productName() {
             return _.get(this.orderProduct, ['cpmc'])
         },
+        yhjPrice() {
+            return _.get(this.orderProduct, ['yhjPrice'])
+        },
         selectedSku() {
             return _.get(this.orderInfo, ['sku']) || {}
         },
@@ -230,7 +236,7 @@ export default {
             }, 0)
         },
         detailTotal() {
-            return (this.totalCountPrice + this.totalExtra).toFixed(2)
+            return (this.totalCountPrice + this.totalExtra - this.yhjPrice).toFixed(2)
         }
     },
     onShow() {
