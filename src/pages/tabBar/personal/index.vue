@@ -129,16 +129,10 @@ export default {
         }, 500)
     },
     methods: {
-        ...mapMutations(['setOrderStatus', 'setUserInfo']),
+        ...mapMutations(['setOrderStatus']),
         getOrderTypes() {
             this.$api.orderConfigType({ code: 'mall_order_status' }).then(res => {
                 this.setOrderStatus(res.data)
-            })
-        },
-        getUserInfo() {
-            const openid = uni.getStorageSync('openid')
-            this.$api.getMallUser({ openid }).then(res => {
-                this.setUserInfo(res.data)
             })
         },
         goPage(item) {

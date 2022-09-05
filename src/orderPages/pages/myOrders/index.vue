@@ -159,17 +159,42 @@ export default {
         },
         cancelOrder(order) {
             uni.showModal({
-                title: '提示',
-                content: '是否取消该订单？',
+                title: '温馨提示',
+                content: '确定要取消订单吗？',
                 success: res => {
                     if (res.confirm) {
-
+                        this.$api.cancelOrder({ 
+                            ddbh: order.ddbh 
+                        }).then(res => {
+                            this.query.pageNum = 1
+                            this.getOrderList()
+                        })
                     }
                 }
             })
         },
         paymentOrder(order) {
-            
+            this.$api.paidByOrderNo({
+                orderNo: order.ddbh
+            }).then(res => {
+                this.payment(res.data)
+            })
+        },
+        payment(param) {
+            wx.requestPayment({
+                timeStamp: param.timeStamp,
+                nonceStr: param.nonceStr,
+                package: param.packageValue,
+                signType: param.signType,
+                paySign: param.paySign,
+                success: res => {
+                    this.query.pageNum = 1
+                    this.getOrderList()
+                },
+                fail: err => {
+                    uni.$u.toast('支付失败')
+                }
+            })
         }
     },
     watch: {

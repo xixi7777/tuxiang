@@ -136,6 +136,9 @@ navigator {
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 .wf-page {
     display: grid;

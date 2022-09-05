@@ -490,5 +490,16 @@ export default {
                 'content-type': 'application/json'
             }
         })
+    },
+    // 取消订单
+    cancelOrder: data => {
+        return request({
+            url: '/wechat/order/cancel',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
     }
 }

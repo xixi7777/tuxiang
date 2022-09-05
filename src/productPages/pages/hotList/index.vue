@@ -10,7 +10,7 @@
                         <navigator hover-class="navigator-hover-class" :url="`/productPages/pages/productDetail/index?cpbh=${item.cpbh}`">
                             <view class="list-item">
                                 <view class="left">
-                                    <text class="top-left ellipsis-column-2" v-if="item.cfd">{{ item.cfd }}出发</text>
+                                    <text class="top-left ellipsis-column-2" v-if="item.cfd">{{ cfd(item) }}出发</text>
                                     <image lazy-load v-if="item.cpzt" :src="cpzt(item)"></image>
                                     <image lazy-load v-else src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_2.png"></image>
                                     <!-- </view> -->
@@ -94,6 +94,13 @@ export default {
         }, 500)
     },
     methods: {
+        cfd(pro) {
+            if (pro.cfd) {
+                const cfd = pro.cfd.split(',')
+                return cfd[cfd.length-1]
+            }
+            return ''
+        },
         cpzt(item) {
             const images = item.cpzt.split(',')
             return images[0]

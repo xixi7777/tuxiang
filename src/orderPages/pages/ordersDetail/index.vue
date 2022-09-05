@@ -239,13 +239,27 @@ export default {
         },
         addOrder() {
             this.$api.paidByOrderNo({
-                orderNo: this.detail.ddbh
+                orderNo: this.orderDetail.ddbh
             }).then(res => {
                 this.payment(res.data)
             })
         },
         cancelOrder(order) {
-
+            uni.showModal({
+                title: '温馨提示',
+                content: '确定要取消订单吗？',
+                success: res => {
+                    if (res.confirm) {
+                        this.$api.cancelOrder({ 
+                            ddbh: this.orderDetail.ddbh 
+                        }).then(res => {
+                            uni.navigateTo({
+                                url: '/orderPages/pages/myOrders/index'
+                            })
+                        })
+                    }
+                }
+            })
         },
         payment(param) {
             wx.requestPayment({

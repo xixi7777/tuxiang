@@ -63,7 +63,7 @@
 			</view>
 
 			<view class="scroll-list-wrapper">
-				<scroll-view scroll-x="true" class="scroll">
+				<scroll-view scroll-x="true" :show-scrollbar="false" :enhanced="true" class="scroll">
 					<view v-for="item in rankproduct" class="scroll-item" :key="item.name">
 						<navigator hover-class="navigator-hover-class" :url="`/productPages/pages/productDetail/index?${item.url}`">
 							<view class="list-image">
@@ -133,8 +133,6 @@ import Search from '@/components/pageSearch/PageSearch'
 
 import { waterfallMixins } from '@/mixins/waterfallMixins';
 import _ from 'lodash'
-import { mapMutations } from 'vuex'
-import urlLoader from '@dcloudio/uni-cli-shared/lib/url-loader';
 export default {
 	mixins: [waterfallMixins],
 	components: {
@@ -192,16 +190,9 @@ export default {
 		}
 	},
 	methods: {
-		...mapMutations(['setUserInfo']),
 		search(keyword) {
 			uni.navigateTo({ url: `/productPages/pages/recommend/index?cpmc=${keyword}` })
 		},
-		getUserInfo() {
-            const openid = uni.getStorageSync('openid')
-            this.$api.getMallUser({ openid }).then(res => {
-                this.setUserInfo(res.data)
-            })
-        },
 		swiperChange({current}) {
 			this.current = current
 		},

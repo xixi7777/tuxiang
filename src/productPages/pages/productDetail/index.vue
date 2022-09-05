@@ -58,7 +58,7 @@
 
         <view class="exchange-wrapper" v-if="skuList.length">
             <view class="header flex-box space-between">
-                <view class="start-city"><text>{{ product.cfd }}出发</text></view>
+                <view class="start-city"><text>{{ cfd }}出发</text></view>
                 <!-- <view class="exchange-start flex-box">
                     <text>切换出发地 (35个)</text>
                     <u-icon name="arrow-right" size="14" class="ml-20"></u-icon>
@@ -71,7 +71,7 @@
                     hover-class="navigator-hover-class">更多班期</navigator>
                 </view>
                 <view class="scroll-list-wrapper">
-                    <scroll-view scroll-x="true" class="scroll">
+                    <scroll-view scroll-x="true" class="scroll" :show-scrollbar="false" :enhanced="true">
                         <view 
                         :class="['dates-item', isSelected(item) && 'is-active']" 
                         v-for="(item, index) in skuList" 
@@ -176,6 +176,13 @@ export default {
                 return this.product.cpbq_dictLabel.split(',')
             }
             return []
+        },
+        cfd() {
+            if (this.product.cfd) {
+                const cfd = this.product.cfd.split(',')
+                return cfd[cfd.length-1]
+            }
+            return ''
         }
     },
     methods: {
