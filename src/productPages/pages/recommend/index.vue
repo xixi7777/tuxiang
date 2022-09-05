@@ -3,45 +3,40 @@
         <view class="recommend-header">
             <view class="app-top-background home"></view>
             <view class="page-title">
-                <navigator open-type="navigateBack" delta="1" hover-class="navigator-hover-class">
-                    <u-icon color="#006848" size="20" name="arrow-left" class="arrow-left"></u-icon>
-                </navigator>
+                <u-icon @click="navigateBack" color="#006848" size="20" name="arrow-left" class="arrow-left"></u-icon>
             </view>
-            <search class="mt-10" v-model="query.cpmc" @confirm="searchConfirm" />
+            <search class="mt-10" v-model="query.cpmc" @blur="searchConfirm" @confirm="searchConfirm" />
 
             <view class="header-filter">
-                <!-- <view class="title">热门推荐</view> -->
-                <view class="sort-wrapper">
-                    <view class="sort">
-                        <view 
-                        :class="['sort-item', query.sfrmtj && 'selected']" 
-                        @click="changeRmtj">
-                            <text>热门推荐</text>
-                        </view>
-                        <view 
-                        @click="showDatePicker = !showDatePicker"
-                        :class="['sort-item', query.ywts && 'selected']" >
-                            <text>线路 / 天数</text>
-                            <u-icon name="arrow-down-fill" size="16"></u-icon>
-                            <u-picker 
-                            :show="showDatePicker" 
-                            :columns="[ywDays]" 
-                            @cancel="showDatePicker = false"
-                            @confirm="confirmDatePicker"></u-picker>
-                        </view>
-                        <view 
-                        :class="['sort-item', query.xlflCode == item && 'selected']" 
-                        @click="selectXlflCode(item)"
-                        v-for="(item, index) in nav" 
-                        :key="index">
-                            <text>{{ item }}</text>
-                        </view>
+                <scroll-view scroll-x="true" class="scroll">
+                    <view 
+                    :class="['sort-item', query.sfrmtj && 'selected']" 
+                    @click="changeRmtj">
+                        <text>热门推荐</text>
                     </view>
-                </view>
+                    <view 
+                    @click="showDatePicker = !showDatePicker"
+                    :class="['sort-item', query.ywts && 'selected']" >
+                        <text>线路 / 天数</text>
+                        <u-icon name="arrow-down-fill" size="16"></u-icon>
+                        <u-picker 
+                        :show="showDatePicker" 
+                        :columns="[ywDays]" 
+                        @cancel="showDatePicker = false"
+                        @confirm="confirmDatePicker"></u-picker>
+                    </view>
+                    <view 
+                    :class="['sort-item', query.xlflCode == item.dictValue && 'selected']" 
+                    @click="selectXlflCode(item.dictValue)"
+                    v-for="(item, index) in nav" 
+                    :key="index">
+                        <text>{{ item.dictLabel }}</text>
+                    </view>
+                </scroll-view>
             </view>
         </view>
 
-        <view class="list-wrapper">
+        <view class="hot-list__wrapper">
             <template v-if="list.length">
                 <view v-for="item in list" :key="item.cpbh">
                     <navigator hover-class="navigator-hover-class" :url="`/productPages/pages/productDetail/index?cpbh=${item.cpbh}`">
@@ -60,7 +55,7 @@
                                     <view class="desc-title ellipsis-column-2">
                                         <text>{{ item.cpmc }}</text>
                                     </view>
-                                    <view class="price-wrapper flex-box space-between align_baseline">
+                                    <view :class="['price-wrapper flex-box space-between align_baseline', item.yhjPrice && 'no-mt']">
                                         <view>
                                             <text class="price-code">￥</text>
                                             <text class="price">{{ item.yhjPrice ? item.price-item.yhjPrice : item.price }}</text>
@@ -116,12 +111,14 @@ export default {
     onLoad(option) {
         const { cpmc, xlflCode } = option
         if (xlflCode) {
-            this.query.cpmc = xlflCode
             this.query.xlflCode = xlflCode
         }
         if (cpmc) {
             this.query.cpmc = cpmc
         }
+    },
+    created() {
+        this.getXllxCode()
     },
     onReachBottom() {
         if (this.total === this.list.length) {
@@ -130,7 +127,10 @@ export default {
         this.query.pageNum++
     },
     onPullDownRefresh() {
-        this.query.pageNum = 1
+        wx.stopPullDownRefresh();
+        setTimeout(() => {
+            this.query.pageNum = 1
+        }, 500)
     },
     methods: {
         selectXlflCode(item) {
@@ -138,6 +138,7 @@ export default {
             this.query.xlflCode = this.query.xlflCode == item ? '' : item
             this.query.sfrmtj = ''
             this.query.ywts = ''
+            console.log(this.query)
         },
         changeRmtj() {
             this.query.sfrmtj = this.query.sfrmtj ? 0 : 1
@@ -166,7 +167,12 @@ export default {
 				this.list = [...this.list, ...res.rows]
                 this.total = res.total
 			})
-        }, 300)
+        }, 300),
+        getXllxCode() {
+            this.$api.getXllxCode().then(res => {
+                this.nav = res.data
+            })
+        }
     },
     watch: {
         query: {
@@ -203,126 +209,48 @@ export default {
     margin-top: 56px;
     display: flex;
     align-items: center;
-    .sort-wrapper {
-        flex: 1;
-    }
     .empty {
         width: 60px;
     }
-    .sort {
-        display: flex;
-        justify-content: space-between;
-        .sort-item {
+
+    /deep/ .sort-item {
+        display: inline-block;
+        padding: 0 30px;
+        text {
+            font-size: 30px;
+            color: #333;
+            line-height: 42px;
+        }
+        .u-icon {
+            display: inline-block;
+            width: 18px;
+            height: 15px;
+            margin-left: 2px;
+            margin-top: 2px;
+        }
+        &.selected {
             text {
+                color: #17AA7D;
                 font-size: 30px;
-                color: #333;
-                line-height: 42px;
-            }
-            /deep/ .u-icon--right {
-                display: inline-block;
-                width: 18px;
-                height: 15px;
-                margin-left: 2px;
-                margin-top: 2px;
-            }
-            &.selected {
-                text {
-                    color: #17AA7D;
-                    font-size: 30px;
-                    font-weight: 600;
-                    line-height: 50px;
-                    position: relative;
-                    &::after {
-                        position: absolute;
-                        content: "";
-                        bottom: -5px;
-                        width: 34px;
-                        height: 8px;
-                        background: #17AA7D;
-                        border-radius: 4px;
-                        left: 50%;
-                        transform: translateX(-50%);
-                    }
+                font-weight: 600;
+                line-height: 50px;
+                position: relative;
+                &::after {
+                    position: absolute;
+                    content: "";
+                    bottom: -5px;
+                    width: 34px;
+                    height: 8px;
+                    background: #17AA7D;
+                    border-radius: 4px;
+                    left: 50%;
+                    transform: translateX(-50%);
                 }
             }
         }
     }
 }
-.list-wrapper {
+.hot-list__wrapper {
     margin-top: 350px;
-    .list-item {
-        margin: 22px auto;
-        display: flex;
-        .left {
-            width: 237px;
-            height: 237px;
-            position: relative;
-            border-radius: 13px;
-            overflow: hidden;
-            .top-left {
-                line-height: 35px;
-                text-align: left;
-                font-size: 22px;
-                padding: 10px;
-                background: #000000;
-                border-radius: 0px 0px 23px 0px;
-                opacity: 0.4;
-                position: absolute;
-                top: 0;
-                left: 0;
-                z-index: 2;
-                color: #fff;
-            }
-            .bottom {
-                position: absolute;
-                bottom: 0;
-                width: 100%;
-                height: 35px;
-                background: rgba(0,0,0,0.3000);
-                backdrop-filter: blur(10px);
-                color: #fff;
-                font-size: 22px;
-                text-align: center;
-                line-height: 35px;
-            }
-        }
-        .right {
-            flex: 1;
-            padding-left: 20px;
-            .desc {
-                padding-bottom: 24px;
-                border-bottom: 1px solid #ddd;
-                .plummet_icon {
-                    width: 110px;
-                    height: 38px;
-                }
-                .desc-title {
-                    color: #2A2A2A;
-                    line-height: 48px;
-                    font-size: 32px;
-                }
-                .price-wrapper {
-                    margin-top: 30px;
-                }
-                .desc-footer {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-top: 10px;
-                    text {
-                        font-size: 26px;
-                        font-weight: 300;
-                        color: #969696;
-                        line-height: 37px;
-                    }
-                    .footer-icon {
-                        display: flex;
-                        text {
-                            margin-left: 16px;
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 </style>

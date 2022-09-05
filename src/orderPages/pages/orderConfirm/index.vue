@@ -6,10 +6,8 @@
         <view class="top-title">
             <view class="title-content">
                 <!-- 返回 -->
-                <view class="arrow-back">
-                    <navigator open-type="navigateBack" hover-class="navigator-hover-class">
-                        <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
-                    </navigator>
+                <view class="arrow-back" @click="navigateBack">
+                    <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
                 </view>
                 <text>订单确认</text>
             </view>
@@ -111,8 +109,8 @@
                     </template>
                     <template v-if="yhjPrice">
                         <view class="row">
-                            <text>优惠</text>
-                            <text class="num text-primary">{{ yhjPrice }}</text>
+                            <text class="text-warning">优惠</text>
+                            <text class="num text-warning">{{ yhjPrice }}</text>
                         </view>
                     
                     </template>
@@ -400,7 +398,7 @@ export default {
                         text-overflow: ellipsis;
                         display: -webkit-box;
                         -webkit-box-orient: vertical;
-                        -webkit-line-clamp: 2;
+                        -webkit-line-clamp: 4;
                         margin-top: 15px;
                     }
 

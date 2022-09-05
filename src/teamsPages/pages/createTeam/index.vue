@@ -280,7 +280,7 @@ export default {
           return
         }
         if (!this.teamInfo.logo) {
-          this.$u.toast('请上传头像')
+          uni.$u.toast('请上传头像')
           return
         }
         if (!this.teamInfo.id) {
@@ -289,7 +289,7 @@ export default {
           this.editTeam(this.teamInfo)
         }
       }).catch(err => {
-        this.$u.toast('请完善信息')
+        uni.$u.toast('请完善信息')
       })
     },
     addTeam(params) {

@@ -23,13 +23,13 @@
               prop="cpbh"
             >
               <view class="picker-input no-border" @click="showProductList">{{ productName }} <u-icon name="arrow-right"></u-icon> </view>
-                <u-picker 
+                <!-- <u-picker 
                 :show="productShow"
                 :defaultIndex="0"
                 :columns="[productList]" 
                 keyName="keyName"
                 @cancel="productShow = false" 
-                @confirm="confirmProduct"></u-picker>
+                @confirm="confirmProduct"></u-picker> -->
             </u-form-item>
             <u-form-item
               label="活动名称"
@@ -87,7 +87,7 @@
               <view class="picker-input no-border" @click="deadlineTimeShow = true">{{ form.deadlineTime }}</view>
               <u-datetime-picker
                 :show="deadlineTimeShow"
-                :minDate="new Date(moment().format('YYYY-MM-DD')).getTime()"
+                :minDate="new Date(moment().add(1, 'd').format('YYYY-MM-DD')).getTime()"
                 :maxDate="new Date(moment(form.beginTime).add(-1, 'd').format('YYYY-MM-DD')).getTime()"
                 @cancel="deadlineTimeShow = false"
                 @confirm="confirmDeadlineTime"
@@ -111,6 +111,21 @@
     <view class="bottom-btn">
       <u-button shape="circle" type="primary" @click="submit" class="btn-submit">确定</u-button>
     </view>
+
+    <u-popup :show="productShow" mode="bottom"  @close="productShow = false">
+      <view class="top-tools flex-box space-between">
+        <view><text class="text-disabled" @click="productShow = false">取消</text></view>
+        <view><text class="text-blue" @click="confirmPicker">确定</text></view>
+      </view>
+      <view class="picker-data__wrapper">
+        <u-search placeholder="搜索" @search="searchProduct" :showAction="false"></u-search>
+        <picker-view @change="pickerHandleChange" indicator-class="indicator-class">
+          <picker-view-column class="picker-column">
+            <view v-for="pro in productList" :key="pro.keyId" class="picker-item text-ellipsis">{{ pro.keyName}}</view>
+          </picker-view-column>
+        </picker-view>
+      </view>
+    </u-popup>
   </view>
 </template>
 
@@ -131,6 +146,8 @@ export default {
       productShow: false,
       productList: [],
       productName: '',
+      productSearch: '',
+      pickedPro: {},
       form: {
         image: '',
         userId: '',
@@ -227,8 +244,8 @@ export default {
   },
   methods: {
     moment,
-    getProducts() {
-      this.$api.activityProduct().then(res => {
+    getProducts(keyname = '') {
+      this.$api.activityProduct({ keyname }).then(res => {
         this.productList = res.data
       })
     },
@@ -291,9 +308,24 @@ export default {
     confirmProduct(selector) {
       this.form.cpbh = selector.value[0].keyid;
       this.productName = selector.value[0].keyName;
+      this.form.name = this.productName
       this.productShow = false
+    },
+    confirmPicker() {
+      this.form.cpbh = this.pickedPro.keyid;
+      this.productName = this.pickedPro.keyName;
+      this.form.name = this.productName
+      this.productShow = false
+    },
+    searchProduct(search) {
+      this.getProducts(search)
+    },
+    pickerHandleChange(evt) {
+      const { detail } = evt
+      const idx = detail.value[0]
+      this.pickedPro = this.productList[idx]
     }
-  },
+  }
 };
 </script>
 
@@ -331,5 +363,25 @@ export default {
 }
 .text-sm {
   font-size: 28px;
+}
+.top-tools {
+  padding: 16px 50px;
+}
+.picker-data__wrapper {
+  margin-top: 30px;
+  padding: 16px 50px;
+}
+.picker-item {
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+  width: 100%;
+}
+.picker-column {
+  height: 400px;
+}
+/deep/ .indicator-class {
+  height: 80px;
+  line-height: 80px;
 }
 </style>

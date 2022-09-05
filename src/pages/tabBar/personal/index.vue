@@ -120,8 +120,13 @@ export default {
         ...mapGetters(['orderStatus', 'userInfo'])
     },
     onShow() {
-        this.getOrderTypes()
         this.getUserInfo()
+    },
+    onPullDownRefresh() {
+        wx.stopPullDownRefresh();
+        setTimeout(() => {
+            this.getUserInfo()
+        }, 500)
     },
     methods: {
         ...mapMutations(['setOrderStatus', 'setUserInfo']),
@@ -141,6 +146,17 @@ export default {
         },
         toOthers(url) {
             uni.navigateTo({ url })
+        }
+    },
+    watch: {
+        orderStatus: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                if (!n.length) {
+                    this.getOrderTypes()
+                }
+            }
         }
     }
 }

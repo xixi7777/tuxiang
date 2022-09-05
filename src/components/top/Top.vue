@@ -1,9 +1,7 @@
 <template>
     <view :class="['top', textLeft && 'text-left']" :style="{ background: backgroundColor }">
-            <view class="back-icon">
-                <navigator open-type="navigateBack" delta="1" hover-class="navigator-hover-class">
-                    <u-icon :color="backIconColor" size="20" name="arrow-left"></u-icon>
-                </navigator>
+            <view class="back-icon" @click="navigateBack">
+                <u-icon :color="backIconColor" size="20" name="arrow-left"></u-icon>
             </view>
             <text class="title text-ellipsis" v-if="title" style="line-height: 20px">{{ title }}</text>
     </view>

@@ -458,5 +458,37 @@ export default {
                 'content-type': 'application/json'
             }
         })
+    },
+    // 获取团队职务列表
+    teamPosition: data => {
+        return request({
+            url: '/wechat/team/positionList',
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 修改团队成员信息
+    manageMember: data => {
+        return request({
+            url: '/wechat/team/manageTeam',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    getXllxCode: data => {
+        return request({
+            url: '/wechat/user/type/mall_cpfl',
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
     }
 }

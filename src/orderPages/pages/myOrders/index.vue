@@ -6,10 +6,8 @@
         <view class="top-title">
             <view class="title-content">
                 <!-- 返回 -->
-                <view class="arrow-back">
-                    <navigator open-type="navigateBack" hover-class="navigator-hover-class">
-                        <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
-                    </navigator>
+                <view class="arrow-back" @click="navigateBack">
+                    <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
                 </view>
                 <text>我的订单</text>
             </view>
@@ -46,7 +44,7 @@
                         <view class="left">
                             <image class="logo" lazy-load
                                 src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/logo.png" />
-                            <text>途享旅程</text>
+                            <text>途享旅游</text>
                             <image class="img" lazy-load
                                 src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png" />
                         </view>
@@ -134,10 +132,10 @@ export default {
         this.query.pageNum++
     },
     onPullDownRefresh() {
-        this.query.pageNum = 1
-    },
-    computed: {
-        // ...mapGetters(['orderStatus'])
+        wx.stopPullDownRefresh();
+        setTimeout(() => {
+            this.query.pageNum = 1
+        }, 500)
     },
     methods: {
         tabChange(item) {

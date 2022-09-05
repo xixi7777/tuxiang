@@ -6,10 +6,8 @@
         <view class="top-title">
             <view class="title-content">
                 <!-- 返回 -->
-                <view class="arrow-back">
-                    <navigator open-type="navigateBack" hover-class="navigator-hover-class">
-                        <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
-                    </navigator>
+                <view class="arrow-back" @click="navigateBack">
+                    <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
                 </view>
                 <text>退款详情</text>
             </view>
@@ -91,6 +89,24 @@
                     maxlength="200"
                     placeholder="退款说明，选填，限200字"></u-textarea>
                 </view>
+
+                <view>
+                    <image class="decor left-decor"
+                        src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
+                    <image class="decor right-decor"
+                        src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
+                </view>
+            </view>
+
+            <view class="content-item travel-info">
+                <view class="item-line item-line__title">
+                    <view>
+                        <text class="item-title">退款说明</text>
+                    </view>
+                </view>
+                <view class="item-line" v-for="(item, index) in refundDesc" :key="index">
+                    {{ item }}
+                </view>
             </view>
 
             <view class="footer-button">
@@ -151,13 +167,15 @@ export default {
                 tklx: null,
                 tkyy: ''
             },
-            refundTypes: []
+            refundTypes: [],
+            refundDesc: ''
         };
     },
     onLoad(option) {
         const { id } = option
         this.getOrderDetail(id)
         this.getRefundTypes()
+        this.getRefundDesc()
     },
     computed: {
         cxrList() {
@@ -190,6 +208,11 @@ export default {
     },
     methods: {
         moment,
+        getRefundDesc() {
+            this.$api.getSysConfigCache({ key: 'mall.order.tk' }).then(res => {
+                this.refundDesc = res.data['mall.order.tk'].split('。')
+            })
+        },
         submit() {
             if (!this.refund.tklx) {
                 uni.$u.toast('请选择退款类型')

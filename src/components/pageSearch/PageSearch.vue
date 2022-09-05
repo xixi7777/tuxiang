@@ -1,23 +1,24 @@
 <template>
-    <!-- <view class="search-wrapper"> -->
-        <!-- <u-sticky offset-top="40"> -->
-            <view class="page-search">
-                <view class="search-icon">
-                    <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/search.png"></image>
-                </view>
-                <input 
-                class="input"
-                v-model="inputVal" 
-                @confirm="confirm"
-                placeholder="请输入你想要的内容" />
-            </view>
-        <!-- </u-sticky> -->
-    <!-- </view> -->
+    <view :class="['page-search', className]">
+        <view class="search-icon">
+            <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/search.png"></image>
+        </view>
+        <input 
+        class="input"
+        v-model="inputVal" 
+        @confirm="confirm"
+        @blur="confirm"
+        placeholder="请输入你想要的内容" />
+    </view>
 </template>
 <script>
 export default {
     props: {
         value: {
+            type: String,
+            default: ''
+        },
+        className: {
             type: String,
             default: ''
         }

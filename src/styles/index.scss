@@ -1,27 +1,7 @@
 @import '../uni.scss';
-
+$grid-gap: 40px;
 * {
     font-family: 'Source Han Sans CN';
-}
-
-.app-top-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 364px;
-    background: linear-gradient(180deg, #A1F5E2 0%, #EAF6F5 100%);
-    border-radius: 0px 0px 0px 50px;
-    z-index: -1;
-    &.home {
-        height: 460px;
-    }
-}
-
-.app-container {
-    padding: 30px;
-    position: relative;
-    min-height: 100vh;
 }
 .text-primary {
     color: $uni-color-primary;
@@ -35,12 +15,21 @@
 .text-success {
     color: $uni-color-success;
 }
-.page-title {
-    font-size: 36px;
-    font-family: 'Source Han Sans CN';
-    font-weight: bold;
-    color: #0B6749;
-    margin: 50px 0;
+.text-blue {
+    color: $uni-color-link;
+}
+.text-disabled {
+    color: $uni-text-color-disable;
+}
+.text-sm {
+    font-size: 22px;
+}
+
+.text-line_through {
+    text-decoration: line-through;
+}
+.no-pt {
+    padding-top: 0;
 }
 .text-ellipsis {
     overflow: hidden;
@@ -49,29 +38,28 @@
     // display: block;
     // width: 100%;
 }
-.price-code {
-    line-height: 36px;
-    font-size: 34px;
+.ellipsis-column-2 {
+    overflow:hidden; 
+    text-overflow:ellipsis;
+    display:-webkit-box; 
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
     font-weight: bold;
-    color: #17AA7D;
-}
-.price {
-    font-size: 46px;
-    font-weight: bold;
-    color: #17AA7D;
-    line-height: 53px;
-}
-.price-from {
-    font-size: 20px;
-    font-weight: 500;
-    color: #17AA7D;
-    line-height: 28px;
 }
 .ml-5 {
     margin-left: 5px;
 }
 .mt-10 {
     margin-top: 10px;
+}
+.mt-30 {
+    margin-top: 30px;
+}
+.p-h-20 {
+    padding: 0 20px;
+}
+.p-v-20 {
+    padding: 20px 0;
 }
 .flex-box {
     display: flex;
@@ -86,11 +74,12 @@
         align-items: baseline;
     }
 }
-.p-h-20 {
-    padding: 0 20px;
+image {
+    width: 100%;
+    height: 100%;
 }
-.p-v-20 {
-    padding: 20px 0;
+.u-empty {
+    margin-top: 50px !important;
 }
 navigator {
     display: inline-block !important;
@@ -100,20 +89,59 @@ navigator {
     background: transparent;
     color: $uni-color-primary;
 }
+.price-code {
+    line-height: 36px;
+    font-size: 34px;
+    font-weight: bold;
+    color: $uni-color-primary;
+}
+.price {
+    font-size: 46px;
+    font-weight: bold;
+    color: $uni-color-primary;
+    line-height: 53px;
+}
+.price-from {
+    font-size: 20px;
+    font-weight: 500;
+    color: $uni-color-primary;
+    line-height: 28px;
+}
+.app-top-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 364px;
+    background: linear-gradient(180deg, #A1F5E2 0%, #EAF6F5 100%);
+    border-radius: 0px 0px 0px 50px;
+    z-index: -1;
+    &.home {
+        height: 460px;
+    }
+}
+.app-container {
+    padding: 30px;
+    position: relative;
+    min-height: 100vh;
+}
+.page-title {
+    font-size: 36px;
+    font-family: 'Source Han Sans CN';
+    font-weight: bold;
+    color: #0B6749;
+    margin: 50px 0;
+}
 .scroll {
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
 }
-
-$grid-gap: 40px;
-
 .wf-page {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: $grid-gap;
 }
-
 .wf-item {
     width: 326px;
 }
@@ -122,11 +150,6 @@ $grid-gap: 40px;
     width: 100%;
     border: none !important;
 }
-image {
-    width: 100%;
-    height: 100%;
-}
-
 .picker-input {
     border-bottom: 1px solid #e2e2e2;
     padding: 20px 6px 20px 0;
@@ -143,12 +166,10 @@ image {
         transform: translateY(-50%);
     }
 }
-
 .upload-avatar {
     padding: 75px 40px 50px;
     display: flex;
     position: relative;
-
     .image {
         width: 125px;
         height: 125px;
@@ -157,7 +178,6 @@ image {
             border-radius: 50%;
         }
     }
-
     .text {
         position: absolute;
         top: 50%;
@@ -167,7 +187,6 @@ image {
         color: #080808;
     }
 }
-
 .bottom-btn {
     position: fixed;
     bottom: 0;
@@ -181,27 +200,6 @@ image {
         font-size: 32px;
         height: 100px;
     }
-}
-.u-empty {
-    margin-top: 50px !important;
-}
-.ellipsis-column-2 {
-    overflow:hidden; 
-    text-overflow:ellipsis;
-    display:-webkit-box; 
-    -webkit-box-orient:vertical;
-    -webkit-line-clamp:2;
-    font-weight: bold;
-}
-.text-sm {
-    font-size: 22px;
-}
-
-.text-line_through {
-    text-decoration: line-through;
-}
-.no-pt {
-    padding-top: 0;
 }
 .subsidy_price {
     display: inline-block;
@@ -217,4 +215,83 @@ image {
     color: #7F776F;
     line-height: 44px;
     margin-left: 10px;
+}
+.hot-list__wrapper {
+    .list-item {
+        margin: 22px auto;
+        display: flex;
+        .left {
+            width: 237px;
+            height: 237px;
+            position: relative;
+            border-radius: 13px;
+            overflow: hidden;
+            .top-left {
+                line-height: 35px;
+                text-align: left;
+                font-size: 22px;
+                padding: 10px;
+                background: #000000;
+                border-radius: 0px 0px 23px 0px;
+                opacity: 0.4;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 2;
+                color: #fff;
+            }
+            .bottom {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                height: 35px;
+                background: rgba(0,0,0,0.3000);
+                backdrop-filter: blur(10px);
+                color: #fff;
+                font-size: 22px;
+                text-align: center;
+                line-height: 35px;
+            }
+        }
+        .right {
+            flex: 1;
+            padding-left: 20px;
+            .desc {
+                padding-bottom: 24px;
+                border-bottom: 1px solid #ddd;
+                .plummet_icon {
+                    width: 110px;
+                    height: 38px;
+                }
+                .desc-title {
+                    color: #2A2A2A;
+                    line-height: 48px;
+                    font-size: 32px;
+                }
+                .price-wrapper {
+                    margin-top: 30px;
+                }
+                .desc-footer {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 10px;
+                    text {
+                        font-size: 26px;
+                        font-weight: 300;
+                        color: #969696;
+                        line-height: 37px;
+                    }
+                    .footer-icon {
+                        display: flex;
+                        text {
+                            margin-left: 16px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.no-mt {
+    margin-top: 0 !important;
 }

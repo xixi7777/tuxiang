@@ -95,7 +95,7 @@
 					<view>
 						<view id="left" v-if="leftList.length">
 							<view v-for="(item,index) in leftList" :key="index" class="wf-item" @tap="itemTap(item)">
-								<navigator :url="`/productPages/pages/recommend/index?${item.url}`" hover-class="navigator-hover-class">
+								<navigator :url="item.url" hover-class="navigator-hover-class">
 									<WaterfallFlowItem v-if="item.image" :item="item" />
 								</navigator>
 							</view>
@@ -106,7 +106,7 @@
 					<view>
 						<view id="right" v-if="rightList.length">
 							<view v-for="(item,index) in rightList" :key="index" class="wf-item" @tap="itemTap(item)">
-								<navigator :url="`/productPages/pages/recommend/index?${item.url}`" hover-class="navigator-hover-class">
+								<navigator :url="item.url" hover-class="navigator-hover-class">
 									<WaterfallFlowItem v-if="item.image" :item="item" />
 								</navigator>
 							</view>
@@ -166,7 +166,10 @@ export default {
 		}
 	},
 	onPullDownRefresh() {
-		this.getConfig()
+		wx.stopPullDownRefresh();
+		setTimeout(() => {
+			this.getConfig()
+		}, 500)
 	},
 	created() {
 		this.getUserInfo()
@@ -191,7 +194,7 @@ export default {
 	methods: {
 		...mapMutations(['setUserInfo']),
 		search(keyword) {
-			uni.navigateTo({ url: `/productPages/pages/recommend/index?search=${keyword}` })
+			uni.navigateTo({ url: `/productPages/pages/recommend/index?cpmc=${keyword}` })
 		},
 		getUserInfo() {
             const openid = uni.getStorageSync('openid')
@@ -237,15 +240,14 @@ export default {
 			}
 			.u-swiper__wrapper__item__wrapper {
 				background: rgba(255,255,255,0.5);
-				padding: 20px;
-				border-radius: 30px;
+				padding: 10px;
+				border-radius: 26px;
 				box-shadow: 0px 20px 20px 0px rgba(28,157,122,0.2000);
-				// height: 430px !important;
 				margin-bottom: 50px;
 			}
 			.u-swiper__wrapper__item__wrapper__image {
-				border-radius: 30px;
-				height: 380px !important;
+				border-radius: 26px !important;
+				height: 400px !important;
 			}
 		}
 	}

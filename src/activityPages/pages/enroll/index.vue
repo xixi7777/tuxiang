@@ -69,8 +69,11 @@ export default {
     this.getList()
   },
   onPullDownRefresh() {
-    this.query.pageNum = 1
-    this.getList()
+    wx.stopPullDownRefresh();
+    setTimeout(() => {
+      this.query.pageNum = 1
+      this.getList()
+    }, 500)
   },
   methods: {
     getList() {

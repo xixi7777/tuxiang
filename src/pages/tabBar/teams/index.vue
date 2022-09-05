@@ -107,8 +107,11 @@ export default {
     this.getTeams()
   },
   onPullDownRefresh() {
-    this.query.pageNum = 1
-    this.getTeams()
+    wx.stopPullDownRefresh();
+    setTimeout(() => {
+      this.query.pageNum = 1
+      this.getTeams()
+    }, 500)
   },
   computed: {
     ...mapGetters(['userInfo'])
@@ -219,7 +222,8 @@ export default {
   .team-item {
     text-align: center;
     margin-top: 90px;
-    height: 525px;
+    // height: 525px;
+    padding-bottom: 50px;
     background: linear-gradient(335deg, rgba(255, 255, 255, 0) 0%, #fff 100%);
     box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1);
     border-radius: 30px;

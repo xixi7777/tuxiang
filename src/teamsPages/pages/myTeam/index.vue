@@ -5,9 +5,7 @@
       <view class="title-content">
         <!-- 返回 -->
         <view class="arrow-back">
-          <navigator open-type="navigateBack" hover-class="navigator-hover-class">
-            <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
-          </navigator>
+            <u-icon @click="navigateBack" color="#006848" name="arrow-left" size="20"></u-icon>
         </view>
         <text>我的团队</text>
       </view>
@@ -105,8 +103,8 @@
                     <image class="image" mode="aspectFill" :src="item.image"></image>
                   </view>
                   <view class="right">
-                    <view class="title"><text>{{ item.name }}</text></view>
-                    <view class="place"><text>活动地点：</text><text class="place-name">{{ item.address }}</text></view>
+                    <view class="title ellipsis-column-2"><text>{{ item.name }}</text></view>
+                    <!-- <view class="place"><text>活动地点：</text><text class="place-name">{{ item.address }}</text></view> -->
                     <view class="date-box">
                       <view>活动时间：</view>
                       <view class="date">
@@ -183,7 +181,10 @@ export default {
     ...mapGetters(['userInfo'])
   },
   onPullDownRefresh() {
-    this.getMyTeam()
+    wx.stopPullDownRefresh();
+    setTimeout(() => {
+      this.getMyTeam()
+    }, 500)
   },
   onLoad(option) {
     const { teamCode, activityId } = option

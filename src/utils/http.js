@@ -23,7 +23,6 @@ export default class Request {
 				method,
 				header,
 				success: res => {
-					console.log(res)
 					if (res.data.code === 200) {
 						resolve(res.data)
 					} else {

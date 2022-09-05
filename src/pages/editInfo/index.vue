@@ -5,10 +5,8 @@
     <view class="top-title">
       <view class="title-content">
         <!-- 返回 -->
-        <view class="arrow-back">
-          <navigator open-type="navigateBack" delta="1" hover-class="navigator-hover-class">
+        <view class="arrow-back" @click="navigateBack">
             <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
-          </navigator>
         </view>
         <text>信息编辑</text>
       </view>

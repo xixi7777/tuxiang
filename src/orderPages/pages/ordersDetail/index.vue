@@ -6,10 +6,8 @@
         <view class="top-title">
             <view class="title-content">
                 <!-- 返回 -->
-                <view class="arrow-back">
-                    <navigator open-type="navigateBack" hover-class="navigator-hover-class">
-                        <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
-                    </navigator>
+                <view class="arrow-back" @click="navigateBack">
+                    <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
                 </view>
                 <text>订单详情</text>
             </view>

@@ -3,7 +3,6 @@
         <top background-color="#000421" backIcon-color="#fff"/>
         <view class="biwan">
             <cover-image :src="phbtpText"></cover-image>
-            <!-- <cover-image v-else src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/biwan.png"></cover-image> -->
         </view>
 
         <view class="hot-line">
@@ -24,7 +23,7 @@
         <view class="classics-wrapper">
             <text class="header">经典必去</text>
             <view class="list" v-if="jdbq.length">
-                <view class="list__item" v-for="(item, index) in jdbq" :key="index">
+                <view class="list__item" v-for="(item, index) in jdbq" :key="index" @click="toProductDetail(item)">
                     <view class="image">
                         <view class="top-icon">
                             <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/top1.png"></image>
@@ -44,7 +43,7 @@
                                     <text class="price-code">￥</text>
                                     <text class="price">{{ item.price }}</text>
                                 </view>
-                                <view class="trade-in" @click="toProductDetail(item)">立即抢购</view>
+                                <view class="trade-in">立即抢购</view>
                             </view>
                         </view>
                     </view>
@@ -57,7 +56,6 @@
 <script>
 import Top from '@/components/top/Top'
 import _ from 'lodash'
-const key = 'mall.system.phb'
 export default {
     components: {
         Top
@@ -72,7 +70,10 @@ export default {
         this.getConfig()
     },
     onPullDownRefresh() {
-		this.getConfig()
+        wx.stopPullDownRefresh();
+        setTimeout(() => {
+            this.getConfig()
+        }, 500)
 	},
     computed: {
         jdbq() {
@@ -91,9 +92,9 @@ export default {
     methods: {
         getConfig() {
             this.$api.getConfigCache({
-                key
+                key: 'mall.system.phb'
             }).then(res => {
-                const keyValue = res.data[key].keyValue
+                const keyValue = res.data['mall.system.phb'].keyValue
 				this.info = JSON.parse(keyValue)
             })
         },

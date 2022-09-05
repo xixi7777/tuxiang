@@ -2,9 +2,7 @@
     <view class="app-container">
         <view class="app-top-background home"></view>
 		<view class="page-title">
-            <navigator open-type="navigateBack" delta="1" hover-class="navigator-hover-class">
-                <u-icon color="#006848" size="20" name="arrow-left" class="arrow-left"></u-icon>
-            </navigator>
+			<u-icon @click="navigateBack" color="#006848" size="20" name="arrow-left" class="arrow-left"></u-icon>
 		</view>
 		<search></search>
 

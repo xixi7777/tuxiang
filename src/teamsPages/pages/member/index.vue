@@ -1,7 +1,7 @@
 <template>
   <view class="member-container">
     <top title="成员管理" />
-    <search @confirm="searchConfirm" />
+    <search className="mt-30" @confirm="searchConfirm" />
 
     <view class="member-wrap">
       <scroll-view scroll-y="true" show-scrollbar="true">
@@ -13,26 +13,51 @@
           <view class="list-content">
             <view class="item item-title">
               <view class="text__wrapper"><text>姓名</text></view>
-              <view class="text__wrapper text-right"><text>职位</text></view>
+              <view class="text__wrapper"><text>职位</text></view>
+              <view class="actions"></view>
             </view>
-            <u-swipe-action>
-              <u-swipe-action-item
-                :options="options"
-                v-for="(item, index) in list"
-                :disabled="item.positionId != 'team_leader'"
-                :key="index"
-                @click="remove(item, index)"
-              >
-                <view class="item item-con">
-                  <view class="text__wrapper"><text class="left">{{ item.nickName }}</text></view>
-                <view class="text__wrapper text-right"><text>{{ item.positionId_dictLabel }}</text></view>
-                </view>
-              </u-swipe-action-item>
-            </u-swipe-action>
+            <view class="item item-con" v-for="(item, index) in list" :key="index">
+              <view class="text__wrapper text-ellipsis"><text class="left">{{ item.nickName }}</text></view>
+              <view class="text__wrapper"><text>{{ item.positionId_dictLabel }}</text></view>
+              <view class="actions">
+                <u-icon name="trash" color="#fa3534" size="22" @click="remove(item, index)"></u-icon>
+                <u-icon name="edit-pen" color="#2979ff" size="22" @click="update(item, index)"></u-icon>
+              </view>
+            </view>
           </view>
         </view>
       </scroll-view>
     </view>
+
+    <u-modal 
+    :show="showEdit" 
+    showCancelButton
+    @cancel="showEdit = false" 
+    @confirm="saveUpdate">
+      <u-form 
+      :model="editForm"
+      :rules="rules"
+      ref="uForm"
+      >
+        <u-form-item label="姓名" prop="nickName">
+          <u-input v-model="editForm.nickName"></u-input>
+        </u-form-item>
+        <u-form-item label="职务" prop="positionId">
+          <view 
+            class="picker-input no-border" 
+            @click="positionShow = true">{{ editForm.positionId_dictLabel }} 
+            <u-icon name="arrow-right"></u-icon> 
+          </view>
+          <u-picker 
+            :show="positionShow"
+            :defaultIndex="pickDefaultIndex"
+            :columns="[positionList]" 
+            keyName="label"
+            @cancel="positionShow = false" 
+            @confirm="confirmPosition"></u-picker>
+        </u-form-item>
+      </u-form>
+    </u-modal>
   </view>
 </template>
 
@@ -48,17 +73,33 @@ export default {
   data() {
     return {
       list: [],
+      positionList: [],
       dzid: '',
-      edit: false,
+      showEdit: false,
+      editForm: {
+        nickName: '',
+        positionId: ''
+      },
+      positionShow: false,
+      pickDefaultIndex: [],
       query: {
         teamId: '',
         nickname: ''
+      },
+      rules: {
+        positionId: [
+          { required: true, message: '请选择职务' }
+        ],
+        nickName: [
+          { required: true, message: '请输入名称' }
+        ]
       }
     }
   },
   onLoad(option) {
     this.query.teamId = option.teamId
     this.dzid = option.dzid
+    this.getPosition()
   },
   computed: {
     ...mapGetters(['userInfo']),
@@ -87,8 +128,42 @@ export default {
         this.list = res.rows
       })
     },
+    getPosition() {
+      this.$api.teamPosition().then(res => {
+        this.positionList = res.data
+      })
+    },
     searchConfirm(search) {
       this.query.nickname = search
+    },
+    update(user, index) {
+      this.showEdit = true
+      this.editForm = {
+        positionId: user.positionId,
+        userId: user.userId,
+        teamCode: user.teamCode,
+        nickName: user.nickName,
+        positionId_dictLabel: user.positionId_dictLabel
+      }
+      const idx = this.positionList.findIndex(item => item.value == user.positionId)
+      console.log(idx)
+      this.pickDefaultIndex = [idx]
+    },
+    confirmPosition(selector) {
+      this.editForm.positionId = selector.value[0].value
+      this.editForm.positionId_dictLabel = selector.value[0].label
+      this.positionShow = false
+    },
+    saveUpdate() {
+      this.$refs.uForm.validate().then(valid => {
+        this.$api.manageMember(this.editForm).then(res => {
+          uni.$u.toast('已修改')
+          this.showEdit = false
+          setTimeout(() => {
+            this.getMembers()
+          }, 500)
+        })
+      })
     },
     remove(user, index) {
       uni.showModal({
@@ -98,7 +173,7 @@ export default {
           if (res.confirm) {
             this.$api.removeMember({
               loginUserId: this.userInfo.id,
-              userId: user.id,
+              userId: user.userId,
               teamId: this.query.teamId
             }).then(res => {
               this.list.splice(index, 1)
@@ -197,16 +272,26 @@ export default {
 
 .list-content {
   .item {
-    height: 80px;
+    // height: 80px;
+    padding: 10px 0;
     align-items: center;
     .text__wrapper {
       text-align: left;
-      flex: 1;
       line-height: 50px;
+      &:nth-of-type(1) {
+        width: 50%;
+      }
       &.text-right {
         text-align: right;
       }
     }
+    .actions {
+        width: 100px;
+        line-height: 50px;
+        /deep/ .u-icon {
+          float: right;
+        }
+      }
     .text__icon {
       width: 100px;
       /deep/ .u-icon {
@@ -225,5 +310,8 @@ export default {
   .left {
     color: #000;
   }
+}
+.picker-input {
+  padding-left: 20px;
 }
 </style>

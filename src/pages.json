@@ -104,6 +104,14 @@
 						"navigationStyle": "custom",
 						"enablePullDownRefresh": true
 					}
+				},
+				{
+					"path": "pages/hotList/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
 				}
 			]
 		},
@@ -250,7 +258,7 @@
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "途享旅程",
+		"navigationBarTitleText": "途享旅游",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	}
