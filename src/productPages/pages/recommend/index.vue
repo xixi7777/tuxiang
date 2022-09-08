@@ -8,32 +8,37 @@
             <search class="mt-10" v-model="query.cpmc" @blur="searchConfirm" @confirm="searchConfirm" />
 
             <view class="header-filter">
-                <scroll-view scroll-x="true" :show-scrollbar="false" :enhanced="true" class="scroll">
-                    <view 
-                    :class="['sort-item', query.sfrmtj && 'selected']" 
-                    @click="changeRmtj">
-                        <text>热门推荐</text>
-                    </view>
+                <view class="scroll-wrapper">
+                    <scroll-view scroll-x="true" :show-scrollbar="false" :enhanced="true" class="scroll">
+                        <view 
+                        :class="['sort-item', query.sfrmtj && 'selected']" 
+                        @click="changeRmtj">
+                            <text>热门推荐</text>
+                        </view>
+                        <view 
+                        :class="['sort-item', query.xlflCode == item.dictValue && 'selected']" 
+                        @click="selectXlflCode(item.dictValue)"
+                        v-for="(item, index) in nav" 
+                        :key="index">
+                            <text>{{ item.dictLabel }}</text>
+                        </view>
+                    </scroll-view>
+                </view>
+                <view class="date-change">
                     <view 
                     @click="showDatePicker = !showDatePicker"
                     :class="['sort-item', query.ywts && 'selected']" >
                         <text>线路 / 天数</text>
                         <u-icon name="arrow-down-fill" size="16"></u-icon>
-                        <u-picker 
-                        :show="showDatePicker" 
-                        :columns="[ywDays]" 
-                        @cancel="showDatePicker = false"
-                        @confirm="confirmDatePicker"></u-picker>
                     </view>
-                    <view 
-                    :class="['sort-item', query.xlflCode == item.dictValue && 'selected']" 
-                    @click="selectXlflCode(item.dictValue)"
-                    v-for="(item, index) in nav" 
-                    :key="index">
-                        <text>{{ item.dictLabel }}</text>
-                    </view>
-                </scroll-view>
+                </view>
             </view>
+
+            <u-picker 
+            :show="showDatePicker" 
+            :columns="[ywDays]" 
+            @cancel="showDatePicker = false"
+            @confirm="confirmDatePicker"></u-picker>
         </view>
 
         <view class="hot-list__wrapper">
@@ -69,7 +74,7 @@
                                             <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dianpu.png"></u-icon>
                                             <text>{{ item.gys_dictLabel }}</text>
                                         </view>
-                                        <view><text v-if="item.isShowNum" class="sold-text">已售{{ item.stock || 0 }}</text></view>
+                                        <view><text v-if="isShowNum" class="sold-text">已售{{ item.stock || 0 }}</text></view>
                                     </view>
                                 </view>
                             </view>
@@ -93,6 +98,7 @@ export default {
         return {
             list: [],
             total: 0,
+            isShowNum: 0,
             search: '',
             nav: ['自由行', '跟团游'],
             showDatePicker: false,
@@ -144,7 +150,6 @@ export default {
             this.query.xlflCode = this.query.xlflCode == item ? '' : item
             this.query.sfrmtj = ''
             this.query.ywts = ''
-            console.log(this.query)
         },
         changeRmtj() {
             this.query.sfrmtj = this.query.sfrmtj ? 0 : 1
@@ -172,6 +177,7 @@ export default {
             this.$api.selectProductListVo(this.query).then(res => {
 				this.list = [...this.list, ...res.rows]
                 this.total = res.total
+                this.isShowNum = !!res.isShowNum
 			})
         }, 300),
         getXllxCode() {
@@ -217,6 +223,9 @@ export default {
     align-items: center;
     .empty {
         width: 60px;
+    }
+    .scroll-wrapper {
+        width: 65%;
     }
 
     /deep/ .sort-item {

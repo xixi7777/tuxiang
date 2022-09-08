@@ -22,7 +22,7 @@
                                     <text class="price-code">￥</text>
                                     <text class="price">{{ item.hdPrice }}</text>
                                 </text>
-                                <text class="original-price">
+                                <text class="original-price" v-if="item.yjPrice">
                                     原价: {{ item.yjPrice }}
                                 </text>
                             </view>
@@ -112,7 +112,7 @@ export default {
             return images[0]
         },
         goDetail(item) {
-            uni.navigateTo({ url: `/productPages/pages/productDetail/index?individual=true&cpbh=${item.cpbh}&cxrq=${item.cfrq}`})
+            uni.navigateTo({ url: `/productPages/pages/productDetail/index?dltid=${item.id}&cpbh=${item.cpbh}&cxrq=${item.cfrq}`})
         },
         getList() {
             if (this.query.pageNum === 1) {

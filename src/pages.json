@@ -6,7 +6,7 @@
 		{
 			"path": "pages/tabBar/home/index",
 			"style": {
-				"navigationBarTitleText": "途享旅游",
+				"navigationBarTitleText": "途享旅程",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
 			}
@@ -258,7 +258,7 @@
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "途享旅游",
+		"navigationBarTitleText": "途享旅程",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	}

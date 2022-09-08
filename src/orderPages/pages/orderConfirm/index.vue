@@ -97,7 +97,14 @@
             <u-popup :show="show" mode="bottom" @close="close">
                 <view class='detail-box'>
                     <view class="row" v-for="(item, index) in orderCount" :key="index">
-                        <text>{{ item.label }}</text><text class="num text-primary">{{ `￥${item.price} × ${item.count} `}}</text>
+                        <text>{{ item.label }}</text>
+                        <text class="num text-primary" v-if="item.hdj">
+                            <text class="text-line_through mr-10 text-disabled">{{ `￥${item.price}` }}</text>
+                            {{ `￥${item.hdj} × ${item.count} `}}
+                        </text>
+                        <text class="num text-primary" v-else>
+                            {{ `￥${item.price} × ${item.count} `}}
+                        </text>
                     </view>
                     <template v-if="orderExtra.length">
                         <view class="row">
@@ -225,7 +232,7 @@ export default {
         },
         totalCountPrice() {
             return this.orderCount.reduce((prev, curr) => {
-                return prev += curr.count*curr.price
+                return prev += curr.count*(curr.hdj ? curr.hdj : curr.price)
             }, 0)
         },
         totalExtra() {
@@ -235,6 +242,9 @@ export default {
         },
         detailTotal() {
             return (this.totalCountPrice + this.totalExtra - this.yhjPrice).toFixed(2)
+        },
+        dltid() {
+            return _.get(this.orderProduct, ['dlt', 'dltid']) || ''
         }
     },
     onShow() {
@@ -282,16 +292,14 @@ export default {
                     gmsl: this.totalCount,
                     teamId: this.orderInfo.teamId,
                     activityId: this.orderInfo.activityId,
+                    dltid: this.dltid,
                     openid: uni.getStorageSync('openid'),
                     ...this.contact,
                     cxrList
                 }
+                console.log(params)
                 this.$api.addOrder(params).then(res => {
                     this.payment(res.data)
-                    // if (res.code === 200) {
-                    // } else {
-                    //     uni.$u.toast(res.msg)
-                    // }
                 })
             })
         },

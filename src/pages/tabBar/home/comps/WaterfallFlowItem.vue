@@ -1,6 +1,6 @@
 <template>
 	<view class="content-box-item">
-		<view class="show-img">
+		<view class="show-img image-radius">
 			<image :disabled="false" :controls="false" :autoplay="false" :src="item.image" lazy-load mode="widthFix"></image>
 		</view>
 		<view class="description">

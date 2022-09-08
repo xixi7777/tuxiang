@@ -29,7 +29,7 @@ export default {
                 const image = target.dataset.image || imageUrl
                 const path = `/teamsPages/pages/myTeam/index?teamCode=${teamCode}`
                 return {
-                    title: '途享旅游',
+                    title: '途享旅程',
                     path,
                     imageUrl: image
                 }
@@ -40,7 +40,7 @@ export default {
                 const image = target.dataset.image || imageUrl
                 const path = `/teamsPages/pages/myTeam/index?teamCode=${teamCode}&activityId=${activityId}`
                 return {
-                    title: '途享旅游',
+                    title: '途享旅程',
                     path,
                     imageUrl: image
                 }
@@ -48,7 +48,7 @@ export default {
         }
 
         return {
-            title: '途享旅游',
+            title: '途享旅程',
             path: $page.fullPath,
             imageUrl
         }        
@@ -57,7 +57,7 @@ export default {
         const imageUrl = this.shareUrl || ''
         const { $page } = this.$scope
         return {
-            title: '途享旅游',
+            title: '途享旅程',
             path: $page.fullPath,
             imageUrl
         }

@@ -33,7 +33,8 @@
                     ]"
                     @click="selectDate(item)">
                         <view class="date-num">{{ item.date }}</view>
-                        <view class="date-price">{{ item.crj ? `￥${item.crj}`: ' ' }}</view>
+                        <view class="date-price" v-if="crhdj">{{ $fixedPrice(crhdj) }}</view>
+                        <view class="date-price" v-else>{{ item.crj ? `￥${$fixedPrice(item.crj)}`: ' ' }}</view>
                     </view>
                 </view>
             </view>
@@ -60,6 +61,10 @@ export default {
         disabled: {
             type: Boolean,
             default: false
+        },
+        crhdj: {
+            type: [String, Number],
+            default: null
         }
     },
     data() {

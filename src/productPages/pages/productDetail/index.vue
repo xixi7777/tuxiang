@@ -16,9 +16,11 @@
         <view class="desc-wrapper">
             <view class="desc-header flex-box space-between align_baseline p-h-20">
                 <view>
-                    <text class="price">￥{{ product.yhjPrice ? product.price-product.yhjPrice : product.price }}</text>
-                    <text class="plummet_price text-line_through text-sm" v-if="product.yhjPrice">￥{{ product.price }}</text>
-                    <!-- <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/info.png" size="20" /> -->
+                    <view class="price" v-if="crhdj">￥{{ $fixedPrice(crhdj) }}</view>
+                    <template v-else>
+                        <text class="price">￥{{ product.yhjPrice ? product.price-product.yhjPrice : product.price }}</text>
+                        <text class="plummet_price text-line_through text-sm" v-if="product.yhjPrice">￥{{ product.price }}</text>
+                    </template>
                 </view>
                 <view>
                     <text v-if="product.yhjPrice" class="subsidy_price text-sm">补贴{{ product.yhjPrice }}元</text>
@@ -79,7 +81,7 @@
                         @click="toSelect(item)">
                             <text>{{ moment(item.kcrq).format('MM-DD') }}</text>
                             <text>{{ weekdays[moment(item.kcrq).isoWeekday()] }}</text>
-                            <text>￥{{ item.crj }}</text>
+                            <text>￥{{ crhdj ? $fixedPrice(crhdj) : $fixedPrice(item.crj) }}</text>
                             <text v-if="item.stock <= 10">余 {{ item.stock }}</text>
                         </view>
                     </scroll-view>
@@ -121,15 +123,15 @@ export default {
         Top
     },
     onLoad(option) {
-        const { cpbh, cxrq, teamId, activityId, individual } = option
+        const { cpbh, cxrq, teamId, activityId, dltid } = option
 
-        this.getProductDetail(cpbh)
+        this.getProductDetail(cpbh, dltid)
 
         this.cpbh = cpbh
         this.individualCxrq = cxrq || ''
         this.teamId = teamId || ''
         this.activityId = activityId || ''
-        this.setIndividual(individual || false)
+        this.setIndividual(!!dltid || false)
     },
     data() {
         return {
@@ -137,6 +139,7 @@ export default {
             product: {},
             currentNum: 0,
             skuList: [],
+            dlt: {},
             defaultSelected: {},
             cpbh: '',
             teamId: '',
@@ -183,6 +186,9 @@ export default {
                 return cfd[cfd.length-1]
             }
             return ''
+        },
+        crhdj() {
+            return _.get(this.dlt, ['crhdj']) || ''
         }
     },
     methods: {
@@ -205,12 +211,18 @@ export default {
                 url: `/productPages/pages/selectDate/index?skubh=${this.defaultSelected.skubh}&kcrq=${this.defaultSelected.kcrq}&teamId=${this.teamId}&activityId=${this.activityId}`
             })
         },
-        getProductDetail(cpbh) {
-            this.$api.selectProductVo({ cpbh }).then(res => {
+        getProductDetail(cpbh, dltid = '') {
+            let params = { cpbh }
+            if (dltid) {
+                params = { ...params, dltid }
+            }
+            this.$api.selectProductVo(params).then(res => {
                 this.product = res.data
+                this.dlt = res.dlt
                 this.setOrderProduct({
                     ...this.product,
-                    fjfwOptions: res.fjfw
+                    fjfwOptions: res.fjfw,
+                    dlt: { ...res.dlt, dltid }
                 })
                 this.getDefaultSku(res.data.cpbh, res.skubh)
             })

@@ -15,6 +15,18 @@ Vue.mixin(mixins)
 
 Vue.config.productionTip = false
 Vue.prototype.$api = api
+Vue.prototype.$fixedPrice = (number, fixed = 2) => {
+  if (number === '' || number === null || number === undefined) {
+      return ''
+  }
+  if (typeof number === 'number') {
+    return number
+  }
+  if (typeof number === 'string') {
+      number *= 1
+  }
+  return number.toFixed(fixed)
+}
 
 App.mpType = 'app'
 

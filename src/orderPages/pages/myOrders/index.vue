@@ -44,7 +44,7 @@
                         <view class="left">
                             <image class="logo" lazy-load
                                 src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/logo.png" />
-                            <text>途享旅游</text>
+                            <text>途享旅程</text>
                             <image class="img" lazy-load
                                 src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/arrow-right.png" />
                         </view>

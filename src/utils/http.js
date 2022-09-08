@@ -48,8 +48,8 @@ export default class Request {
 									mask: true,
 									duration: 2000
 								})
-							}, 500)
-							reject(res.data)
+							}, 300)
+							// reject(res.data)
 						}
 					}
 				},
@@ -61,15 +61,15 @@ export default class Request {
 							mask: true,
 							duration: 2000
 						})
-					}, 500)
-					reject(err.data)
+					}, 300)
+					// reject(err.data)
 				},
 				complete: () => {
 					if (!hideLoading) {
 						uni.hideLoading()
 					}
-					resolve()
-					return
+					// resolve()
+					// return
 				}
 			})
 		})

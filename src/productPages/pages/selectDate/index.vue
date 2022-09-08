@@ -9,7 +9,7 @@
             <view>
                 <view class="product-title text-ellipsis"><text>{{ name }}</text></view>
                 <view class="product-price">
-                    <text>￥ {{ selectedSku.crj }}</text>
+                    <text>￥ {{ crhdj ? $fixedPrice(crhdj) : selectedSku.crj ? $fixedPrice(selectedSku.crj) : '' }}</text>
                 </view>
             </view>
         </view>
@@ -31,6 +31,7 @@
             <Calendar 
             :disabled="isIndividual" 
             :sku-list="skuList" 
+            :crhdj="crhdj"
             @select-date="selectDate" 
             :default-select-date="calendarDefaultDate" />
         </view>
@@ -42,7 +43,7 @@
             <view class="quantity-list" v-for="(item, index) in orderCount" :key="index">
                 <view>
                     <text>{{ item.label }}</text>
-                    <text class="price">￥{{ item.price }}</text>
+                    <text class="price">￥{{ item.hdj ? item.hdj : item.price }}</text>
                 </view>
                 <view class="quantity-input">
                     <NumberInput v-model="item.count" :max="countMax(item.value)" />
@@ -57,7 +58,7 @@
             <view class="quantity-list" v-for="(item, index) in orderExtra" :key="index">
                 <view>
                     <text>{{ item.fwmc }}</text>
-                    <text class="price">￥{{ item.price }}</text>
+                    <text class="price">￥{{ $fixedPrice(item.price) }}</text>
                 </view>
                 <view class="quantity-input">
                     <NumberInput v-model="item.count" />
@@ -148,9 +149,15 @@ export default {
         etj() {
             return _.get(this.selectedSku, ['etj'])*1 || 0
         },
+        crhdj() {
+            return _.get(this.orderProduct, ['dlt', 'crhdj']) || ''
+        },
+        ethdj() {
+            return _.get(this.orderProduct, ['dlt', 'ethdj']) || ''
+        },
         totalCountPrice() {
             return this.orderCount.reduce((prev, curr) => {
-                return prev += curr.count*curr.price
+                return prev += curr.count*(curr.hdj ? curr.hdj : curr.price)
             }, 0)
         },
         totalExtra() {
@@ -160,20 +167,7 @@ export default {
         },
         totalPrice() {
             return (this.totalCountPrice + this.totalExtra).toFixed(2)
-        },
-        // remainStock() {
-        //     let child = 0
-        //     let adult = 0
-        //     this.orderCount.forEach(item => {
-        //         if (item.value === 1) {
-        //             child++
-        //         }
-        //         if (item.value === 2) {
-        //             adult++
-        //         }
-        //     })
-        //     return this.selectedSku.stock - child - adult
-        // }
+        }
     },
     methods: {
         ...mapMutations(['setOrderInfo', 'setCxlxOptions']),
@@ -306,9 +300,11 @@ export default {
             handler(n) {
                 this.orderCount.forEach(item => {
                     if (item.value == 1) {
-                        this.$set(item, 'price', n.crj)
+                        this.$set(item, 'price', this.$fixedPrice(n.crj))
+                        this.$set(item, 'hdj', this.$fixedPrice(this.crhdj))
                     } else if (item.value == 2) {
-                        this.$set(item, 'price', n.etj)
+                        this.$set(item, 'price', this.$fixedPrice(n.etj))
+                        this.$set(item, 'hdj', this.$fixedPrice(this.ethdj))
                     }
                 })
             }

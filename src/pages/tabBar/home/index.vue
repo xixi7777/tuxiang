@@ -3,7 +3,7 @@
 		<!-- <tab-bar :current="0"></tab-bar> -->
         <view class="app-top-background home"></view>
 		<view class="page-title">
-			<text>途享旅游</text>
+			<text>途享旅程</text>
 		</view>
 		<search @confirm="search" />
 		
@@ -331,6 +331,9 @@ export default {
 			.list-image {
 				width: 302px;
 				height: 220px;
+				border-top-left-radius: 20px;
+				border-top-right-radius: 20px;
+				overflow: hidden;
 			}
 			.scroll-title {
 				margin-top: 18px;

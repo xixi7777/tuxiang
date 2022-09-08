@@ -9,7 +9,7 @@
             <view class="scroll-list-wrapper">
                 <scroll-view scroll-x="true" class="scroll">
                     <view class="hot-item" v-for="(item, index) in rmxl" :key="index">
-                        <navigator :url="`/${item.url}`" hover-class="navigator-hover-class">
+                        <navigator :url="item.url" hover-class="navigator-hover-class">
                             <view class="hot-image">
                                 <image :src="item.image" lazy-load></image>
                             </view>
@@ -24,16 +24,16 @@
             <text class="header">经典必去</text>
             <view class="list" v-if="jdbq.length">
                 <view class="list__item" v-for="(item, index) in jdbq" :key="index" @click="toProductDetail(item)">
-                    <view class="image">
-                        <view class="top-icon">
-                            <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/top1.png"></image>
+                    <view class="image image-radius">
+                        <view class="top-icon" v-if="index<=2">
+                            <image :src="`//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/top${index+1}.png`"></image>
                         </view>
                         <image :src="item.image" lazy-load></image>
                     </view>
                     <view class="desc">
                         <view class="desc__content">
                             <view class="text-ellipsis title">
-                                <text>{{ item.cpmc }}</text>
+                                <text>{{ item.name }}</text>
                             </view>
                             <view class="detail-info">
                                 <!-- <text>云南属于高原地区，景区距离相隔比较远，并且不在同一个方向。云南属于高原地区，景区距离相隔比较远，并且不在同一个方向</text> -->
@@ -80,7 +80,7 @@ export default {
             return _.get(this.info, ['jdbq']) || []
         },
         rmxl() {
-            return _.get(this.info, ['rmxl'])
+            return _.get(this.info, ['rmxl']) || []
         },
         phbtpText() {
             return _.get(this.info, ['phbtp', 1, 'image']) || '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/biwan.png'
@@ -99,7 +99,7 @@ export default {
             })
         },
         toProductDetail(product) {
-            uni.navigateTo({ url: `/productPages/pages/productDetail/index?${product.url}`})
+            uni.navigateTo({ url: product.url })
         }
     }
 }
@@ -182,7 +182,6 @@ export default {
                     position: absolute;
                     width: 91px;
                     height: 40px;
-
                 }
             }
             .desc {

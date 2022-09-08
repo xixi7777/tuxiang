@@ -23,13 +23,6 @@
               prop="cpbh"
             >
               <view class="picker-input no-border" @click="showProductList">{{ productName }} <u-icon name="arrow-right"></u-icon> </view>
-                <!-- <u-picker 
-                :show="productShow"
-                :defaultIndex="0"
-                :columns="[productList]" 
-                keyName="keyName"
-                @cancel="productShow = false" 
-                @confirm="confirmProduct"></u-picker> -->
             </u-form-item>
             <u-form-item
               label="活动名称"
@@ -87,8 +80,7 @@
               <view class="picker-input no-border" @click="deadlineTimeShow = true">{{ form.deadlineTime }}</view>
               <u-datetime-picker
                 :show="deadlineTimeShow"
-                :minDate="new Date(moment().add(1, 'd').format('YYYY-MM-DD')).getTime()"
-                :maxDate="new Date(moment(form.beginTime).add(-1, 'd').format('YYYY-MM-DD')).getTime()"
+                :minDate="new Date(moment(form.beginTime).add(1, 'd').format('YYYY-MM-DD')).getTime()"
                 @cancel="deadlineTimeShow = false"
                 @confirm="confirmDeadlineTime"
                 mode="date"
@@ -220,7 +212,7 @@ export default {
         cpbh: [
           {
             required: true,
-            message: '请关联产品',
+            message: '请选择产品',
             trigger: ['blur'],
           }
         ]
@@ -305,16 +297,11 @@ export default {
     showProductList() {
       this.productShow = true
     },
-    confirmProduct(selector) {
-      this.form.cpbh = selector.value[0].keyid;
-      this.productName = selector.value[0].keyName;
-      this.form.name = this.productName
-      this.productShow = false
-    },
     confirmPicker() {
       this.form.cpbh = this.pickedPro.keyid;
       this.productName = this.pickedPro.keyName;
       this.form.name = this.productName
+      this.form.image = this.pickedPro.imageUrl.split(',')[0]
       this.productShow = false
     },
     searchProduct(search) {

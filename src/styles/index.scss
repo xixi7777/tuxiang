@@ -52,6 +52,9 @@ $grid-gap: 40px;
 .mt-10 {
     margin-top: 10px;
 }
+.mr-10 {
+    margin-right: 10px;
+}
 .mt-30 {
     margin-top: 30px;
 }
@@ -156,7 +159,7 @@ navigator {
 .picker-input {
     border-bottom: 1px solid #e2e2e2;
     padding: 20px 6px 20px 0;
-    height: 42px;
+    min-height: 42px;
     line-height: 42px;
     position: relative;
     &.no-border {
@@ -297,4 +300,8 @@ navigator {
 }
 .no-mt {
     margin-top: 0 !important;
+}
+.image-radius {
+    border-radius: 20px;
+    overflow: hidden;
 }
