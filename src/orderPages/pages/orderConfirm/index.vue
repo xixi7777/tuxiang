@@ -161,7 +161,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import _ from 'lodash'
 import moment from 'moment'
 export default {
@@ -203,7 +203,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['cxrList', 'orderProduct', 'orderInfo']),
+        ...mapGetters(['cxrList', 'orderProduct', 'orderInfo', 'cxrSelectedList']),
         productName() {
             return _.get(this.orderProduct, ['cpmc'])
         },
@@ -248,8 +248,7 @@ export default {
         }
     },
     onShow() {
-        const n = this.cxrList
-        const selectedList = n.filter(item => item.checked)
+        const selectedList = _.cloneDeep(this.cxrSelectedList)
         this.travelers = selectedList
         this.cxrIds = selectedList.map(item => item.zjhm).join(',')
         if (selectedList.length < this.totalCount) {
@@ -267,6 +266,7 @@ export default {
     },
     methods: {
         moment,
+        ...mapMutations(['setCxrSelectedList']),
         toOrder() {
             uni.navigateTo({ url: '/orderPages/pages/myOrders/index' })
         },
@@ -297,9 +297,10 @@ export default {
                     ...this.contact,
                     cxrList
                 }
-                console.log(params)
                 this.$api.addOrder(params).then(res => {
+                    this.cxrIds = ''
                     this.payment(res.data)
+                    this.setCxrSelectedList([])
                 })
             })
         },
@@ -322,7 +323,7 @@ export default {
             this.show = false
         },
         addTravelers() {
-            uni.navigateTo({ url: `/productPages/pages/traveler/index?cxrIds=${this.cxrIds}` })
+            uni.navigateTo({ url: `/productPages/pages/traveler/index?cxrIds=${this.cxrIds}&count=${this.totalCount}` })
         }
     }
 }

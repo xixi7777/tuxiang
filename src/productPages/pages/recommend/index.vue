@@ -22,16 +22,17 @@
                         :key="index">
                             <text>{{ item.dictLabel }}</text>
                         </view>
+                        <view 
+                        @click="showDatePicker = !showDatePicker"
+                        :class="['sort-item', query.ywts && 'selected']" >
+                            <text>线路 / 天数</text>
+                            <u-icon name="arrow-down-fill" size="16"></u-icon>
+                        </view>
                     </scroll-view>
                 </view>
-                <view class="date-change">
-                    <view 
-                    @click="showDatePicker = !showDatePicker"
-                    :class="['sort-item', query.ywts && 'selected']" >
-                        <text>线路 / 天数</text>
-                        <u-icon name="arrow-down-fill" size="16"></u-icon>
-                    </view>
-                </view>
+                <!-- <view class="date-change">
+                    
+                </view> -->
             </view>
 
             <u-picker 
@@ -219,13 +220,13 @@ export default {
 }
 .header-filter {
     margin-top: 30px;
-    display: flex;
+    // display: flex;
     align-items: center;
     .empty {
         width: 60px;
     }
     .scroll-wrapper {
-        width: 65%;
+        width: 100%;
     }
 
     /deep/ .sort-item {

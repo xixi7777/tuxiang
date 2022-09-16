@@ -11,10 +11,20 @@
                         <text class="indicator-num__text">{{ currentNum + 1 }}/{{ images.length }}</text>
                     </view>
             </u-swiper>
+            <view class="cf-city"><text>{{ cfd }}出发</text></view>
+            <view class="product-id"><text>商品ID：{{ product.cpbh }}</text></view>
         </view>
 
         <view class="desc-wrapper">
-            <view class="desc-header flex-box space-between align_baseline p-h-20">
+            <view class="product-name">
+                <text>{{ product.cpmc }}</text>
+            </view>
+
+            <view class="consult flex-box" v-if="cpbqLabel.length">
+                <view class="consult-item" v-for="(item, index) in cpbqLabel" :key="index"><text>{{ item }}</text></view>
+            </view>
+
+            <view class="desc-price flex-box space-between align_baseline">
                 <view>
                     <view class="price" v-if="crhdj">￥{{ $fixedPrice(crhdj) }}</view>
                     <template v-else>
@@ -23,27 +33,21 @@
                     </template>
                 </view>
                 <view>
-                    <text v-if="product.yhjPrice" class="subsidy_price text-sm">补贴{{ product.yhjPrice }}元</text>
+                    <text v-if="product.yhjPrice" class="subsidy_price text-sm ml-10">补贴{{ product.yhjPrice }}元</text>
                 </view>
             </view>
-            <view class="product-name p-h-20">
-                <text>{{ product.cpmc }}</text>
-            </view>
-            <view class="consult p-h-20 flex-box" v-if="cpbqLabel.length">
-                <view class="consult-item" v-for="(item, index) in cpbqLabel" :key="index"><text>{{ item }}</text></view>
-                <!-- <view class="consult-item"><text>{{ product.cfd_dictLabel }}</text></view> -->
-            </view>
-            <u-line dashed color="#D7D7D7"></u-line>
-            <view class="service flex-box p-h-20" v-if="fwbqLabel.length">
+            
+            <u-line color="#D7D7D7"></u-line>
+            <view class="service flex-box" v-if="fwbqLabel.length">
                 <view class="service-title"><text>服务</text></view>
                 <view class="btn-group flex-box">
-                    <view class="flex-box" v-for="(item, index) in fwbqLabel" :key="index">
-                        <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/check.png" size="10"></u-icon>
+                    <view class="flex-box btn-item" v-for="(item, index) in fwbqLabel" :key="index">
+                        <u-icon name="checkmark-circle" size="13"></u-icon>
                         <text>{{ item }}</text>
                     </view>
                 </view>
             </view>
-            <view class="desc-footer flex-box space-between p-h-20">
+            <view class="desc-footer flex-box space-between">
                 <view class="left flex-box">
                     <view class="anxinyou-icon">
                         <image src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/anxinyou.png"></image>
@@ -51,16 +55,25 @@
                     <view class="anxinyou"><text>安心游</text></view>
                 </view>
                 <view class="right flex-box">
-                    <text>严格消毒</text>
-                    <text>体温监测</text>
-                    <text>健康码乘车</text>
+                    <view class="biaoqian-item">
+                        <text style="vertical-align: 1px;">严格消毒</text>
+                    </view>
+                    <text class="biaoqian-item">
+                        <text>体温监测</text>
+                    </text>
+                    <text class="biaoqian-item">
+                        <text>健康码乘车</text>
+                    </text>
                 </view>
             </view>
         </view>
 
         <view class="exchange-wrapper" v-if="skuList.length">
             <view class="header flex-box space-between">
-                <view class="start-city"><text>{{ cfd }}出发</text></view>
+                <view class="start-city">
+                    <u-icon color="#17AA7D" name="map" size="20"></u-icon>
+                    <text>{{ cfd }}出发</text>
+                </view>
                 <!-- <view class="exchange-start flex-box">
                     <text>切换出发地 (35个)</text>
                     <u-icon name="arrow-right" size="14" class="ml-20"></u-icon>
@@ -133,6 +146,9 @@ export default {
         this.activityId = activityId || ''
         this.setIndividual(!!dltid || false)
     },
+    created() {
+        this.setCxrSelectedList([])
+    },
     data() {
         return {
             shareVisible: false,
@@ -169,14 +185,14 @@ export default {
             return ''
         },
         fwbqLabel() {
-            if (this.product.fwbq_dictLabel) {
-                return this.product.fwbq_dictLabel.split(',')
+            if (this.product.fwbq) {
+                return this.product.fwbq.split(',')
             }
             return []
         },
         cpbqLabel() {
-            if (this.product.cpbq_dictLabel) {
-                return this.product.cpbq_dictLabel.split(',')
+            if (this.product.cpbq) {
+                return this.product.cpbq.split(',')
             }
             return []
         },
@@ -192,7 +208,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(['setOrderProduct', 'setIndividual']),
+        ...mapMutations(['setOrderProduct', 'setIndividual', 'setCxrSelectedList']),
         moment,
         isSelected(item) {
             return this.defaultSelected.id == item.id
@@ -255,6 +271,7 @@ export default {
 <style lang="scss" scoped>
 .detail-container {
     padding-bottom: 120px;
+    overflow-x: hidden;
     .fixed-button {
         position: fixed;
         bottom: 0;
@@ -299,8 +316,24 @@ export default {
         height: 434px;
         margin-top: 190px;
         border-top: 1px solid transparent;
+        position: relative;
+        .product-id,
+        .cf-city {
+            position: absolute;
+            bottom: 12px;
+            font-size: 24px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 33px;
+        }
+        .product-id {
+            right: 28px;
+        }
+        .cf-city {
+            left: 28px;
+        }
         .indicator-num {
-            background-color: rgba(255, 255, 255, 0.5);
+            background: rgba(0,0,0,0.3);
             border-radius: 100px;
             @include flex;
             justify-content: center;
@@ -331,24 +364,19 @@ export default {
     }
     .desc-wrapper {
         margin: 0 30px;
-        transform: translateY(-70px);
-        background: linear-gradient(335deg, rgba(255,255,255,0.4) 0%, #FFFFFF 100%);
-        box-shadow: 0px 17px 23px 0px rgba(138,131,168,0.1000);
         border-radius: 20px;
         padding-top: 30px;
-        .desc-header {
+        .desc-price {
+            margin: 30px auto 20px;
             .price {
                 font-size: 50px;
                 font-weight: bold;
                 color: #17AA7D;
                 line-height: 58px;
                 letter-spacing: 1px;
-                margin-right: 16px;
             }
         }
         .product-name {
-            margin-top: 24px;
-            margin-bottom: 46px;
             overflow: hidden; 
             text-overflow: ellipsis;
             display: -webkit-box; 
@@ -363,11 +391,10 @@ export default {
         }
         .consult {
             margin-top: 22px;
-            margin-bottom: 46px;
             .consult-item {
                 padding: 0 16px 6px 16px;
                 background: rgba(0,0,0,0.06);
-                border-radius: 30px;
+                border-radius: 4px;
                 text-align: center;
                 text {
                     font-size: 24px;
@@ -380,7 +407,7 @@ export default {
             }
         }
         .service {
-            margin-top: 28px;
+            margin-top: 12px;
             .service-title {
                 font-size: 26px;
                 font-weight: 400;
@@ -388,67 +415,69 @@ export default {
                 line-height: 47px;
             }
             .btn-group {
-                margin-left: 15px;
-                background: rgba(255,255,255,0.3);
-                border-radius: 20px;
-                border: 1px solid #7ECFB7;
-                height: 40px;
-                line-height: 40px;
+                .btn-item {
+                    margin-left: 30px;
+                }
                 text {
                     font-size: 20px;
-                    color: #17AA7D;
-                    margin-left: 8px;
-                }
-                &>.flex-box {
-                    padding: 0 20px;
-                    &:not(:first-child) {
-                        border-left: 1px solid #17AA7D;
-                    }
+                    font-weight: 400;
+                    color: #000000;
+                    line-height: 47px;
+                    margin-left: 10px;
                 }
             }
         }
         .desc-footer {
-            margin-top: 30px;
+            margin: 14px -30px -30px;
             height: 88px;
             background: rgba(23,170,125,0.2);
-            border-radius: 20px 20px 0px 0px;
+            box-shadow: 0px 0px 23px 0px rgba(147,147,147,0.2);
             opacity: 0.55;
+            padding: 0 30px;
             .anxinyou-icon {
                 width: 70px;
                 height: 60px;
             }
             .anxinyou {
-                margin-left: 14px;
+                margin-left: 10px;
                 font-size: 32px;
                 font-weight: 500;
                 color: #006848;
             }
+            &>.left {
+                width: 220px;
+            }
             &>.right {
-                text {
-                    padding: 0 16px;
-                    display: inline-block;
-                    font-size: 24px;
-                    font-weight: 400;
-                    color: #17AA7D;
+                flex: 1;
+                .biaoqian-item {
+                    padding: 0 12px;
                     &:not(:first-child) {
                         border-left: 1px solid #17AA7D;
                     }
+                }
+                text {
+                    font-size: 24px;
+                    font-weight: 400;
+                    color: #17AA7D;
+                    margin-left: 10px;
                 }
             }
         }
     }
     .exchange-wrapper {
-        margin: 0 30px;
+        margin: 60px -30px;
         background: #FFFFFF;
-        border-radius: 20px;
-        padding: 30px;
-        margin-top: -30px;
+        padding: 16px 60px 30px 60px;
         box-shadow: 0px 0px 23px 0px rgba(147,147,147,0.2000);
         .start-city {
             font-size: 32px;
             font-weight: bold;
             color: #006848;
             line-height: 47px;
+            /deep/ .u-icon {
+                display: inline-block;
+                margin-right: 12px;
+            }
         }
         .exchange-start {
             font-size: 24px;
@@ -457,15 +486,15 @@ export default {
             line-height: 47px;
         }
         .exchange-date__wrapper {
-            margin-top: 33px;
+            margin-top: 30px;
             position: relative;
             .more-choose {
                 position: absolute;
                 top: 0;
                 bottom: 0;
-                right: 0;
+                right: -30px;
                 background: #fff;
-                width: 40px;
+                width: 60px;
                 text-align: center;
                 font-size: 22px;
                 font-weight: 500;
@@ -473,6 +502,8 @@ export default {
                 line-height: 40px;
                 word-wrap: break-word;
                 z-index: 3;
+                display: flex;
+                align-items: center;
             }
         }
         .scroll-list-wrapper {
@@ -484,7 +515,7 @@ export default {
             .dates-item {
                 // width: 160px;
                 background: rgba(0,0,0,.1);
-                border-radius: 20px;
+                border-radius: 4px;
                 opacity: 0.5;
                 text-align: center;
                 padding: 16px 40px;
@@ -494,6 +525,7 @@ export default {
                     font-size: 24px;
                     line-height: 33px;
                     display: block;
+                    font-weight: 500;
                     &:last-child {
                         font-size: 28px;
                         line-height: 34px;
@@ -501,12 +533,13 @@ export default {
                 }
                 &.is-active {
                     background-color: #17AA7D;
+                    opacity: 1;
                     text {
                         color: #fff;
                     }
                 }
                 &:not(:first-child) {
-                    margin-left: 20px;
+                    margin-left: 4px;
                 }
             }
         }

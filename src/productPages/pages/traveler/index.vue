@@ -17,10 +17,11 @@
             wrap 
             :iconColor="readonly?'#17AA7D':'#fff'"
             active-color="#17AA7D">
-                <view class="traveler-item" v-for="(item, index) in travelerList" :key="index">
+                <view class="traveler-item" v-for="item in travelerList" :key="item.zjhm">
                     <u-checkbox 
                         :name="item.zjhm"
                         :checked="item.checked"
+                        :disabled="!item.checked && selectedCount == count"
                     ></u-checkbox>
                     <view>
                         <view class="name">{{ item.xm }}</view>
@@ -33,6 +34,9 @@
             </u-checkbox-group>
         </view>
 
+        <view class="bottom-btn">
+            <u-button type="primary" shape="circle" @click="confirm">完成</u-button>
+        </view>
         <u-modal 
         :show="modalVisible" 
         title="添加"
@@ -93,6 +97,9 @@ export default {
             cxrChecked: [],
             readonly: false,
             cxrIds: [],
+            count: 0,
+            selectedCount: 0,
+            changeKey: 1,
             form: {
                 xm: '',
                 lxdh: '',
@@ -154,8 +161,10 @@ export default {
     },
     onLoad(option) {
         this.readonly = option.readonly || false
+        this.count = option.count || 0
         if (option.cxrIds) {
             this.cxrIds = option.cxrIds.split(',')
+            this.selectedCount = this.cxrIds.length
         }
     },
     methods: {
@@ -195,7 +204,13 @@ export default {
                     }
                 })
             })
-            this.setCxrList(this.travelerList) 
+            this.selectedCount = values.length
+            this.changeKey = new Date().getTime()
+            this.setCxrList(this.travelerList)
+        },
+        confirm() {
+            this.setCxrSelectedList(this.travelerList.filter(item => item.checked)) 
+            uni.navigateBack()
         },
         openAdd() {
             this.modalVisible = true
@@ -384,5 +399,8 @@ export default {
     /deep/ .u-form-item__body__left {
         margin-bottom: 0 !important;
     }
+}
+.bottom-btn {
+    display: flex;
 }
 </style>

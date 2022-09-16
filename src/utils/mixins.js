@@ -1,5 +1,8 @@
 import { mapMutations } from "vuex"
 export default {
+    onPullDownRefresh() {
+        wx.stopPullDownRefresh();
+    },
     methods: {
         ...mapMutations(['setUserInfo']),
         navigateBack() {

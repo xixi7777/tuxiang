@@ -49,6 +49,9 @@ $grid-gap: 40px;
 .ml-5 {
     margin-left: 5px;
 }
+.ml-10 {
+    margin-left: 10px;
+}
 .mt-10 {
     margin-top: 10px;
 }
@@ -127,6 +130,7 @@ navigator {
     padding: 30px;
     position: relative;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 .page-title {
     font-size: 36px;
