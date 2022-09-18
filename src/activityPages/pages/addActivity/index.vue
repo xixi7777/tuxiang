@@ -80,7 +80,8 @@
               <view class="picker-input no-border" @click="deadlineTimeShow = true">{{ form.deadlineTime }}</view>
               <u-datetime-picker
                 :show="deadlineTimeShow"
-                :minDate="new Date(moment(form.beginTime).add(1, 'd').format('YYYY-MM-DD')).getTime()"
+                :minDate="new Date(moment().format('YYYY-MM-DD')).getTime()"
+                :maxDate="new Date(moment(form.beginTime).add(-1, 'd').format('YYYY-MM-DD')).getTime()"
                 @cancel="deadlineTimeShow = false"
                 @confirm="confirmDeadlineTime"
                 mode="date"
@@ -204,7 +205,7 @@ export default {
         ],
         headcount: [
           {
-            required: true,
+            required: false,
             message: '请输入人数要求',
             trigger: ['blur'],
           }

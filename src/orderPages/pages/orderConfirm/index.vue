@@ -48,22 +48,22 @@
 
             <view class="content-item">
                 <view class="item-line"> <text class="item-title">预订人信息</text></view>
-                <u-form labelPosition="left" :model="contact" :rules="rules" ref="contactForm" labelWidth="80">
+                <u-form labelPosition="left" :model="formContact" :rules="rules" ref="contactForm" labelWidth="80">
                     <u-form-item label="联系人" prop="lxrxm"
                         leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_user.png">
-                        <u-input type="text" v-model="contact.lxrxm" placeholder="请填写订单联系人姓名" />
+                        <u-input type="text" v-model="formContact.lxrxm" @input="setFormData" placeholder="请填写订单联系人姓名" />
                     </u-form-item>
 
                     <u-form-item label="手机号" prop="lxrdh"
                         leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png">
-                        <u-input type="number" v-model="contact.lxrdh" placeholder="请输入手机号">
+                        <u-input type="number" v-model="formContact.lxrdh" @input="setFormData" placeholder="请输入手机号">
                             <u--text text="+86" slot="prefix" margin="0 3px 0 0" type="tips"></u--text>
                         </u-input>
                     </u-form-item>
 
                     <u-form-item label="备注" prop="ddbz"
                         leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png">
-                        <u-input type="text" v-model="contact.ddbz" placeholder="如有特殊需要请备注" />
+                        <u-input type="text" v-model="formContact.ddbz" @input="setFormData" placeholder="如有特殊需要请备注" />
                     </u-form-item>
                 </u-form>
                 <view>
@@ -91,20 +91,30 @@
                         <u-icon name="plus" color="#17AA7D" size="20"></u-icon>
                     </view>
                 </u-form>
+            </view>
 
+            <view class="mt-30 ">
+                <text class="text-subtitle">点击“提交订单”则表示您已详细阅读统一并接受：</text>
+                <text class="text-primary" @click="toProtocol">《途享旅程用户协议》</text>
             </view>
 
             <u-popup :show="show" mode="bottom" @close="close">
                 <view class='detail-box'>
-                    <view class="row" v-for="(item, index) in orderCount" :key="index">
-                        <text>{{ item.label }}</text>
-                        <text class="num text-primary" v-if="item.hdj">
-                            <text class="text-line_through mr-10 text-disabled">{{ `￥${item.price}` }}</text>
-                            {{ `￥${item.hdj} × ${item.count} `}}
-                        </text>
-                        <text class="num text-primary" v-else>
-                            {{ `￥${item.price} × ${item.count} `}}
-                        </text>
+                    <view v-for="(item, index) in orderCount" :key="index">
+                        <view class="row">
+                            <text>{{ item.label }}</text>
+                            <text class="num text-primary" v-if="item.hdj">
+                                <text class="text-line_through mr-10 text-disabled">{{ `￥${item.price}` }}</text>
+                                {{ `￥${item.hdj} × ${item.count} `}}
+                            </text>
+                            <text class="num text-primary" v-else>
+                                {{ `￥${item.price} × ${item.count} `}}
+                            </text>
+                        </view>
+                        <view class="row" v-if="item.yhj">
+                            <text class="text-warning">优惠</text>
+                            <text class="num text-warning">{{ `￥${item.yhj} × ${item.count} `}}</text>
+                        </view>
                     </view>
                     <template v-if="orderExtra.length">
                         <view class="row">
@@ -113,13 +123,6 @@
                         <view class="row" v-for="(item, index) in orderExtra" :key="index">
                             <text>{{ item.fwmc }}</text><text class="num text-primary">{{ `￥${item.price} × ${item.count} `}}</text>
                         </view>
-                    </template>
-                    <template v-if="yhjPrice">
-                        <view class="row">
-                            <text class="text-warning">优惠</text>
-                            <text class="num text-warning">{{ yhjPrice }}</text>
-                        </view>
-                    
                     </template>
                     <view class="row">
                         <text>合计</text><text class="num text-primary">￥ {{ detailTotal }}</text>
@@ -170,7 +173,7 @@ export default {
             successModal: false,
             travelers: [],
             cxrIds: '',
-            contact: {
+            formContact: {
                 lxrxm: '',
                 lxrdh: '',
                 ddbz: '',
@@ -203,7 +206,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['cxrList', 'orderProduct', 'orderInfo', 'cxrSelectedList']),
+        ...mapGetters(['cxrList', 'orderProduct', 'orderInfo', 'cxrSelectedList', 'contact']),
         productName() {
             return _.get(this.orderProduct, ['cpmc'])
         },
@@ -222,17 +225,24 @@ export default {
             return _.sumBy(this.orderCount, 'count')
         },
         orderCount() {
-            return _.get(this.orderInfo, ['orderCount'])
+            return _.get(this.orderInfo, ['orderCount']) || []
         },
         orderExtra() {
-            return _.get(this.orderInfo, ['orderExtra'])
+            return _.get(this.orderInfo, ['orderExtra']) || []
         },
         totalPrice() {
             return this.detailTotal || 0
         },
         totalCountPrice() {
             return this.orderCount.reduce((prev, curr) => {
-                return prev += curr.count*(curr.hdj ? curr.hdj : curr.price)
+                let price = 0
+                if (curr.hdj) {
+                    price = curr.hdj
+                } else {
+                    price = curr.price
+                }
+                let total = curr.count*price - curr.count*curr.yhj
+                return prev += total
             }, 0)
         },
         totalExtra() {
@@ -241,7 +251,9 @@ export default {
             }, 0)
         },
         detailTotal() {
-            return (this.totalCountPrice + this.totalExtra - this.yhjPrice).toFixed(2)
+            let total = this.totalCountPrice + this.totalExtra
+            if (total <= 0) return 0.01
+            else return this.$fixedPrice(total)
         },
         dltid() {
             return _.get(this.orderProduct, ['dlt', 'dltid']) || ''
@@ -266,15 +278,18 @@ export default {
     },
     methods: {
         moment,
-        ...mapMutations(['setCxrSelectedList']),
+        ...mapMutations(['setCxrSelectedList', 'setContact', 'setOrderInfo']),
         toOrder() {
             uni.navigateTo({ url: '/orderPages/pages/myOrders/index' })
+        },
+        setFormData() {
+            this.setContact(this.formContact)
         },
         submit() {
             this.$refs.contactForm.validate().then(res => {
                 const cxrList = this.travelers.filter(item => !!item.zjhm)
                 if (!cxrList.length) {
-                    uni.$u.toast('请至少添加一位出行人！')
+                    uni.$u.toast('请添加出行人！')
                     return
                 }
                 
@@ -294,13 +309,15 @@ export default {
                     activityId: this.orderInfo.activityId,
                     dltid: this.dltid,
                     openid: uni.getStorageSync('openid'),
-                    ...this.contact,
+                    ...this.formContact,
                     cxrList
                 }
                 this.$api.addOrder(params).then(res => {
                     this.cxrIds = ''
                     this.payment(res.data)
                     this.setCxrSelectedList([])
+                    this.setContact({})
+                    this.setOrderInfo({})
                 })
             })
         },
@@ -324,6 +341,20 @@ export default {
         },
         addTravelers() {
             uni.navigateTo({ url: `/productPages/pages/traveler/index?cxrIds=${this.cxrIds}&count=${this.totalCount}` })
+        },
+        toProtocol() {
+            uni.navigateTo({ url: '/otherPages/pages/policy/index?key=mall.system.policy' })
+        }
+    },
+    watch: {
+        contact: {
+            immediate: true,
+            deep: true,
+            handler(n) {
+                if (!_.isEmpty(n)) {
+                    this.formContact = _.cloneDeep(n)
+                }
+            }
         }
     }
 }
@@ -552,7 +583,7 @@ export default {
     right: 0;
     background: #FFFFFF;
     box-shadow: 0px -6px 10px 0px rgba(0, 0, 0, 0.0600);
-    padding: 20px 40px;
+    padding: 30px 40px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

@@ -20,7 +20,6 @@ export default {
         }
     },
     onLoad(option) {
-        console.log(option.key)
         this.key = option.key
         this.getPolicy(option.key)
     },

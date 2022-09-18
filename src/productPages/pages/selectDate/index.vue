@@ -144,10 +144,16 @@ export default {
             return !_.sumBy(this.orderCount, 'count') || !this.selectedSku.kcrq
         },
         crj() {
-            return _.get(this.selectedSku, ['crj'])*1 || 0
+            return _.get(this.selectedSku, ['crj']) ?? 0
         },
         etj() {
-            return _.get(this.selectedSku, ['etj'])*1 || 0
+            return _.get(this.selectedSku, ['etj']) ?? 0
+        },
+        cryhj() {
+            return _.get(this.orderProduct, ['yhjPrice']) ?? 0
+        },
+        etyhj() {
+            return _.get(this.orderProduct, ['yhjPriceEt']) ?? 0
         },
         crhdj() {
             return _.get(this.orderProduct, ['dlt', 'crhdj']) || ''
@@ -302,9 +308,11 @@ export default {
                     if (item.value == 1) {
                         this.$set(item, 'price', this.$fixedPrice(n.crj))
                         this.$set(item, 'hdj', this.$fixedPrice(this.crhdj))
+                        this.$set(item, 'yhj', this.$fixedPrice(this.cryhj))
                     } else if (item.value == 2) {
                         this.$set(item, 'price', this.$fixedPrice(n.etj))
                         this.$set(item, 'hdj', this.$fixedPrice(this.ethdj))
+                        this.$set(item, 'yhj', this.$fixedPrice(this.etyhj))
                     }
                 })
             }

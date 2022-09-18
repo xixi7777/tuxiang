@@ -30,12 +30,15 @@
                         <view><text class="label">证件类型</text><text>{{ zjlxLabel(item) }}</text></view>
                         <view><text class="label">人员类型</text><text>{{ cxlxLabel(item) }}</text></view>
                     </view>
+                    <view class="delete-icon">
+                        <u-icon name="trash" color="#fa3534" size="24" @click="remove(item, index)"></u-icon>
+                    </view>
                 </view>
             </u-checkbox-group>
         </view>
 
         <view class="bottom-btn">
-            <u-button type="primary" shape="circle" @click="confirm">完成</u-button>
+            <u-button type="primary" shape="circle" @click="confirm" :disabled="!selectedCount">完成</u-button>
         </view>
         <u-modal 
         :show="modalVisible" 
@@ -136,7 +139,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['cxrSelectedList', 'cxrList', 'cxlxOptions', 'zjlxOptions']),
+        ...mapGetters(['cxrSelectedList', 'cxrList', 'cxlxOptions', 'zjlxOptions', 'orderInfo']),
         cxlxText() {
             let label = ''
             this.cxlxOptions.forEach(item => {
@@ -154,6 +157,9 @@ export default {
                 }
             })
             return label
+        },
+        orderCount() {
+            return _.get(this.orderInfo, ['orderCount'])
         }
     },
     created() {
@@ -209,7 +215,30 @@ export default {
             this.setCxrList(this.travelerList)
         },
         confirm() {
-            this.setCxrSelectedList(this.travelerList.filter(item => item.checked)) 
+            const selectedList = this.travelerList.filter(item => item.checked)
+            this.setCxrSelectedList(selectedList) 
+            let crCount = 0
+            let etCount = 0
+            let crIndex = _.findIndex(this.orderCount, item => item.value == 1)
+            let etIndex = _.findIndex(this.orderCount, item => item.value == 2)
+            if (crIndex >= 0) {
+                crCount = this.orderCount[crIndex].count
+            }
+            if (etIndex >= 0) {
+                etCount = this.orderCount[etIndex].count
+            }
+
+            let crCxr = selectedList.filter(item => item.cxlx == 1).length
+            let etCxr = selectedList.filter(item => item.cxlx == 2).length
+            if (crCount != crCxr || etCount!= etCxr) {
+                uni.showToast({
+                    title: '您选择出行人类型与订单的出行类型不一致，请重新选择',
+                    icon: 'none',
+                    mask: true,
+                    duration: 2000
+                })
+                return
+            }
             uni.navigateBack()
         },
         openAdd() {
@@ -260,6 +289,25 @@ export default {
                 return target.label
             }
             return ''
+        },
+        remove(item, index) {
+            uni.showModal({
+                title: '温馨提示',
+                content: '确定要删除此出行人吗？',
+                success: res => {
+                    if (res.confirm) {
+                        if (item.id) {
+                            this.$api.removeCxr({
+                                id: item.id
+                            }).then(res => {
+                                this.travelerList.splice(index, 1)
+                            })
+                        } else {
+                            this.travelerList.splice(index, 1)
+                        }
+                    }
+                }
+            })
         }
     },
     watch: {
@@ -334,6 +382,7 @@ export default {
 }
 
 .traveler-list {
+    margin-bottom: 150px;
     /deep/ .u-checkbox-group {
         display: block;
         .u-checkbox__icon-wrap--disabled--checked {
@@ -373,6 +422,10 @@ export default {
         &>view:not(:first-child) {
             margin-top: 10px;
         }
+    }
+    .delete-icon {
+        position: absolute;
+        right: 30px;
     }
 }
 .slot-content {

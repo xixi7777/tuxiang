@@ -4,32 +4,37 @@ $grid-gap: 40px;
     font-family: 'Source Han Sans CN';
 }
 .text-primary {
-    color: $uni-color-primary;
+    color: $uni-color-primary !important;
 }
 .text-error {
-    color: $uni-color-error;
+    color: $uni-color-error !important;
 }
 .text-warning {
-    color: $uni-color-warning;
+    color: $uni-color-warning !important;
 }
 .text-success {
-    color: $uni-color-success;
+    color: $uni-color-success !important;
 }
 .text-blue {
-    color: $uni-color-link;
+    color: $uni-color-link !important;
 }
 .text-disabled {
-    color: $uni-text-color-disable;
+    color: $uni-text-color-disable !important;
+}
+.text-subtitle {
+    color: $u-info !important;
 }
 .text-sm {
-    font-size: 22px;
+    font-size: 22px !important;
 }
-
 .text-line_through {
-    text-decoration: line-through;
+    text-decoration: line-through !important;
 }
 .no-pt {
     padding-top: 0;
+}
+.text-center {
+    text-align: center !important;
 }
 .text-ellipsis {
     overflow: hidden;
@@ -55,11 +60,14 @@ $grid-gap: 40px;
 .mt-10 {
     margin-top: 10px;
 }
-.mr-10 {
-    margin-right: 10px;
+.mt-20 {
+    margin-top: 20px;
 }
 .mt-30 {
     margin-top: 30px;
+}
+.mr-10 {
+    margin-right: 10px;
 }
 .p-h-20 {
     padding: 0 20px;
@@ -219,6 +227,11 @@ navigator {
     border: 1px solid #FF5C35;
     color: #FF5C35;
     padding: 0 12px;
+    &.home {
+        border: none;
+        font-size: 20px;
+        margin-left: 10px;
+    }
 }
 .plummet_price {
     font-weight: 300;

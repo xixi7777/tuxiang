@@ -10,5 +10,6 @@ export default {
     zjlxOptions: state => state.zjlxOptions,
     cxlxOptions: state => state.cxlxOptions,
     userInfo: state => state.userInfo,
-    isIndividual: state => state.isIndividual
+    isIndividual: state => state.isIndividual,
+    contact: state => state.contact
 }

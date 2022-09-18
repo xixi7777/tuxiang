@@ -167,7 +167,7 @@ export default {
                             ddbh: order.ddbh 
                         }).then(res => {
                             this.query.pageNum = 1
-                            this.getOrderList()
+                            wx.redirectTo({ url: '/orderPages/pages/myOrders/index' })
                         })
                     }
                 }
@@ -189,7 +189,7 @@ export default {
                 paySign: param.paySign,
                 success: res => {
                     this.query.pageNum = 1
-                    this.getOrderList()
+                    wx.redirectTo({ url: '/orderPages/pages/myOrders/index' })
                 },
                 fail: err => {
                     uni.$u.toast('支付失败')
@@ -236,7 +236,7 @@ export default {
     right: 0;
     z-index: 0;
     height: 365px;
-    background: linear-gradient(180deg, #A1F5E2 0%, #EAF6F5 100%);
+    background: #A1F5E2;
     border-radius: 0px 0px 0px 50px;
 }
 
@@ -245,7 +245,7 @@ export default {
     left: 0;
     right: 0;
     top: 0;
-    padding: 70px 0 30px;
+    height: 160px;
     width: 100%;
     color: #006848;
     font-size: 36px;
@@ -254,23 +254,24 @@ export default {
 
     .title-content {
         padding-left: 70px;
+        margin-top: 100px;
     }
 
     .arrow-back {
         position: absolute;
         left: 15px;
-        top: 70px;
+        top: 110px;
     }
 }
 
 .tabs-status {
     position: fixed;
     z-index: 10;
-    top: 130px;
+    top: 160px;
     left: 0;
     right: 0;
     padding-bottom: 20px;
-    background: linear-gradient(180deg, #A1F5E2 0%, #d0fdf3 100%);
+    background: #A1F5E2;
 
     /deep/ .u-tabs {
         font-size: 26px !important;
@@ -281,7 +282,7 @@ export default {
 }
 
 .orders-container {
-    padding: 250px 30px 30px;
+    padding: 280px 30px 30px;
 
     .order-wrapper {
         position: relative;
@@ -389,6 +390,7 @@ export default {
                     display: -webkit-box;
                     -webkit-box-orient: vertical;
                     -webkit-line-clamp: 2;
+                    max-width: 400px;
                 }
 
                 .num-box {

@@ -10,5 +10,6 @@ export default {
     zjlxOptions: [],
     cxlxOptions: [],
     userInfo: {},
-    isIndividual: false
+    isIndividual: false,
+    contact: {}
 }

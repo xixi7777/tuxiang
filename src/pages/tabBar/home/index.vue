@@ -15,7 +15,8 @@
 				:current="current"
 				keyName="image"
 				imgMode="widthFix"
-				:autoplay="false"
+				:autoplay="true"
+				:interval="interval"
 				@change="swiperChange"
 				@click="navigateToList"
 				>
@@ -70,7 +71,11 @@
 								<image lazy-load :src="item.image"></image>
 							</view>
 							<view class="scroll-title"><text>{{ item.cpmc }}</text></view>
-							<view class="price-wrapper"><text class="price-code">￥</text><text class="price">{{ item.price }}</text></view>
+							<view class="price-wrapper">
+								<text class="price-code">￥</text>
+								<text class="price">{{ item.yhjPrice ? item.price-item.yhjPrice : item.price }}</text>
+								<text v-if="item.yhjPrice" class="subsidy_price home">补贴{{ item.yhjPrice }}元</text>
+							</view>
 						</navigator>
 					</view>
 				</scroll-view>
@@ -187,14 +192,19 @@ export default {
 		},
 		hot() {
 			return _.get(this.homeInfo, ['hot']) || []
+		},
+		interval() {
+			return _.get(this.homeInfo, ['interval']) || 3000
 		}
 	},
 	methods: {
 		search(keyword) {
 			uni.navigateTo({ url: `/productPages/pages/recommend/index?cpmc=${keyword}` })
 		},
-		swiperChange({current}) {
-			this.current = current
+		swiperChange(item) {
+			if (item.source == 'autoplay' || item.source == 'touch'){
+				this.current = item.current
+			}
 		},
 		navigateToList(index) {
 			let url = this.slide[index].url
@@ -347,12 +357,12 @@ export default {
 			}
 			.price-code {
 				margin-left: 20px;
-				font-size: 24px;
+				font-size: 22px;
 				color: #25A97E;
 			}
 			.price {
 				color: #25A97E;
-				font-size: 36px;
+				font-size: 32px;
 				font-weight: bold;
 			}
 			.sale {
@@ -382,4 +392,5 @@ export default {
 			padding: 20px;
 		}
 	}
+	
 </style>

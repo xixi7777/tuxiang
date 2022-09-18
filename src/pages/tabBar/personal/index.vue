@@ -53,20 +53,6 @@
                 </view>
             </view>
 
-            <!-- <view class="order-wrapper">
-                <view class="title"><text>更多功能</text></view>
-                <view class="order-type">
-                    <view class="item" v-for="(item, index) in functions" :key="index">
-                        <button class="open-type__button" @click="toOthers(item.url)" hover-class="none" plain>
-                            <view class="function-icon">
-                                    <image :src="item.icon"></image>
-                            </view>
-                            <view class="title"><text>{{ item.title }}</text></view>
-                        </button>
-                    </view>
-                </view>
-            </view> -->
-
             <view class="order-wrapper about">
                 <view class="about-list" v-for="(item, index) in about" :key="index">
                     <button v-if="item.openType" class="open-type__button" :open-type="item.openType" hover-class="none" plain>
@@ -108,8 +94,8 @@ export default {
             ],
             about: [
                 { title: '积分明细', url: '/otherPages/pages/collection/index?integral=1', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/me_jifen.png' },
-                { title: '我的收藏', url: '/otherPages/pages/collection/index?type=1', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/me_shoucang.png' },
-                { title: '分享好友', url: '/otherPages/pages/collection/index?type=0', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/me_share.png' },
+                // { title: '我的收藏', url: '/otherPages/pages/collection/index?type=1', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/me_shoucang.png' },
+                { title: '分享好友', openType: 'share', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/me_share.png' },
                 { title: '关于我们', url: '/otherPages/pages/policy/index?key=mall.system.we', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/guanyuwomen.png' },
                 { title: '用户协议', url: '/otherPages/pages/policy/index?key=mall.system.policy', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/xieyi.png' },
                 { title: '联系客服', openType: 'contact', icon: '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/kefu.png' }
@@ -381,12 +367,12 @@ export default {
             height: 30px;
         }
 
-        &:nth-child(5) {
+        &:nth-child(4) {
             .about-icon {
                 width: 33px;
             }
         }
-        &:nth-child(5) {
+        &:nth-child(4) {
             .about-title {
                 padding-left: 63px;
             }

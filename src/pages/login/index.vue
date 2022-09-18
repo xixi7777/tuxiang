@@ -11,7 +11,7 @@
                 <view style="display: flex;">
                     我已阅读并同意
                     <view class="text-primary">
-                        <navigator url="/otherPages/pages/policy/index?type=policy" hover-class="navigator-hover-class">《途享旅程用户协议》</navigator>
+                        <navigator url="/otherPages/pages/policy/index?key=mall.system.policy" hover-class="navigator-hover-class">《途享旅程用户协议》</navigator>
                     </view>
                     <!-- <view class="text-primary ml-10">
                         <navigator url="/otherPages/pages/policy/index?type=policy" hover-class="navigator-hover-class"> 隐私政策</navigator>

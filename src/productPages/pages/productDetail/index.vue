@@ -74,10 +74,6 @@
                     <u-icon color="#17AA7D" name="map" size="20"></u-icon>
                     <text>{{ cfd }}出发</text>
                 </view>
-                <!-- <view class="exchange-start flex-box">
-                    <text>切换出发地 (35个)</text>
-                    <u-icon name="arrow-right" size="14" class="ml-20"></u-icon>
-                </view> -->
             </view>
             <view class="exchange-date__wrapper">
                 <view class="more-choose">
@@ -148,6 +144,7 @@ export default {
     },
     created() {
         this.setCxrSelectedList([])
+        this.setOrderInfo({})
     },
     data() {
         return {
@@ -197,18 +194,22 @@ export default {
             return []
         },
         cfd() {
+            let startCity = []
             if (this.product.cfd) {
                 const cfd = this.product.cfd.split(',')
-                return cfd[cfd.length-1]
+                cfd.forEach(item => {
+                    const c = item.split('/')
+                    startCity.push(c.at(-1))
+                })
             }
-            return ''
+            return startCity.join(',')
         },
         crhdj() {
             return _.get(this.dlt, ['crhdj']) || ''
         }
     },
     methods: {
-        ...mapMutations(['setOrderProduct', 'setIndividual', 'setCxrSelectedList']),
+        ...mapMutations(['setOrderProduct', 'setIndividual', 'setCxrSelectedList', 'setOrderInfo']),
         moment,
         isSelected(item) {
             return this.defaultSelected.id == item.id
@@ -218,9 +219,6 @@ export default {
                 return
             } 
             this.defaultSelected = item
-            // uni.navigateTo({
-            //     url: `/productPages/pages/selectDate/index?skubh=${item.skubh}&kcrq=${item.kcrq}&teamId=${this.teamId}&activityId=${this.activityId}`
-            // })
         },
         toSelectDate() {
             uni.navigateTo({
@@ -402,7 +400,7 @@ export default {
                     color: rgba(0,0,0,0.7);
                 }
                 &:not(:first-child) {
-                    margin-left: 30px;
+                    margin-left: 6px;
                 }
             }
         }
@@ -546,7 +544,7 @@ export default {
     }
     .product-detail {
         margin-top: 30px;
-        background-color: #3cacc4;
+        background-color: #fff;
         padding: 30px;
     }
 }

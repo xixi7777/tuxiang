@@ -46,31 +46,40 @@ export const waterfallMixins = {
         // 瀑布流排序
         waterFall() {
             const i = this.mark;
-            if (i === 0) {
-                // 初始化，从左边开始插入
-                this.leftList.push(this.allList[i]);
-                // 更新左边列表高度
-                this.getViewHeight(0);
-            } else if (i === 1) {
-                // 第二个item插入，默认为右边插入
-                this.rightList.push(this.allList[i]);
-                // 更新右边列表高度
-                this.getViewHeight(1);
-            } else {
-                // 根据左右列表高度判断下一个item应该插入哪边
-                const leftOrRight = this.boxHeight[0] > this.boxHeight[1] ? 1 : 0;
-                if (leftOrRight) {
-                    this.rightList.push(this.allList[i])
-                } else {
-                    this.leftList.push(this.allList[i])
-                }
-                // 更新插入列表高度
-                this.getViewHeight(leftOrRight);
+            if (i%2 === 0) {
+                this.leftList.push(this.allList[i])
+                this.mark = this.mark + 1
             }
+            if (i%2 === 1) {
+                this.rightList.push(this.allList[i])
+                this.mark = this.mark + 1
+            }
+            // if (i === 0) {
+            //     // 初始化，从左边开始插入
+            //     this.leftList.push(this.allList[i]);
+            //     // 更新左边列表高度
+            //     this.getViewHeight(0);
+            // } else if (i === 1) {
+            //     // 第二个item插入，默认为右边插入
+            //     this.rightList.push(this.allList[i]);
+            //     // 更新右边列表高度
+            //     this.getViewHeight(1);
+            // } else {
+            //     // 根据左右列表高度判断下一个item应该插入哪边
+            //     const leftOrRight = this.boxHeight[0] > this.boxHeight[1] ? 1 : 0;
+            //     console.log(this.boxHeight)
+            //     if (leftOrRight) {
+            //         this.rightList.push(this.allList[i])
+            //     } else {
+            //         this.leftList.push(this.allList[i])
+            //     }
+            //     // 更新插入列表高度
+            //     this.getViewHeight(leftOrRight);
+            // }
         },
         // 获取列表高度
         getViewHeight(leftOrRight) {
-            const query = uni.createSelectorQuery().in(this);
+            const query = uni.createSelectorQuery().in(this)
             const id = leftOrRight ? '#right' : '#left';
             // 使用nextTick，确保页面更新结束后，再请求高度
             this.$nextTick(() => {

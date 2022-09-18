@@ -501,5 +501,16 @@ export default {
                 'content-type': 'application/json'
             }
         })
+    },
+    // 删除出行人
+    removeCxr: data => {
+        return request({
+            url: '/wechat/order/removeCxr',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
     }
 }

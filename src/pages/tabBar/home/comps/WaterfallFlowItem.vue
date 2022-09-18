@@ -5,8 +5,6 @@
 		</view>
 		<view class="description">
 			<text class="title">{{item.name}}</text>
-			<!-- <text class="info">{{item.info}}</text> -->
-			<!-- <text class="interest">1万人感兴趣</text> -->
 		</view>
 	</view>
 </template>

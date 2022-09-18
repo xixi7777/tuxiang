@@ -36,5 +36,8 @@ export default {
     },
     setIndividual(state, individual) {
         state.isIndividual = individual
+    },
+    setContact(state, contact) {
+        state.contact = contact
     }
 }
