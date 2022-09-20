@@ -129,11 +129,19 @@
                 :data-image="item.image">邀请好友</u-button>
               </view>
               <view class="button">
-                <u-button shape="circle" color="#74b9fd" @click="toSignUp">报名列表</u-button>
+                <u-button shape="circle" color="#74b9fd" @click="toSignUp(item.id)">报名列表</u-button>
               </view>
               <view class="button">
-                <u-button shape="circle" color="#f8ab52" @click="joinActivity(team.id, item.id)">立即报名</u-button>
-                <!-- <u-button shape="circle" color="#f8ab52" @click="cancel(team, item)">取消报名</u-button> -->
+                <template v-if="item.isbm == 0">
+                  <u-button 
+                  shape="circle" 
+                  v-if="moment().isBefore(item.deadlineTime)" 
+                  color="#f8ab52" 
+                  @click="joinActivity(team.id, item.id)">立即报名</u-button>
+                  <u-button shape="circle" v-else color="#f8ab52">报名结束</u-button>
+                </template>
+                <u-button v-else-if="item.isbm == 1" shape="circle" color="#f8ab52" @click="cancel(team, item)">取消报名</u-button>
+                <u-button v-else-if="item.isbm == 2" shape="circle" color="#f8ab52">报名成功</u-button>
               </view>
             </view>
             <view v-if="index < team.activities.length-1">
@@ -163,6 +171,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -201,6 +210,7 @@ export default {
     }
   },
   methods: {
+    moment,
     joinTeamByShare(teamCode, activityId) {
       this.$api.teamDetail({ teamCode })
       .then(res => {
@@ -259,8 +269,8 @@ export default {
 
       return actions
     },
-    toSignUp() {
-      uni.navigateTo({ url: '/activityPages/pages/enroll/index' })
+    toSignUp(activityId) {
+      uni.navigateTo({ url: `/activityPages/pages/enroll/index?activityId=${activityId}` })
     },
     quitTeam(team) {
       uni.showModal({
@@ -302,8 +312,15 @@ export default {
               teamId,
               openid: uni.getStorageSync('openid')
             }).then(res => {
-              uni.$u.toast('已成功报名')
-              this.getMyTeam()
+              uni.showToast({
+                icon: 'none',
+                title: '已报名参加',
+                mask: true,
+                duration: 1000
+              })
+              setTimeout(() => {
+                this.getActivity()
+              }, 1000)
             })
           }
         }
@@ -335,7 +352,9 @@ export default {
         this.$api.teamActivity({
           teamId: item.id,
           pageNum: 1,
-          pageSize: 1000
+          pageSize: 1000,
+          uid: this.userInfo.id.toString(),
+          userId: this.userInfo.id.toString()
         }).then(res => {
           this.$set(item, 'activities', res.rows)
         })
@@ -351,7 +370,15 @@ export default {
                   activityId: activity.id,
                   userId: this.userInfo.id
                 }).then(res => {
-                  this.getActivity(team)
+                  uni.showToast({
+                    icon: 'none',
+                    title: '已取消报名此活动',
+                    mask: true,
+                    duration: 1000
+                  })
+                  setTimeout(() => {
+                    this.getActivity()
+                  }, 1000)
                 })
               }
           }

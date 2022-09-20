@@ -163,7 +163,12 @@ export default {
         this.showPwd = true
         return
       }
-      uni.$u.toast('仅限团队邀请')
+      uni.showToast({
+        icon: 'none',
+        title: '仅限团队邀请',
+        mask: true,
+        duration: 1000
+      })
     },
     close() {
       this.showPwd = false

@@ -19,7 +19,6 @@ export default {
         state.orderInfo = orderInfo
     },
     setCxrList(state, cxrList) {
-        console.log(cxrList)
         state.cxrList = cxrList
     },
     setOrderStatus(state, orderStatus) {

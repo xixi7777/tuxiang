@@ -302,7 +302,7 @@ export default {
       this.form.cpbh = this.pickedPro.keyid;
       this.productName = this.pickedPro.keyName;
       this.form.name = this.productName
-      this.form.image = this.pickedPro.imageUrl.split(',')[0]
+      this.form.image = this.pickedPro.imageUrl ? this.pickedPro.imageUrl.split(',')[0] : ''
       this.productShow = false
     },
     searchProduct(search) {

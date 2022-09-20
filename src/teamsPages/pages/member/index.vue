@@ -164,7 +164,6 @@ export default {
         meId: this.loginUserId
       }
       const idx = this.positionList.findIndex(item => item.value == user.positionId)
-      console.log(idx)
       this.pickDefaultIndex = [idx]
     },
     confirmPosition(selector) {

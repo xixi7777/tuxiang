@@ -101,20 +101,22 @@
             <u-popup :show="show" mode="bottom" @close="close">
                 <view class='detail-box'>
                     <view v-for="(item, index) in orderCount" :key="index">
-                        <view class="row">
-                            <text>{{ item.label }}</text>
-                            <text class="num text-primary" v-if="item.hdj">
-                                <text class="text-line_through mr-10 text-disabled">{{ `￥${item.price}` }}</text>
-                                {{ `￥${item.hdj} × ${item.count} `}}
-                            </text>
-                            <text class="num text-primary" v-else>
-                                {{ `￥${item.price} × ${item.count} `}}
-                            </text>
-                        </view>
-                        <view class="row" v-if="item.yhj">
-                            <text class="text-warning">优惠</text>
-                            <text class="num text-warning">{{ `￥${item.yhj} × ${item.count} `}}</text>
-                        </view>
+                        <template v-if="item.count">
+                            <view class="row">
+                                <text>{{ item.label }}</text>
+                                <text class="num text-primary" v-if="item.hdj">
+                                    <text class="text-line_through mr-10 text-disabled">{{ `￥${item.price}` }}</text>
+                                    {{ `￥${item.hdj} × ${item.count} `}}
+                                </text>
+                                <text class="num text-primary" v-else>
+                                    {{ `￥${item.price} × ${item.count} `}}
+                                </text>
+                            </view>
+                            <view class="row" v-if="item.yhj">
+                                <text class="text-warning">优惠</text>
+                                <text class="num text-warning">{{ `￥${item.yhj} × ${item.count} `}}</text>
+                            </view>
+                        </template>
                     </view>
                     <template v-if="orderExtra.length">
                         <view class="row">
@@ -195,7 +197,6 @@ export default {
                     },
                     {
                         validator: (rule, value, callback) => {
-                            console.log(uni.$u.test.mobile(value))
                             return uni.$u.test.mobile(value);
                         },
                         message: '手机号码格式不正确'

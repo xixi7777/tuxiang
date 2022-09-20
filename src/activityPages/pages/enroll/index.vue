@@ -43,6 +43,7 @@ export default {
     return {
       list: [],
       total: 0,
+      activityId: '',
       query: {
         pageNum: 1,
         pageSize: 10
@@ -71,6 +72,9 @@ export default {
       this.getList()
     }, 500)
   },
+  onLoad(option) {
+    this.activityId = option.activityId ?? ''
+  },
   methods: {
     getList() {
       if (this.query.pageNum == 1) {
@@ -78,6 +82,7 @@ export default {
       }
       this.$api.activityUserList({
         openid: uni.getStorageSync('openid'),
+        activityId: this.activityId,
         ...this.query
       }).then(res => {
         this.list = [...this.list, ...res.rows]
