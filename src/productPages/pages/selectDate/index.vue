@@ -163,7 +163,8 @@ export default {
         },
         totalCountPrice() {
             return this.orderCount.reduce((prev, curr) => {
-                return prev += curr.count*(curr.hdj ? curr.hdj : curr.price)
+                const hdj = curr.hdj ?? 0
+                return prev += curr.count*(hdj ? hdj : curr.price)
             }, 0)
         },
         totalExtra() {
@@ -172,7 +173,8 @@ export default {
             }, 0)
         },
         totalPrice() {
-            return (this.totalCountPrice + this.totalExtra).toFixed(2)
+            const total = this.totalCountPrice + this.totalExtra
+            return (total).toFixed(2)
         }
     },
     methods: {
@@ -226,7 +228,7 @@ export default {
                 this.skuList = res.data
                 if (this.calendarDefaultDate) {
                     this.skuList.forEach(sku => {
-                        if(sku.kcrq == this.calendarDefaultDate) {
+                        if(moment(sku.kcrq).format('YYYY-MM-DD') == moment(this.calendarDefaultDate).format('YYYY-MM-DD')) {
                             this.selectedSku = sku
                         }
                     })

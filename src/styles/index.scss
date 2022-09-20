@@ -66,6 +66,9 @@ $grid-gap: 40px;
 .mt-30 {
     margin-top: 30px;
 }
+.mb-30 {
+    margin-bottom: 30px;
+}
 .mr-10 {
     margin-right: 10px;
 }
@@ -122,7 +125,7 @@ navigator {
     line-height: 28px;
 }
 .app-top-background {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;

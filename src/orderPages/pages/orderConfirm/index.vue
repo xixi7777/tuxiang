@@ -93,8 +93,8 @@
                 </u-form>
             </view>
 
-            <view class="mt-30 ">
-                <text class="text-subtitle">点击“提交订单”则表示您已详细阅读统一并接受：</text>
+            <view class="mt-30">
+                <text class="text-subtitle">点击“提交订单”则表示您已详细阅读同意并接受：</text>
                 <text class="text-primary" @click="toProtocol">《途享旅程用户协议》</text>
             </view>
 
@@ -206,7 +206,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['cxrList', 'orderProduct', 'orderInfo', 'cxrSelectedList', 'contact']),
+        ...mapGetters(['cxrList', 'orderProduct', 'orderInfo', 'cxrSelectedList']),
         productName() {
             return _.get(this.orderProduct, ['cpmc'])
         },
@@ -253,10 +253,18 @@ export default {
         detailTotal() {
             let total = this.totalCountPrice + this.totalExtra
             if (total <= 0) return 0.01
-            else return this.$fixedPrice(total)
+            else return total.toFixed(2)
         },
         dltid() {
             return _.get(this.orderProduct, ['dlt', 'dltid']) || ''
+        },
+        contact() {
+            let form = uni.getStorageSync('contact')
+            form = form ? JSON.parse(form) : {}
+            if (_.get(form, ['ddbz'])) {
+                form.ddbz = ''
+            }
+            return form
         }
     },
     onShow() {
@@ -278,12 +286,13 @@ export default {
     },
     methods: {
         moment,
-        ...mapMutations(['setCxrSelectedList', 'setContact', 'setOrderInfo']),
+        ...mapMutations(['setCxrSelectedList', 'setContact', 'setOrderInfo', 'setCxrList']),
         toOrder() {
             uni.navigateTo({ url: '/orderPages/pages/myOrders/index' })
         },
         setFormData() {
             this.setContact(this.formContact)
+            uni.setStorageSync('contact', JSON.stringify(this.formContact));
         },
         submit() {
             this.$refs.contactForm.validate().then(res => {
@@ -316,8 +325,7 @@ export default {
                     this.cxrIds = ''
                     this.payment(res.data)
                     this.setCxrSelectedList([])
-                    this.setContact({})
-                    this.setOrderInfo({})
+                    this.setCxrList([])
                 })
             })
         },
@@ -489,7 +497,7 @@ export default {
 
     .content-item {
         position: relative;
-        padding: 60px 30px 70px;
+        padding: 40px 30px 20px;
         background: linear-gradient(335deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);
         box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1000);
         font-size: 32px;
@@ -519,6 +527,12 @@ export default {
         .add {
             font-size: 50px;
             color: #17AA7D;
+        }
+        /deep/ .u-form {
+            margin: 10px 0;
+            .u-form-item__body {
+                padding: 0 !important;
+            }
         }
     }
 }

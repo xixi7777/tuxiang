@@ -17,11 +17,11 @@
             wrap 
             :iconColor="readonly?'#17AA7D':'#fff'"
             active-color="#17AA7D">
-                <view class="traveler-item" v-for="item in travelerList" :key="item.zjhm">
+                <view class="traveler-item" v-for="(item, index) in travelerList" :key="item.zjhm">
                     <u-checkbox 
                         :name="item.zjhm"
                         :checked="item.checked"
-                        :disabled="!item.checked && selectedCount == count"
+                        :disabled="readonly || (!item.checked && selectedCount == count)"
                     ></u-checkbox>
                     <view>
                         <view class="name">{{ item.xm }}</view>
@@ -30,7 +30,7 @@
                         <view><text class="label">证件类型</text><text>{{ zjlxLabel(item) }}</text></view>
                         <view><text class="label">人员类型</text><text>{{ cxlxLabel(item) }}</text></view>
                     </view>
-                    <view class="delete-icon">
+                    <view class="delete-icon" v-if="!readonly">
                         <u-icon name="trash" color="#fa3534" size="24" @click="remove(item, index)"></u-icon>
                     </view>
                 </view>
@@ -163,7 +163,7 @@ export default {
         }
     },
     created() {
-        this.getCxrList()
+        // this.getCxrList()
     },
     onLoad(option) {
         this.readonly = option.readonly || false
@@ -324,6 +324,8 @@ export default {
             handler(n) {
                 if (n.length) {
                     this.travelerList = this.cxrList
+                } else {
+                    this.getCxrList()
                 }
             }
         },

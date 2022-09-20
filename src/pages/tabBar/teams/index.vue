@@ -137,10 +137,17 @@ export default {
         ...this.addParams,
         openid: uni.getStorageSync('openid')
       }).then(res => {
-        uni.$u.toast('你已成功加入团队')
-        this.query.pageNum = 1
-        this.getTeams()
-        this.showPwd = false
+        uni.showToast({
+          icon: 'none',
+          title: '你已成功加入团队',
+          mask: true,
+          duration: 1000
+        })
+        setTimeout(() => {
+          this.query.pageNum = 1
+          this.getTeams()
+          this.showPwd = false
+        }, 1000)
       })
     },
     joinTeam(team) {

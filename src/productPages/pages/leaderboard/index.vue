@@ -32,7 +32,7 @@
                     </view>
                     <view class="desc">
                         <view class="desc__content">
-                            <view class="text-ellipsis title">
+                            <view class="ellipsis-column-2 title">
                                 <text>{{ item.name }}</text>
                             </view>
                             <view class="detail-info">
@@ -115,10 +115,9 @@ export default {
 .biwan {
     width: 578px;
     height: 347px;
-    margin: 150px auto 124px auto;
+    margin: 150px auto 60px auto;
 }
 .hot-line {
-    margin-top: 124px;
     .scroll {
         width: 100%;
         overflow: hidden;
@@ -126,7 +125,6 @@ export default {
     }
     .hot-item {
         width: 194px;
-        height: 232px;
         border-radius: 20px;
         overflow: hidden;
         display: inline-block;
@@ -153,7 +151,7 @@ export default {
             text-align: center;
             color: #fff;
             font-size: 32px;
-            line-height: 45px;
+            padding: 10px 0;
         }
     }
 }

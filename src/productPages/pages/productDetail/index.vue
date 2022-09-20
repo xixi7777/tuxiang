@@ -28,7 +28,7 @@
                 <view>
                     <view class="price" v-if="crhdj">￥{{ $fixedPrice(crhdj) }}</view>
                     <template v-else>
-                        <text class="price">￥{{ product.yhjPrice ? product.price-product.yhjPrice : product.price }}</text>
+                        <text class="price">￥{{ product.yhjPrice ? productPrice : product.price }}</text>
                         <text class="plummet_price text-line_through text-sm" v-if="product.yhjPrice">￥{{ product.price }}</text>
                     </template>
                 </view>
@@ -132,7 +132,7 @@ export default {
         Top
     },
     onLoad(option) {
-        const { cpbh, cxrq, teamId, activityId, dltid } = option
+        const { cpbh, cxrq, teamId, activityId, dltid, activityDate } = option
 
         this.getProductDetail(cpbh, dltid)
 
@@ -140,10 +140,13 @@ export default {
         this.individualCxrq = cxrq || ''
         this.teamId = teamId || ''
         this.activityId = activityId || ''
-        this.setIndividual(!!dltid || false)
+        this.activityDate = activityDate || ''
+        const disabled = !!dltid || !!teamId || !!activityId
+        this.setIndividual(disabled || false)
     },
     created() {
         this.setCxrSelectedList([])
+        this.setCxrList([])
         this.setOrderInfo({})
     },
     data() {
@@ -158,6 +161,7 @@ export default {
             teamId: '',
             activityId: '',
             individualCxrq: '',
+            activityDate: '',
             weekdays: {
                 1: '周一',
                 2: '周二',
@@ -206,10 +210,15 @@ export default {
         },
         crhdj() {
             return _.get(this.dlt, ['crhdj']) || ''
+        },
+        productPrice() {
+            const price = this.product.price - this.product.yhjPrice
+            if (price <= 0) return 0.01
+            else return this.$fixedPrice(price)
         }
     },
     methods: {
-        ...mapMutations(['setOrderProduct', 'setIndividual', 'setCxrSelectedList', 'setOrderInfo']),
+        ...mapMutations(['setOrderProduct', 'setIndividual', 'setCxrSelectedList', 'setOrderInfo', 'setCxrList']),
         moment,
         isSelected(item) {
             return this.defaultSelected.id == item.id
@@ -250,8 +259,8 @@ export default {
                 }).then(res => {
                     this.skuList = this.sortSkuByDate(res.data)
                     this.skuList.forEach(item => {
-                        const date = this.individualCxrq || moment().format('YYYY-MM-DD')
-                        if (date == moment(item.kcrq).format('YYYY-MM-DD')) {
+                        const date = this.individualCxrq || this.activityDate || moment().format('YYYY-MM-DD')
+                        if (moment(date).format('YYYY-MM-DD') == moment(item.kcrq).format('YYYY-MM-DD')) {
                             this.defaultSelected = item
                         }
                     })

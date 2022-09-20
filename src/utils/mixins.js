@@ -15,9 +15,11 @@ export default {
         },
         getUserInfo() {
             const openid = uni.getStorageSync('openid')
-            this.$api.getMallUser({ openid }).then(res => {
-                this.setUserInfo(res.data)
-            })
+            if (openid) {
+                this.$api.getMallUser({ openid }).then(res => {
+                    this.setUserInfo(res.data)
+                })
+            }
         }
     }
 }

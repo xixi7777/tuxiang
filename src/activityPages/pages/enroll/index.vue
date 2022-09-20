@@ -14,13 +14,9 @@
           <view class="left" v-if="index <= 2">
             <image lazy-load class="image" :src="topImageUrl[index]" />
           </view>
-          <view class="left" v-if="index > 2"
-            ><text class="text">{{ index }}</text></view
-          >
+          <view class="left" v-if="index > 2"><text class="text">{{ index }}</text></view>
 
-          <view class="center"
-            ><text>{{ item.xm }}</text></view
-          >
+          <view class="center"><text>{{ item.xm }}</text></view>
           <view
             :class="[
               'right',
@@ -28,8 +24,7 @@
                 paid: item.status == 1,
                 unpaid: item.status == 0,
               },
-            ]"
-          >
+            ]">
             <text>{{ item.zfzt ? '已支付' : '未支付' }}</text>
           </view>
         </view>
@@ -39,6 +34,7 @@
 </template>
 <script>
 import Top from '@/components/top/Top';
+import _ from 'lodash'
 export default {
   components: {
     Top,
@@ -55,7 +51,7 @@ export default {
         '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_top1.png',
         '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_top2.png',
         '//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/list_top3.png',
-      ],
+      ]
     };
   },
   onShow() {
@@ -70,13 +66,16 @@ export default {
   },
   onPullDownRefresh() {
     wx.stopPullDownRefresh();
+    this.query.pageNum = 1
     setTimeout(() => {
-      this.query.pageNum = 1
       this.getList()
     }, 500)
   },
   methods: {
     getList() {
+      if (this.query.pageNum == 1) {
+        this.list = []
+      }
       this.$api.activityUserList({
         openid: uni.getStorageSync('openid'),
         ...this.query
@@ -84,13 +83,6 @@ export default {
         this.list = [...this.list, ...res.rows]
         this.total = res.total
       })
-    },
-  },
-  watch: {
-    'query.pageNum'(n) {
-      if (n === 1) {
-        this.list = []
-      }
     }
   }
 };
@@ -124,8 +116,8 @@ export default {
     justify-content: space-between;
     font-size: 26px;
     color: #000;
-    margin-bottom: 25px;
     text-align: center;
+    padding: 20px 0;
     .left {
       width: 100px;
     }

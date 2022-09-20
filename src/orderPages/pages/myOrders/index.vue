@@ -149,6 +149,9 @@ export default {
             return images[0]
         },
         getOrderList: _.debounce(function() {
+            if (this.query.pageNum == 1) {
+                this.orderList = []
+            }
             this.$api.orderList(this.query).then(res => {
                 this.orderList = [...this.orderList, ...res.data.records]
                 this.total = res.data.total
@@ -202,9 +205,6 @@ export default {
             immediate: true,
             deep: true,
             handler(n) {
-                if (n.pageNum === 1) {
-                    this.orderList = []
-                }
                 if (n.openid) {
                     this.getOrderList()
                 }

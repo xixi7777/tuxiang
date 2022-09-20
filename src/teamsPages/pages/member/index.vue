@@ -20,8 +20,10 @@
               <view class="text__wrapper text-ellipsis"><text class="left">{{ item.nickName }}</text></view>
               <view class="text__wrapper"><text>{{ item.positionId_dictLabel }}</text></view>
               <view class="actions">
-                <u-icon name="trash" color="#fa3534" size="22" @click="remove(item, index)"></u-icon>
-                <u-icon name="edit-pen" color="#2979ff" size="22" @click="update(item, index)"></u-icon>
+                <template v-if="dzid == loginUserId || loginUserId == item.userId">
+                  <u-icon name="trash" color="#fa3534" size="22" @click="remove(item, index)"></u-icon>
+                  <u-icon name="edit-pen" color="#2979ff" size="22" @click="update(item, index)"></u-icon>
+                </template>
               </view>
             </view>
           </view>
@@ -51,7 +53,7 @@
           <u-picker 
             :show="positionShow"
             :defaultIndex="pickDefaultIndex"
-            :columns="[positionList]" 
+            :columns="[positionPickers]" 
             keyName="label"
             @cancel="positionShow = false" 
             @confirm="confirmPosition"></u-picker>
@@ -103,6 +105,9 @@ export default {
   },
   computed: {
     ...mapGetters(['userInfo']),
+    loginUserId() {
+      return _.get(this.userInfo, ['id'])
+    },
     options() {
       if (this.dzid != this.userInfo.id) {
         return []
@@ -120,6 +125,18 @@ export default {
 					}
         }
       ]
+    },
+    positionPickers() {
+      if (this.loginUserId == this.dzid) {
+        return this.positionList
+      }
+      const list = _.cloneDeep(this.positionList)
+      list.forEach((item, index) => {
+        if (item.dictValue == 'team_leader') {
+          list.splice(index, 1)
+        }
+      })
+      return list
     }
   },
   methods: {
@@ -143,7 +160,8 @@ export default {
         userId: user.userId,
         teamCode: user.teamCode,
         nickName: user.nickName,
-        positionId_dictLabel: user.positionId_dictLabel
+        positionId_dictLabel: user.positionId_dictLabel,
+        meId: this.loginUserId
       }
       const idx = this.positionList.findIndex(item => item.value == user.positionId)
       console.log(idx)
@@ -161,7 +179,7 @@ export default {
           this.showEdit = false
           setTimeout(() => {
             this.getMembers()
-          }, 500)
+          }, 800)
         })
       })
     },
@@ -279,17 +297,18 @@ export default {
       text-align: left;
       line-height: 50px;
       &:nth-of-type(1) {
-        width: 50%;
+        width: 45%;
       }
       &.text-right {
         text-align: right;
       }
     }
     .actions {
-        width: 100px;
+        width: 130px;
         line-height: 50px;
         /deep/ .u-icon {
           float: right;
+          margin-right: 10px;
         }
       }
     .text__icon {

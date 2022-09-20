@@ -72,13 +72,13 @@
             </view>
 
             <view class="content-item travel-info">
-                <view class="item-line item-line__title">
+                <view class="item-line item-line__title" @click="refundModal = true">
                     <view>
                         <text class="item-title">退款原因</text>
                     </view>
-                    <view @click="refundModal = true">
+                    <view>
                         <text class="tkyy-title">{{ refundLabel }}</text>
-                        <u-icon color="#838689" name="arrow-right" size="12"></u-icon>
+                        <u-icon bold color="#838689" name="arrow-right" size="24"></u-icon>
                     </view>
                 </view>
                 <view class="item-line" >
@@ -424,8 +424,8 @@ export default {
                 font-size: 24px;
                 font-family: PingFangSC-Medium, PingFang SC;
                 font-weight: 500;
-                color: #838689;;
-                line-height: 33px;
+                color: #838689;
+                vertical-align: 5px;
             }
         }
 

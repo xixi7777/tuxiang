@@ -22,7 +22,7 @@
           <!-- 团队信息 -->
           <view class="info">
             <view class="info-name">
-              <text class="name text-ellipse">{{ team.title }}</text>
+              <text class="name text-ellipsis">{{ team.title }}</text>
               <view class="team-btn">
                 <button 
                 open-type="share" 
@@ -97,7 +97,9 @@
         <!-- 活动列表 -->
         <view class="activity-group">
           <view class="activity-item" v-for="(item, index) in team.activities" :key="index">
-            <navigator hover-class="navigator-hover-class" :url="`/productPages/pages/productDetail/index?cpbh=${item.cpbh}&teamId=${team.id}&activityId=${item.id}`">
+            <navigator 
+            hover-class="navigator-hover-class" 
+            :url="`/productPages/pages/productDetail/index?cpbh=${item.cpbh}&teamId=${team.id}&activityId=${item.id}&activityDate=${item.beginTime}`">
               <view class="activity-content">
                   <view class="left">
                     <image class="image" mode="aspectFill" :src="item.image"></image>
@@ -131,6 +133,7 @@
               </view>
               <view class="button">
                 <u-button shape="circle" color="#f8ab52" @click="joinActivity(team.id, item.id)">立即报名</u-button>
+                <!-- <u-button shape="circle" color="#f8ab52" @click="cancel(team, item)">取消报名</u-button> -->
               </view>
             </view>
             <view v-if="index < team.activities.length-1">
@@ -336,6 +339,22 @@ export default {
         }).then(res => {
           this.$set(item, 'activities', res.rows)
         })
+      })
+    },
+    cancel(team, activity) {
+      uni.showModal({
+          title: '温馨提示',
+          content: '确定要取消报名吗？',
+          success: res => {
+              if (res.confirm) {
+                this.$api.cancelActivity({
+                  activityId: activity.id,
+                  userId: this.userInfo.id
+                }).then(res => {
+                  this.getActivity(team)
+                })
+              }
+          }
       })
     }
   }

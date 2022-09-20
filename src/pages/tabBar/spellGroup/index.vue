@@ -18,12 +18,14 @@
                             <view class="title"><text>{{ item.cpmc }}</text></view>
                             <view class="sign-date"><text>报名时间：{{ registerDate(item) }}</text></view>
                             <view>
+                                <text class="original-price" v-if="item.yjPrice">
+                                    原价: {{ item.yjPrice }}
+                                </text>
+                            </view>
+                            <view>
                                 <text class="vip-price">{{ item.hdPriceName }}: 
                                     <text class="price-code">￥</text>
                                     <text class="price">{{ item.hdPrice }}</text>
-                                </text>
-                                <text class="original-price" v-if="item.yjPrice">
-                                    原价: {{ item.yjPrice }}
                                 </text>
                             </view>
                             <view>
@@ -101,7 +103,6 @@ export default {
                 let keyValue = res.data['mall.system.phb'].keyValue
 				keyValue = JSON.parse(keyValue)
                 this.bgImage = keyValue.pt
-                console.log(this.bgImage)
             })
         },
         registerDate(item) {
@@ -148,7 +149,6 @@ export default {
         margin-top: 455px; 
     }
     .spell-item {
-        height: 422px;
         background: linear-gradient(335deg, rgba(255,255,255,0) 0%, #FFFFFF 100%);
         box-shadow: 0px 17px 23px 0px rgba(138,131,168,0.1);
         border-radius: 20px;
@@ -214,7 +214,6 @@ export default {
                     font-weight: 300;
                     color: #7F776F;
                     line-height: 44px;
-                    margin-top: 9px;
                     .price-code {
                         font-size: 24px;
                         font-weight: bold;
@@ -232,7 +231,6 @@ export default {
                     color: #7f776f;
                     line-height: 44px;
                     text-decoration: line-through;
-                    margin-left: 15px;
                 }
                 .member {
                     font-size: 26px; 

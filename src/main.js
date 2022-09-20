@@ -17,7 +17,7 @@ Vue.config.productionTip = false
 Vue.prototype.$api = api
 Vue.prototype.$fixedPrice = (number, fixed = 2) => {
   if (number === '' || number === null || number === undefined) {
-      return ''
+      return 0
   }
   if (typeof number === 'number') {
     return number

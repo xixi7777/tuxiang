@@ -359,7 +359,7 @@ export default {
             font-size: 32px;
             color: #333;
             flex: 1;
-            padding-left: 50px;
+            padding-left: 34px;
         }
 
         .go {
@@ -374,7 +374,7 @@ export default {
         }
         &:nth-child(4) {
             .about-title {
-                padding-left: 63px;
+                padding-left: 40px;
             }
         }
     }

@@ -31,7 +31,7 @@ export default class Request {
 								icon: 'none',
 								title: '登录身份已过期，请重新登录',
 								mask: true,
-								duration: 2000
+								duration: 3000
 							})
 							uni.removeStorageSync('userinfo')
 							uni.removeStorageSync('openid')
@@ -40,15 +40,24 @@ export default class Request {
 									url: '/pages/login/index'
 								})
 							})
+						} else if (!res.data.msg) {
+							setTimeout(() => {
+								uni.showToast({
+									title: '服务异常，请反馈至网站管理员',
+									icon: 'none',
+									mask: true,
+									duration: 3000
+								})
+							}, 500)
 						} else {
 							setTimeout(() => {
 								uni.showToast({
 									title: res.data.msg,
 									icon: 'none',
 									mask: true,
-									duration: 2000
+									duration: 3000
 								})
-							}, 300)
+							}, 500)
 							// reject(res.data)
 						}
 					}

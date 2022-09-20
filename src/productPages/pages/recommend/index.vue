@@ -91,8 +91,8 @@
                                     </view>
                                     <view class="desc-footer">
                                         <view class="footer-icon">
-                                            <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dianpu.png"></u-icon>
-                                            <text>{{ item.gys_dictLabel }}</text>
+                                            <u-icon v-if="item.gys_dictLabel" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dianpu.png"></u-icon>
+                                            <text v-if="item.gys_dictLabel">{{ item.gys_dictLabel }}</text>
                                         </view>
                                         <view><text v-if="isShowNum" class="sold-text">已售{{ item.stock || 0 }}</text></view>
                                     </view>
@@ -223,6 +223,10 @@ export default {
         searchConfirm(search) {
             this.query.cpmc = search
             this.query.pageNum = 1
+            this.query.ywts = ''
+            this.query.xlflCode = ''
+            this.query.sfrmtj = ''
+            this.query.orderby = ''
         },
         confirmDatePicker(e) {
             const ywts = e.value[0] == '请选择' ? '' : e.value[0].replace('天', '')
@@ -238,6 +242,9 @@ export default {
             this.showOrderBy = false
         },
         getProductList: _.debounce(function() {
+            if (this.query.pageNum === 1) {
+                this.list = []
+            }
             this.$api.selectProductListVo(this.query).then(res => {
 				this.list = [...this.list, ...res.rows]
                 this.total = res.total
@@ -255,9 +262,6 @@ export default {
             immediate: true,
             deep: true,
             handler(n) {
-                if (n.pageNum === 1) {
-                    this.list = []
-                }
                 this.getProductList()
             }
         },
@@ -313,7 +317,7 @@ export default {
             display: inline-block;
             width: 18px;
             height: 15px;
-            margin-left: 2px;
+            margin-left: 10px;
             margin-top: 2px;
         }
         &.selected {

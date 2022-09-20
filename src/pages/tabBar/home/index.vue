@@ -42,11 +42,11 @@
 					:open-type="item.url.includes('tabBar')?'switchTab':'navigate'"
 					:url="item.url">
 						<view class="image-list">
-							<view class="icon-wrapper">
+							<view :class="['icon-wrapper', `icon-wrapper__${index+1}`]">
 								<image lazy-load mode="heightFix" class="icon" :src="item.image"></image>
 							</view>
 						</view>
-						<text>{{ item.name }}</text>
+						<text class="text">{{ item.name }}</text>
 					</navigator>
                 </view>
 		</view>
@@ -66,14 +66,14 @@
 			<view class="scroll-list-wrapper">
 				<scroll-view scroll-x="true" :show-scrollbar="false" :enhanced="true" class="scroll">
 					<view v-for="item in rankproduct" class="scroll-item" :key="item.name">
-						<navigator hover-class="navigator-hover-class" :url="`/productPages/pages/productDetail/index?${item.url}`">
+						<navigator hover-class="navigator-hover-class" :url="item.url">
 							<view class="list-image">
 								<image lazy-load :src="item.image"></image>
 							</view>
 							<view class="scroll-title"><text>{{ item.cpmc }}</text></view>
 							<view class="price-wrapper">
 								<text class="price-code">￥</text>
-								<text class="price">{{ item.yhjPrice ? item.price-item.yhjPrice : item.price }}</text>
+								<text class="price">{{ item.yhjPrice ? formatPrice(item.price-item.yhjPrice) : (item.price || 0.01) }}</text>
 								<text v-if="item.yhjPrice" class="subsidy_price home">补贴{{ item.yhjPrice }}元</text>
 							</view>
 						</navigator>
@@ -198,6 +198,10 @@ export default {
 		}
 	},
 	methods: {
+		formatPrice(price) {
+            if (price <= 0) return 0.01
+            return this.$fixedPrice(price)
+        },
 		search(keyword) {
 			uni.navigateTo({ url: `/productPages/pages/recommend/index?cpmc=${keyword}` })
 		},
@@ -272,16 +276,16 @@ export default {
 	}
 	/deep/
 	.travel-group {
-		margin-top: 36px;
 		padding: 0 20px;
-		margin-bottom: 50px;
+		margin-bottom: 20px;
 		display: flex;
 		justify-content: space-between;
+		.travel-item .text {
+			font-size: 25px;
+		}
 		.icon-wrapper {
-			width: 76px;
 			margin: 0 auto;
 			margin-bottom: 14px;
-			height: 80px;
 			position: relative;
 			image {
 				height: 100%;
@@ -289,6 +293,26 @@ export default {
 				bottom: 0;
 				left: 50%;
 				transform: translateX(-50%);
+			}
+			&.icon-wrapper__1 {
+				width: 62.7px;
+				height: 71px;
+			}
+			&.icon-wrapper__2 {
+				width: 59.1px;
+				height: 61.7px;
+			}
+			&.icon-wrapper__3 {
+				width: 52.4px;
+				height: 64.2px;
+			}
+			&.icon-wrapper__4 {
+				width: 50.7px;
+				height: 64.2px;
+			}
+			&.icon-wrapper__5 {
+				width: 45px;
+				height: 67px;
 			}
 		}
 	}
@@ -354,6 +378,7 @@ export default {
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
+				min-height: 20px;
 			}
 			.price-code {
 				margin-left: 20px;

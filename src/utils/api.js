@@ -512,5 +512,16 @@ export default {
                 'content-type': 'application/json'
             }
         })
+    },
+    // 取消活动报名
+    cancelActivity: data => {
+        return request({
+            url: '/wechat/team/activity/cancelActivity',
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
     }
 }
