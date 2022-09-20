@@ -28,7 +28,10 @@
               <image :src="item.logo" mode="aspectFill"></image>
             </view>
             <view class="name text-ellipsis"><text>{{ item.title }}</text></view>
-            <view class="desc text-ellipsis"><text>{{ item.note }}</text></view>
+            <view class="desc text-ellipsis">
+              <u-icon name="file-text" size="16" v-if="item.note" ></u-icon>
+              <text>{{ item.note }}</text>
+            </view>
             <view class="member-num">{{ item.zrs }}</view>
             <view class="members">团队人数</view>
             <view class="date"><text>{{ moment(item.createTime).format('YYYY年MM月DD日') }}</text></view>
@@ -265,7 +268,13 @@ export default {
       color: #868686;
       font-size: 28px;
       line-height: 44px;
+      height: 44px;
       margin-top: 8px;
+      padding: 0 6px;
+      /deep/ .u-icon {
+        display: inline-block;
+        vertical-align: -4px;
+      }
     }
     .member-num {
       font-size: 36px;

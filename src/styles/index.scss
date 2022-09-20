@@ -224,12 +224,10 @@ navigator {
 }
 .subsidy_price {
     display: inline-block;
-    height: 40px;
-    line-height: 40px;
     border-radius: 20px;
     border: 1px solid #FF5C35;
     color: #FF5C35;
-    padding: 0 12px;
+    padding: 2px 12px;
     &.home {
         border: none;
         font-size: 20px;

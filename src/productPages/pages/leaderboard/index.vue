@@ -36,12 +36,13 @@
                                 <text>{{ item.name }}</text>
                             </view>
                             <view class="detail-info">
-                                <!-- <text>云南属于高原地区，景区距离相隔比较远，并且不在同一个方向。云南属于高原地区，景区距离相隔比较远，并且不在同一个方向</text> -->
+                                <text class="plummet_price text-line_through text-sm" v-if="item.yhjPrice">原价:￥{{ item.price }}</text>
+                                <text v-if="item.yhjPrice" class="subsidy_price text-sm ml-10">补贴{{ item.yhjPrice }}元</text>
                             </view>
                             <view class="actions">
                                 <view class="">
                                     <text class="price-code">￥</text>
-                                    <text class="price">{{ item.price }}</text>
+                                    <text class="price">{{ item.yhjPrice ? formatPrice(item.price-item.yhjPrice) : item.price }}</text>
                                 </view>
                                 <view class="trade-in">立即抢购</view>
                             </view>
@@ -90,6 +91,10 @@ export default {
         }
     },
     methods: {
+        formatPrice(price) {
+            if (price <= 0) return 0.01
+            return this.$fixedPrice(price)
+        },
         getConfig() {
             this.$api.getConfigCache({
                 key: 'mall.system.phb'
@@ -207,8 +212,7 @@ export default {
                     -webkit-line-clamp:2;
                     font-size: 26px;
                     color: #969696;
-                    line-height: 44px;
-                    margin-top: 6px;
+                    margin-top: 10px;
                 }
                 .actions {
                     display: flex;

@@ -35,8 +35,8 @@
                                         </view>
                                         <view class="desc-footer">
                                             <view class="footer-icon">
-                                                <u-icon name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dianpu.png"></u-icon>
-                                                <text>{{ item.gys_dictLabel }}</text>
+                                                <u-icon v-if="item.gys_dictLabel" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dianpu.png"></u-icon>
+                                                <text v-if="item.gys_dictLabel">{{ item.gys_dictLabel }}</text>
                                             </view>
                                             <view><text v-if="item.isShowNum" class="sold-text">已售{{ item.stock || 0 }}</text></view>
                                         </view>
@@ -95,11 +95,15 @@ export default {
     },
     methods: {
         cfd(pro) {
+            let startCity = []
             if (pro.cfd) {
                 const cfd = pro.cfd.split(',')
-                return cfd[cfd.length-1]
+                cfd.forEach(item => {
+                    const c = item.split('/')
+                    startCity.push(c.at(-1))
+                })
             }
-            return ''
+            return startCity.join(',')
         },
         cpzt(item) {
             const images = item.cpzt.split(',')

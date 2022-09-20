@@ -48,12 +48,12 @@
                   <view class="name row-box position">
                     <text>职务</text>
                     <!-- <text></text> -->
-                    <text>{{ team.dzxm }}</text>
+                    <text>队长</text>
                   </view>
                   <view class="role row-box position">
                     <text>{{ userInfo.id == team.dzid ? '队长' : '成员' }}</text>
                     <!-- <text>副队长</text> -->
-                    <text>队长</text>
+                    <text>{{ team.dzxm }}</text>
                   </view>
                 </view>
                 <view class="data-box">
