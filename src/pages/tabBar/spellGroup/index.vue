@@ -19,7 +19,7 @@
                             <view class="sign-date"><text>报名时间：{{ registerDate(item) }}</text></view>
                             <view>
                                 <text class="original-price" v-if="item.yjPrice">
-                                    原价: {{ item.yjPrice }}
+                                    原价: ￥{{ item.yjPrice }}
                                 </text>
                             </view>
                             <view>

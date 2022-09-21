@@ -20,7 +20,7 @@ export default {
         }
     },
     onLoad(option) {
-        this.key = option.key
+        this.key = option.key || 'mall.system.policy'
         this.getPolicy(option.key)
     },
     computed: {

@@ -1,9 +1,10 @@
 <template>
     <view class="app-container">
         <view class="app-top-background"></view>
+        <top background-color="transparent" title="登录" />
         <cover-image class="logo" src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/logo.png"></cover-image>
 
-        <button class="primary-button" shape="circle" @click="login">微信一键登录</button>
+        <button class="primary-button" shape="circle" @click="login">授权登录并获取手机号码</button>
         <!-- <button class="primary-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">微信一键登录</button> -->
         <view class="radio">
             <radio-group @change="handleChange" style="display: flex; align-items: center; justify-content: center;">
@@ -40,8 +41,10 @@
     </view>
 </template>
 <script>
+import Top from '@/components/top/Top'
 const WXBizDataCrypt = require('../../utils/RdWXBizDataCrypt.js')
 export default {
+    components: { Top },
     data() {
         return {
             checked: false,
@@ -139,9 +142,10 @@ export default {
                 openid,
                 nickName: userInfo.nickName,
                 imageUrl: userInfo.avatarUrl,
-                xb: userInfo.gender === 1 ? '男' : userInfo.gender === 2 ? '女' : '未知',
+                xb: userInfo.gender == 1 ? '男' : userInfo.gender == 2 ? '女' : '未知',
                 phone
-            }).then(res => {})
+            }).then(res => {
+            })
         },
         login() {
             if (!this.checked) {

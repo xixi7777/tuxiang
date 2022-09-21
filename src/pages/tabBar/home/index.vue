@@ -158,15 +158,17 @@ export default {
 		}
 	},
 	onShow() {
-		const openid = uni.getStorageSync('openid')
-        if (!openid) {
-            uni.reLaunch({
-                url: '/pages/login/index'
-            });
-        } else {
-			this.showPage = true
-			this.getConfig()
-		}
+		// const openid = uni.getStorageSync('openid')
+        // if (!openid) {
+        //     uni.reLaunch({
+        //         url: '/pages/login/index'
+        //     });
+        // } else {
+			
+		// }
+
+		this.showPage = true
+		this.getConfig()
 	},
 	onPullDownRefresh() {
 		wx.stopPullDownRefresh();

@@ -1,7 +1,25 @@
 import { mapMutations } from "vuex"
+import config from '@/utils/config'
 export default {
     onPullDownRefresh() {
         wx.stopPullDownRefresh();
+    },
+    onShow() {
+        if (!uni.getStorageSync('openid')) {
+            let pages = getCurrentPages()
+            let currentRoute = pages[pages.length - 1].route
+            let currentURl = `/${currentRoute}`
+            if (!config.whiteList.includes(currentURl)) {
+                uni.reLaunch({
+                    url: config.loginPage
+                })
+            }
+        }
+    },
+    computed: {
+        logined() {
+            return !!uni.getStorageSync('openid')
+        }
     },
     methods: {
         ...mapMutations(['setUserInfo']),

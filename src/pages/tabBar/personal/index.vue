@@ -4,9 +4,11 @@
             <text>我的</text>
         </view>
 
-        <view class="person-wrapper">
+        <view class="person-wrapper" v-if="logined">
             <view class="left">
-                <view class="name text-ellipsis"><text>Hi~, 我是{{ userInfo.nickName }}</text></view>
+                <view class="name text-ellipsis">
+                    <text>Hi~, 我是{{ userInfo.nickName }}</text>
+                </view>
                 <view class="team"><text>所属团队: {{ userInfo.team ? userInfo.team : '暂未加入团队' }}</text>
                     <view class="leader" v-if="userInfo.teamzw_dictLabel">
                         <text>{{ userInfo.teamzw_dictLabel }}</text>
@@ -16,7 +18,6 @@
             <view class="right">
                 <view class="me-avatar">
                     <image mode="aspectFill" :src="userInfo.imageUrl"></image>
-                    <!-- <u-avatar :src="userInfo.imageUrl"></u-avatar> -->
                 </view>
                 <navigator url="/pages/editInfo/index" hover-class="navigator-hover-class">
                     <view class="fanhui">
@@ -26,10 +27,22 @@
                 </navigator>
             </view>
         </view>
+        <view v-else class="person-wrapper">
+            <view class="left">
+                <view class="name">
+                <text>Hi~, 请登录</text>
+            </view>
+            </view>
+            <view class="right">
+                <navigator url="/pages/login/index" hover-class="navigator-hover-class">
+                    <u-button shape="circle" type="primary">登录</u-button>
+                </navigator>
+            </view>
+        </view>
 
         <view class="jifen-wrapper">
             <view class="jifen">
-                <view><text>{{ userInfo.integral }}</text></view>
+                <view><text>{{ userInfo.integral || 0 }}</text></view>
                 <view><text>我的积分</text></view>
             </view>
             <view class="cishu">

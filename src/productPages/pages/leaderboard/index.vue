@@ -213,11 +213,14 @@ export default {
                     font-size: 26px;
                     color: #969696;
                     margin-top: 10px;
+                    .plummet_price {
+                        margin-left: 0;
+                    }
                 }
                 .actions {
                     display: flex;
                     justify-content: space-between;
-                    margin-top: 14px;
+                    // margin-top: 14px;
                     .trade-in {
                         width: 175px;
                         height: 55px;
