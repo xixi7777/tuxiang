@@ -9,7 +9,7 @@
             <view>
                 <view class="product-title text-ellipsis"><text>{{ name }}</text></view>
                 <view class="product-price">
-                    <text>￥ {{ crhdj ? $fixedPrice(crhdj) : selectedSku.crj ? $fixedPrice(selectedSku.crj) : '' }}</text>
+                    <text>￥ {{ crhdj ? $fixedPrice(crhdj) : selectedSku.crj ? $fixedPrice(selectedSku.crj) : 0.01 }}</text>
                 </view>
             </view>
         </view>
@@ -19,10 +19,10 @@
                 <view class="project-title"><text>{{ p.ggmc }}</text></view>
                 <view class="project-list">
                     <text 
-                    @click="changeSkugg(p, c)" 
-                    :class="[skuXm[p.id] == c.id && 'is-active']" 
-                    v-for="c in p.childList" 
-                    :key="c.id">{{ c.ggmc }}</text>
+                        v-for="c in p.childList" 
+                        @click="changeSkugg(p, c)" 
+                        :class="[skuXm[p.id] == c.id && 'is-active']" 
+                        :key="c.id">{{ c.ggmc }}</text>
                 </view>
             </view>
         </view>
@@ -36,14 +36,14 @@
             :default-select-date="calendarDefaultDate" />
         </view>
 
-        <view class="quantity-wrapper">
+        <view class="quantity-wrapper" id="quantity">
             <view class="quantity-list">
                 <view class="title"><text>购买数量 <text class="text-error text-sm" v-if="selectedSku.stock <= 10">(余 {{ selectedSku.stock }})</text></text></view>
             </view>
             <view class="quantity-list" v-for="(item, index) in orderCount" :key="index">
                 <view>
                     <text>{{ item.label }}</text>
-                    <text class="price">￥{{ item.hdj ? item.hdj : item.price }}</text>
+                    <text class="price">￥{{ item.hdj ? item.hdj : item.price ? item.price : 0 }}</text>
                 </view>
                 <view class="quantity-input">
                     <NumberInput v-model="item.count" :max="countMax(item.value)" />
@@ -163,18 +163,18 @@ export default {
         },
         totalCountPrice() {
             return this.orderCount.reduce((prev, curr) => {
-                const hdj = curr.hdj ?? 0
-                return prev += curr.count*(hdj ? hdj : curr.price)
+                return prev += curr.count*(curr.hdj ? curr.hdj : curr.price ? curr.price : 0)
             }, 0)
         },
         totalExtra() {
             return this.orderExtra.reduce((prev, curr) => {
-                return prev += curr.count*curr.price
+                return prev += curr.count*(curr.price ? curr.price : 0)
             }, 0)
         },
         totalPrice() {
             const total = this.totalCountPrice + this.totalExtra
-            return (total).toFixed(2)
+            if (total <= 0) return 0
+            else return (total).toFixed(2)
         }
     },
     methods: {
@@ -215,6 +215,9 @@ export default {
                     }
                 })
             })
+            if (!this.defaultSkubh) {
+                this.skuXm[this.skuggList[0].id] = this.skuggList[0].childList[0].id
+            }
         },
         getProductSku(cpbh) {
             this.$api.selectProductSkuggVo({ cpbh })
@@ -317,6 +320,15 @@ export default {
                         this.$set(item, 'yhj', this.$fixedPrice(this.etyhj))
                     }
                 })
+
+                uni.createSelectorQuery().select('#quantity').boundingClientRect((res)=>{
+                    console.log(res)
+                    const scrollH = res.top
+                    uni.pageScrollTo({
+                        duration: 100,
+                        scrollTop: scrollH,
+                    })
+                }).exec()
             }
         }
     }

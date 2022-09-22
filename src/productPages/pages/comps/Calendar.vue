@@ -232,10 +232,10 @@ export default {
                         date: strDate[2]
                     }
                     this.currentMonth = { y: strDate[0], m: strDate[1] }
+                    // this.dates = this.monthDay(this.currentMonth.y, this.currentMonth.m)
                 } else {
                     this.choose = this.today
                 }
-                this.dates = this.monthDay(this.currentMonth.y, this.currentMonth.m)
             }
         },
         skuList: {
@@ -244,6 +244,8 @@ export default {
             handler(n) {
                 if (n.length) {
                     this.dates = this.setDateStock()
+                } else {
+                    this.dates = this.monthDay(this.year, this.month)
                 }
             }
         }
@@ -313,25 +315,24 @@ export default {
             align-items: center;
             justify-content: center;
             .item {
-                margin-top: 30px;
+                margin-top: 10px;
                 width: calc(100% / 7);
             }
         }
         .day {
             width: 100%;
             text-align: center;
-            padding: 20px auto;
+            padding: 6px auto;
             .date-num {
-                font-size: 40px;
+                font-size: 32px;
                 font-weight: 500;
                 color: #333;
             }
             .date-price {
                 height: 33px;
-                font-size: 24px;
+                font-size: 22px;
                 font-weight: 500;
                 color: #FF9000;
-                margin-top: 12px;
             }
             &.not-current {
                 .date-num, .date-price {

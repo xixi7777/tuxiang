@@ -509,6 +509,28 @@ export default {
             method: 'POST',
             data,
             header: {
+                'content-type': 'multipart/form-data'
+            }
+        })
+    },
+    // 添加出行人
+    addCxr: data => {
+        return request({
+            url: '/wechat/order/addCxr',
+            method: 'POST',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 编辑出行人
+    editCxr: data => {
+        return request({
+            url: '/wechat/order/editCxr',
+            method: 'POST',
+            data,
+            header: {
                 'content-type': 'application/json'
             }
         })
@@ -517,6 +539,17 @@ export default {
     cancelActivity: data => {
         return request({
             url: '/wechat/team/activity/cancelActivity',
+            method: 'GET',
+            data,
+            header: {
+                'content-type': 'application/json'
+            }
+        })
+    },
+    // 出发地
+    departures: data => {
+        return request({
+            url: '/wechat/user/type/mall_cfd',
             method: 'GET',
             data,
             header: {

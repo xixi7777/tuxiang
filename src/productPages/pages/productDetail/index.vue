@@ -76,10 +76,8 @@
                 </view>
             </view>
             <view class="exchange-date__wrapper">
-                <view class="more-choose">
-                    <navigator 
-                    :url="`/productPages/pages/selectDate/index?skubh=${defaultSelected.skubh}&kcrq=${defaultSelected.kcrq}&teamId=${teamId}&activityId=${activityId}`" 
-                    hover-class="navigator-hover-class">更多班期</navigator>
+                <view class="more-choose" @click="toSelectDate">
+                    <text>更多班期</text>
                 </view>
                 <view class="scroll-list-wrapper">
                     <scroll-view scroll-x="true" class="scroll" :show-scrollbar="false" :enhanced="true">
@@ -213,7 +211,7 @@ export default {
         },
         productPrice() {
             const price = this.product.price - this.product.yhjPrice
-            if (price <= 0) return 0.01
+            if (price <= 0) return 0
             else return this.$fixedPrice(price)
         }
     },
@@ -228,6 +226,7 @@ export default {
                 return
             } 
             this.defaultSelected = item
+            this.toSelectDate()
         },
         toSelectDate() {
             uni.navigateTo({

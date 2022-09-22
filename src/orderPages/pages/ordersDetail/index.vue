@@ -93,6 +93,13 @@
                         <text class="key">出行时间</text>
                         <text class="value">{{ orderDetail.cxrq }}</text>
                     </view>
+                    <view class="item-line" v-if="orderDetail.appletcfd">
+                        <image class="pre-img"
+                            src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_place.png"></image>
+                        <text class="key">出发地</text>
+                        <text class="value">{{ orderDetail.appletcfd }}</text>
+                    </view>
+
                     <view>
                         <image class="decor left-decor"
                             src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>

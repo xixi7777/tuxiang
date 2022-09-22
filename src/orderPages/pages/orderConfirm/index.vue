@@ -60,7 +60,22 @@
                             <u--text text="+86" slot="prefix" margin="0 3px 0 0" type="tips"></u--text>
                         </u-input>
                     </u-form-item>
-
+                    <u-form-item label="出发地" prop="appletcfd"
+                        leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_place.png"
+                        >
+                        <view class="picker-input no-border" style="padding-left: 9px;" @click="showCity = true">
+                            <template v-if="formContact.appletcfd">{{ formContact.appletcfd }}</template>
+                            <text style="color: rgb(192, 196, 204)" v-else>请选择出发地</text>
+                            <u-icon name="arrow-right"></u-icon>
+                        </view>
+                        <u-picker 
+                        :show="showCity"
+                        :defaultIndex="0"
+                        :columns="[cities]" 
+                        keyName="dictLabel"
+                        @cancel="showCity = false" 
+                        @confirm="confirmCity"></u-picker>
+                    </u-form-item>
                     <u-form-item label="备注" prop="ddbz"
                         leftIcon="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/ipt_icon_phone.png">
                         <u-input type="text" v-model="formContact.ddbz" @input="setFormData" placeholder="如有特殊需要请备注" />
@@ -73,6 +88,7 @@
                         src="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/myteam_activity_decor.png"></image>
                 </view>
             </view>
+
             <view class="content-item travel-info">
                 <view class="item-line"> <text class="item-title">出行信息</text> </view>
                 <u-form ref="formGoOut">
@@ -179,6 +195,7 @@ export default {
                 lxrxm: '',
                 lxrdh: '',
                 ddbz: '',
+                appletcfd: ''
             },
             rules: {
                 lxrxm: [
@@ -186,6 +203,14 @@ export default {
                         type: 'string',
                         required: true,
                         message: '请输入真实姓名',
+                        trigger: ['blur', 'change'],
+                    },
+                ],
+                appletcfd: [
+                    {
+                        type: 'string',
+                        required: true,
+                        message: '请选择出发地',
                         trigger: ['blur', 'change'],
                     },
                 ],
@@ -203,7 +228,9 @@ export default {
                     }
                 ]
             },
-            show: false
+            show: false,
+            showCity: false,
+            cities: []
         };
     },
     computed: {
@@ -236,19 +263,14 @@ export default {
         },
         totalCountPrice() {
             return this.orderCount.reduce((prev, curr) => {
-                let price = 0
-                if (curr.hdj) {
-                    price = curr.hdj
-                } else {
-                    price = curr.price
-                }
+                let price = curr.hdj ? curr.hdj : curr.price ? curr.price : 0
                 let total = curr.count*price - curr.count*curr.yhj
                 return prev += total
             }, 0)
         },
         totalExtra() {
             return this.orderExtra.reduce((prev, curr) => {
-                return prev += curr.count*curr.price
+                return prev += curr.count*(curr.price ? curr.price : 0)
             }, 0)
         },
         detailTotal() {
@@ -262,13 +284,11 @@ export default {
         contact() {
             let form = uni.getStorageSync('contact')
             form = form ? JSON.parse(form) : {}
-            if (_.get(form, ['ddbz'])) {
-                form.ddbz = ''
-            }
             return form
         }
     },
     onShow() {
+        this.getDeparture()
         const selectedList = _.cloneDeep(this.cxrSelectedList)
         this.travelers = selectedList
         this.cxrIds = selectedList.map(item => item.zjhm).join(',')
@@ -291,9 +311,23 @@ export default {
         toOrder() {
             uni.navigateTo({ url: '/orderPages/pages/myOrders/index' })
         },
+        getDeparture() {
+            this.$api.departures().then(res => {
+                this.cities = res.data
+            })
+        },
         setFormData() {
-            this.setContact(this.formContact)
-            uni.setStorageSync('contact', JSON.stringify(this.formContact));
+            const contact = {
+                lxrxm: this.formContact.lxrxm,
+                lxrdh: this.formContact.lxrdh,
+                appletcfd: this.formContact.appletcfd
+            }
+            this.setContact(contact)
+            uni.setStorageSync('contact', JSON.stringify(contact));
+        },
+        confirmCity(selector) {
+            this.$set(this.formContact, 'appletcfd', selector.value[0].dictLabel)
+            this.showCity = false
         },
         submit() {
             this.$refs.contactForm.validate().then(res => {

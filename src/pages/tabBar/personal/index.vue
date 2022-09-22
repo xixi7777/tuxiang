@@ -11,7 +11,8 @@
                 </view>
                 <view class="team"><text>所属团队: {{ userInfo.team ? userInfo.team : '暂未加入团队' }}</text>
                     <view class="leader" v-if="userInfo.teamzw_dictLabel">
-                        <text>{{ userInfo.teamzw_dictLabel }}</text>
+                        <!-- <view class="background"></view> -->
+                        <text class="">{{ userInfo.teamzw_dictLabel }}</text>
                     </view>
                 </view>
             </view>
@@ -201,29 +202,22 @@ export default {
 
         .leader {
             position: relative;
-            width: 97px;
-            height: 50px;
-            text-align: center;
-            line-height: 50px;
-            display: inline-block;
             margin-left: 4px;
-            background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/duizhang.png);
-            background-size: cover;
-
-            .background {
-                position: absolute;
-                top: 4px;
-                left: 0;
-                height: 100%;
-                z-index: -1;
-                background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/duizhang.png);
-                background-size: cover;
-            }
-
+            height: 50px;
+            min-width: 97px;
+            display: inline-block;
             text {
                 color: #fff;
                 font-size: 24px;
                 line-height: 50px;
+                position: absolute;
+                top: 16px;
+                left: 0;
+                min-width: 97px;
+                height: 50px;
+                padding-left: 12px;
+                background-image: url(//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/duizhang.png);
+                background-size: cover;
             }
         }
     }
@@ -255,7 +249,7 @@ export default {
 .jifen-wrapper {
     height: 196px;
     position: relative;
-    margin: 24px -30px;
+    margin: 0 -30px;
     justify-content: center;
     align-items: center;
     display: flex;
@@ -286,17 +280,16 @@ export default {
     background: linear-gradient(335deg, rgba(255, 255, 255, 0) 0%, #fff 100%);
     box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1);
     border-radius: 20px;
-    padding: 40px;
+    padding: 20px 40px 30px;
 
     &:not(:first-child) {
-        margin-top: 40px;
+        margin-top: 30px;
     }
 
     &>.title {
         color: #333;
         font-size: 36px;
         font-weight: bold;
-        margin-top: 40px;
         padding-left: 40px;
     }
 
@@ -304,14 +297,14 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 65px auto 25px;
+        margin: 30px auto 0;
 
         .item {
             flex: 1;
             text-align: center;
 
             .title {
-                margin-top: 20px;
+                margin-top: 10px;
                 font-size: 26px;
                 color: #6F7075;
                 line-height: 37px;
@@ -347,7 +340,7 @@ export default {
     }
 
     &.about {
-        padding: 70px 40px;
+        padding: 20px 40px;
     }
 
     .about-list {
@@ -360,7 +353,7 @@ export default {
             display: flex;
         }
         &:not(:first-child) {
-            margin-top: 30px;
+            margin-top: 4px;
         }
 
         .about-icon {

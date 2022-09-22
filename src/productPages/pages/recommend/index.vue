@@ -10,7 +10,7 @@
             <view class="header-filter">
                 <view class="scroll-wrapper" id="scrollViewWrapper">
                     <scroll-view 
-                    scroll-x="true" 
+                    :scroll-x="true" 
                     :show-scrollbar="false" 
                     :enhanced="true" 
                     :scroll-left="scrollLeft"

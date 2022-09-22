@@ -23,7 +23,7 @@
                         :checked="item.checked"
                         :disabled="readonly || (!item.checked && selectedCount == count)"
                     ></u-checkbox>
-                    <view>
+                    <view @click="checkboxChange(item)">
                         <view class="name">{{ item.xm }}</view>
                         <view><text class="label">电话</text><text>{{ item.lxdh }}</text></view>
                         <view><text class="label">证件号</text><text>{{ item.zjhm }}</text></view>
@@ -31,6 +31,7 @@
                         <view><text class="label">人员类型</text><text>{{ cxlxLabel(item) }}</text></view>
                     </view>
                     <view class="delete-icon" v-if="!readonly">
+                        <u-icon name="edit-pen" color="#2979ff" size="24" @click="edit(item, index)"></u-icon>
                         <u-icon name="trash" color="#fa3534" size="24" @click="remove(item, index)"></u-icon>
                     </view>
                 </view>
@@ -56,7 +57,9 @@
                         <u-input type="number" border="bottom" v-model="form.lxdh" />
                     </u-form-item>
                     <u-form-item label="证件类型" prop="zjlx">
-                        <view class="picker-input" @click="showZjlxPicker">{{ zjlxText }} <u-icon name="arrow-right"></u-icon></view>
+                        <view class="picker-input">{{ zjlxText }} 
+                            <!-- <u-icon name="arrow-right"></u-icon> -->
+                        </view>
                         <u-picker 
                         :show="showZjlx"
                         :columns="[zjlxOptions]" 
@@ -78,7 +81,8 @@
                         @confirm="confirmCxlx"></u-picker>
                     </u-form-item>
                 </u-form>
-                <u-button type="primary" shape="circle" @click="submit">添加</u-button>
+                <u-button v-if="!form.id" type="primary" shape="circle" @click="submit">添加</u-button>
+                <u-button v-else type="primary" shape="circle" @click="update">修改</u-button>
             </view>
         </u-modal>
     </view>
@@ -102,11 +106,10 @@ export default {
             cxrIds: [],
             count: 0,
             selectedCount: 0,
-            changeKey: 1,
             form: {
                 xm: '',
                 lxdh: '',
-                zjlx: '',
+                zjlx: '1',
                 zjhm: '',
                 cxlx: '',
                 bz: ''
@@ -162,8 +165,11 @@ export default {
             return _.get(this.orderInfo, ['orderCount'])
         }
     },
-    created() {
-        // this.getCxrList()
+    onPullDownRefresh() {
+        wx.stopPullDownRefresh();
+        setTimeout(() => {
+            this.getCxrList()
+        }, 500)
     },
     onLoad(option) {
         this.readonly = option.readonly || false
@@ -199,7 +205,17 @@ export default {
                 this.setZjlxOptions(res.data)
             })
         },
+        checkboxChange(item) {
+            if (this.readonly || (!item.checked && this.selectedCount == this.count)) {
+                return
+            }
+            item.checked = !item.checked
+            let checkeds = this.travelerList.filter(i => i.checked)
+            this.selectedCount = checkeds.length
+            this.setCxrList(this.travelerList)
+        },
         checkboxGroupChange(values) {
+            this.cxrIds = values
             this.travelerList.forEach(item => {
                 item.checked = false
             })
@@ -211,7 +227,6 @@ export default {
                 })
             })
             this.selectedCount = values.length
-            this.changeKey = new Date().getTime()
             this.setCxrList(this.travelerList)
         },
         confirm() {
@@ -271,9 +286,24 @@ export default {
         },
         submit() {
             this.$refs.uForm.validate().then(res => {
+                this.$api.addCxr({
+                    openid: uni.getStorageSync('openid'),
+                    ...this.form
+                }).then(res => {
+                    this.modalVisible = false
+                    this.resetForm()
+                    this.getCxrList()
+                })
+            })
+        },
+        update() {
+            this.$api.editCxr({
+                openid: uni.getStorageSync('openid'),
+                ...this.form
+            }).then(res => {
                 this.modalVisible = false
-                this.travelerList.push(this.form)
-                this.setCxrList(this.travelerList)
+                this.resetForm()
+                this.getCxrList()
             })
         },
         zjlxLabel(item) {
@@ -300,14 +330,20 @@ export default {
                             this.$api.removeCxr({
                                 id: item.id
                             }).then(res => {
-                                this.travelerList.splice(index, 1)
+                                this.getCxrList()
                             })
-                        } else {
-                            this.travelerList.splice(index, 1)
                         }
                     }
                 }
             })
+        },
+        edit(item, index) {
+            const temp = _.cloneDeep(item)
+            this.form = {
+                ...this.form,
+                ...temp
+            }
+            this.openAdd()
         }
     },
     watch: {
@@ -344,6 +380,12 @@ export default {
             handler(n) {
                 if (!n.length) {
                     this.getZjlx()
+                } else {
+                    n.forEach(item => {
+                        if (item.label.includes('身份证')) {
+                            this.$set(this.form, 'zjlx', item.value)
+                        }
+                    })
                 }
             }
         }
@@ -428,6 +470,13 @@ export default {
     .delete-icon {
         position: absolute;
         right: 30px;
+        // width: 60px;
+        /deep/ .u-icon {
+            display: inline-block;
+            &:last-child {
+                margin-left: 20px;
+            }
+        }
     }
 }
 .slot-content {

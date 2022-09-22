@@ -36,7 +36,7 @@
                 type="success"
                 @getphonenumber="getPhoneNumber"
                 class="phone-button"
-			>微信用户一键绑定</button>
+			>获取手机号码</button>
 		</u-modal>
     </view>
 </template>
