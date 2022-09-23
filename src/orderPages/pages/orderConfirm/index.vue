@@ -7,7 +7,7 @@
             <view class="title-content">
                 <!-- 返回 -->
                 <view class="arrow-back" @click="navigateBack">
-                    <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
+                    <u-icon color="#006848" name="arrow-left" size="24"></u-icon>
                 </view>
                 <text>订单确认</text>
             </view>
@@ -422,7 +422,7 @@ export default {
     left: 0;
     right: 0;
     top: 0;
-    padding: 70px 0 30px;
+    padding: 120px 0 30px;
     width: 100%;
     color: #006848;
     font-size: 36px;
@@ -437,7 +437,7 @@ export default {
     .arrow-back {
         position: absolute;
         left: 15px;
-        top: 70px;
+        top: 120px;
     }
 }
 

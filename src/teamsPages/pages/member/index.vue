@@ -1,7 +1,7 @@
 <template>
   <view class="member-container">
-    <top title="成员管理" />
-    <search className="mt-30" @confirm="searchConfirm" />
+    <top title="成员管理"  />
+    <search className="mt-90" @confirm="searchConfirm" />
 
     <view class="member-wrap">
       <scroll-view scroll-y="true" show-scrollbar="true">
@@ -67,6 +67,7 @@
 import Top from '@/components/top/Top';
 import Search from '@/components/pageSearch/PageSearch';
 import { mapGetters } from 'vuex';
+import _ from 'lodash'
 export default {
   components: {
     Top,
@@ -104,7 +105,9 @@ export default {
     this.getPosition()
   },
   computed: {
-    ...mapGetters(['userInfo']),
+    userInfo() {
+      return JSON.parse(uni.getStorageSync('userInfo'))
+    },
     loginUserId() {
       return _.get(this.userInfo, ['id'])
     },
@@ -201,11 +204,11 @@ export default {
     }
   },
   watch: {
-    query: {
+    'query.teamId': {
       immediate: true,
       deep: true,
       handler(n) {
-        if (n.teamId) {
+        if (n) {
           this.getMembers()
         }
       }
@@ -216,10 +219,10 @@ export default {
 
 <style lang="scss" scoped>
 /deep/ .top {
-  padding: 70px 30px 180px 30px !important;
+  padding: 120px 30px 180px 30px !important;
 
   .back-icon {
-    top: 70px !important;
+    top: 120px !important;
   }
 }
 
@@ -236,7 +239,7 @@ export default {
   position: fixed;
   left: 30px;
   right: 30px;
-  top: 240px;
+  top: 300px;
   bottom: 50px;
   z-index: 100;
   padding: 30px;
@@ -332,4 +335,5 @@ export default {
 .picker-input {
   padding-left: 20px;
 }
+
 </style>

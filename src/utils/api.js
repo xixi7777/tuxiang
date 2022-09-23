@@ -171,9 +171,8 @@ export default {
     // 获取详情
     teamDetail: data => {
         return request({
-            url: `/wechat/team/${data.teamId}`,
+            url: `/wechat/team/${data.id}`,
             method: 'GET',
-            data,
             header: {
                 'content-type': 'application/json'
             }
@@ -416,7 +415,7 @@ export default {
         })
     },
     // 获取团队详情
-    teamDetail: data => {
+    getTeamInfoByCode: data => {
         return request({
             url: '/wechat/team/getTeamInfo',
             method: 'GET',

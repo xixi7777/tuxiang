@@ -56,12 +56,13 @@ export default {
             jumpPage: ''
         }
     },
-    onLoad(option) {
+    onLoad(options) {
+        const { teamCode, activityId } = options
         this.getAppBaseInfo()
-        if (!option.teamCode) {
+        if (!teamCode) {
             this.jumpPage = '/pages/tabBar/home/index'
         } else {
-            this.jumpPage = `/teamsPages/pages/myTeam/index?teamCode=${option.code}*activityId=${activityId}`
+            this.jumpPage = `/teamsPages/pages/myTeam/index?teamCode=${teamCode}&activityId=${activityId}`
         }
     },
     methods: {

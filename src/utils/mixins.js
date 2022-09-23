@@ -7,10 +7,12 @@ export default {
     onShow() {
         if (!uni.getStorageSync('openid')) {
             let pages = getCurrentPages()
+            // let lastPage = pages.length >= 2 ? pages[pages.length-2] : {}
+
             let currentRoute = pages[pages.length - 1].route
             let currentURl = `/${currentRoute}`
             if (!config.whiteList.includes(currentURl)) {
-                uni.reLaunch({
+                uni.navigateTo({
                     url: config.loginPage
                 })
             }
@@ -36,6 +38,7 @@ export default {
             if (openid) {
                 this.$api.getMallUser({ openid }).then(res => {
                     this.setUserInfo(res.data)
+                    uni.setStorageSync('userInfo', JSON.stringify(res.data))
                 })
             }
         }

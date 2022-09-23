@@ -1,7 +1,7 @@
 <template>
     <view :class="['top', textLeft && 'text-left']" :style="{ background: backgroundColor }">
             <view class="back-icon" @click="navigateBack">
-                <u-icon :color="backIconColor" size="20" name="arrow-left"></u-icon>
+                <u-icon :color="backIconColor" bold size="24" name="arrow-left"></u-icon>
             </view>
             <text class="title text-ellipsis" v-if="title" style="line-height: 20px">{{ title }}</text>
     </view>
@@ -34,13 +34,13 @@ export default {
     top: 0;
     left: 0;
     right: 0;
-    padding: 100px 30px 50px 30px;
+    padding: 120px 30px 30px 30px;
     text-align: center;
     z-index: 99;
     .back-icon {
         position: absolute;
         left: 30px;
-        top: 100px;
+        top: 120px;
     }
     .title {
         display: inline-block;

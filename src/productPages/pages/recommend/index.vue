@@ -3,7 +3,7 @@
         <view class="recommend-header">
             <view class="app-top-background home"></view>
             <view class="page-title">
-                <u-icon @click="navigateBack" color="#006848" size="20" name="arrow-left" class="arrow-left"></u-icon>
+                <u-icon @click="navigateBack" color="#006848" bold size="24" name="arrow-left" class="arrow-left"></u-icon>
             </view>
             <search class="mt-10" v-model="query.cpmc" @blur="searchConfirm" @confirm="searchConfirm" />
 

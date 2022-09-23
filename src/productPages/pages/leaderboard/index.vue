@@ -1,6 +1,6 @@
 <template>
     <view class="app-container" :style="{backgroundImage: `url(${phbtpImage})`}">
-        <top background-color="#000421" backIcon-color="#fff"/>
+        <top background-color="transparent" backIcon-color="#fff"/>
         <view class="biwan">
             <cover-image :src="phbtpText"></cover-image>
         </view>
@@ -120,7 +120,7 @@ export default {
 .biwan {
     width: 578px;
     height: 347px;
-    margin: 150px auto 60px auto;
+    margin: 170px auto 60px auto;
 }
 .hot-line {
     .scroll {

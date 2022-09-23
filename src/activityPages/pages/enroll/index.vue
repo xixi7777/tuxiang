@@ -94,10 +94,10 @@ export default {
 </script>
 <style lang="scss" scope>
 /deep/ .top {
-  padding: 70px 30px 60px 30px !important;
+  padding: 120px 30px 60px 30px !important;
   border-radius: 0px 0px 0px 50px;
   .back-icon {
-    top: 70px !important;
+    top: 120px !important;
   }
 }
 
@@ -106,7 +106,7 @@ export default {
   z-index: 100;
   left: 30px;
   right: 30px;
-  top: 155px;
+  top: 210px;
   bottom: 50px;
   padding: 40px 30px;
   background: linear-gradient(335deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);

@@ -5,7 +5,7 @@
       <view class="title-content">
         <!-- 返回 -->
         <view class="arrow-back">
-            <u-icon @click="navigateBack" color="#006848" name="arrow-left" size="20"></u-icon>
+            <u-icon @click="navigateBack" bold color="#006848" name="arrow-left" size="26"></u-icon>
         </view>
         <text>我的团队</text>
       </view>
@@ -27,16 +27,11 @@
                 <button 
                 open-type="share" 
                 id="invite_team" 
-                :data-teamCode="team.teamCode"
-                :data-image="item.logo">邀请</button>
+                :data-team-code="team.teamCode"
+                :data-image="team.logo">邀请</button>
                 <button @click="quitTeam(team)">退团</button>
               </view>
             </view>
-            <!-- <view class="info-gender">
-              <view class="image-male image"> </view>
-              <view class="image-female image"> </view>
-              <text>S码</text>
-            </view> -->
 
             <!-- 头像 -->
             <view class="info-avatar">
@@ -64,7 +59,7 @@
                   <view class="row-box">
                     <text>总人数</text>
                     <text>积分</text>
-                    <navigator v-if="team.dzid == userInfo.id" :url="`/teamsPages/pages/createTeam/index?teamCode=${team.teamCode}`" hover-class="navigator-hover-class">
+                    <navigator v-if="team.dzid == userInfo.id" :url="`/teamsPages/pages/createTeam/index?id=${team.id}`" hover-class="navigator-hover-class">
                       <view class="info-edit">
                         信息编辑
                       </view>
@@ -84,7 +79,7 @@
           <!-- 功能区 -->
           <view class="feature-wrapper">
             <view class="feature-item__content" v-for="(item, index) in features(team)" :key="index">
-              <navigator :url="item.option ? `${item.url}?teamId=${team.id}&dzid=${team.dzid}` :item.url" hover-class="navigator-hover-class">
+              <navigator :url="item.option ? `${item.url}?teamId=${team.id}&dzid=${team.dzid}` : item.url" hover-class="navigator-hover-class">
                   <view class="feature-item">
                     <image class="icon-image" :src="item.icon"> </image>
                     <text>{{ item.name }}</text>
@@ -119,14 +114,14 @@
             </navigator>
             <view class="btn-wrapper">
               <view class="button">
-                <u-button 
+                <button 
                 shape="circle" 
                 color="#17aa7d" 
                 open-type="share" 
                 id="share_activity" 
-                :data-activityId="item.id"
-                :data-teamCode="team.teamCode"
-                :data-image="item.image">邀请好友</u-button>
+                :data-activity-id="item.id"
+                :data-team-code="team.teamCode"
+                :data-image="item.image">邀请好友</button>
               </view>
               <view class="button">
                 <u-button shape="circle" color="#74b9fd" @click="toSignUp(item.id)">报名列表</u-button>
@@ -179,6 +174,7 @@ export default {
       team: {},
       teams: [],
       defaultTeam: {},
+      userInfo: {},
       joinParams: {
         teamCode: null,
         activityId: null,
@@ -186,11 +182,10 @@ export default {
       }
     };
   },
-  created() {
+  onShow() {
     this.getMyTeam()
-  },
-  computed: {
-    ...mapGetters(['userInfo'])
+    let info = uni.getStorageSync('userInfo')
+    this.userInfo = info ? JSON.parse(info) : {}
   },
   onPullDownRefresh() {
     wx.stopPullDownRefresh();
@@ -198,22 +193,26 @@ export default {
       this.getMyTeam()
     }, 500)
   },
-  onLoad(option) {
-    const { teamCode, activityId } = option
-    if (this.teamCode) {
-      if (!uni.getStorageSync('openid')) {
-        uni.navigateTo({ url: `/pages/login/index?teamCode=${teamCode}&activityId=${activityId}` })
-      }
-      this.joinParams.teamCode = teamCode || null
-      this.joinParams.activityId = activityId || null
-      this.joinTeamByShare()
+  onLoad(options) {
+    let { teamCode, activityId } = options
+    teamCode = teamCode == null || teamCode == 'undefined' ? '' : teamCode
+    activityId = activityId == null || activityId == 'undefined' ? '' : activityId
+    
+    this.joinParams.teamCode = teamCode
+    this.joinParams.activityId = activityId
+    
+    if (teamCode && uni.getStorageSync('openid')) {
+      this.getTeamInfoByCode(teamCode, activityId)
     }
+
+    if (!uni.getStorageSync('openid')) {
+      uni.navigateTo({ url: `/pages/login/index?teamCode=${teamCode}&activityId=${activityId}` })
+    } 
   },
   methods: {
     moment,
-    joinTeamByShare(teamCode, activityId) {
-      this.$api.teamDetail({ teamCode })
-      .then(res => {
+    getTeamInfoByCode(teamCode, activityId) {
+      this.$api.getTeamInfoByCode({ teamCode }).then(res => {
         const team = res.data
         if (team.jdyq == 0) {
           this.addMember()
@@ -223,6 +222,9 @@ export default {
           this.showPwd = true
           return
         }
+        if (activityId) {
+          this.joinActivity(team.id, activityId)
+        }
       })
     },
     addMember() {
@@ -231,6 +233,15 @@ export default {
         openid: uni.getStorageSync('openid')
       }).then(res => {
         uni.$u.toast('你已成功加入团队')
+        uni.showToast({
+          icon: 'none',
+          title: '你已成功加入团队',
+          mask: true,
+          duration: 2000
+        })
+        setTimeout(() => {
+          this.getMyTeam()
+        }, 2000)
         this.showPwd = false
       })
     },
@@ -301,51 +312,62 @@ export default {
         }
       })
     },
-    joinActivity(teamId, activityId) {
-      uni.showModal({
-        title: '温馨提示',
-        content: '确定要报名参加此活动吗？',
-        success: res => {
-          if (res.confirm) {
-            this.$api.addUserInActivity({
-              activityId,
-              teamId,
-              openid: uni.getStorageSync('openid')
-            }).then(res => {
-              uni.showToast({
-                icon: 'none',
-                title: '已报名参加',
-                mask: true,
-                duration: 1000
-              })
-              setTimeout(() => {
-                this.getActivity()
-              }, 1000)
-            })
-          }
-        }
-      })
-    },
-    getMyTeam() {
-      this.$api.myTeamList({
+    joinActivitySubmit(teamId, activityId) {
+      this.$api.addUserInActivity({
+        activityId,
+        teamId,
         openid: uni.getStorageSync('openid')
       }).then(res => {
-        if (res.data && res.data.length) {
-          this.teams = res.data
+        uni.showToast({
+          icon: 'none',
+          title: '已报名参加',
+          mask: true,
+          duration: 1000
+        })
+        setTimeout(() => {
           this.getActivity()
-        } else {
-          wx.showModal({
-            title: '提示',
-            content: '你暂未加入任何团队！',
-            showCancel: false,
-            success: res => {
-              if (res.confirm) {
-                uni.switchTab({ url: '/pages/tabBar/teams/index' })
-              }
-            }
-          })
-        }
+        }, 1000)
       })
+    },
+    joinActivity(teamId, activityId, showConfirm = true) {
+      if (showConfirm) {
+        uni.showModal({
+          title: '温馨提示',
+          content: '确定要报名参加此活动吗？',
+          success: res => {
+            if (res.confirm) {
+              this.joinActivitySubmit(teamId, activityId)
+            }
+          }
+        })
+      } else {
+        this.joinActivitySubmit(teamId, activityId)
+      }
+    },
+    getMyTeam() {
+      if (uni.getStorageSync('openid')) {
+        this.$api.myTeamList({
+          openid: uni.getStorageSync('openid')
+        }).then(res => {
+          if (res.data && res.data.length) {
+            this.teams = res.data
+            this.getActivity()
+          } else {
+            if (!this.joinParams.teamCode) {
+              wx.showModal({
+                title: '提示',
+                content: '你暂未加入任何团队！',
+                showCancel: false,
+                success: res => {
+                  if (res.confirm) {
+                    uni.switchTab({ url: '/pages/tabBar/teams/index' })
+                  }
+                }
+              })
+            }
+          }
+        })
+      }
     },
     getActivity() {
       this.teams.forEach(item => {
@@ -412,7 +434,7 @@ export default {
   left: 0;
   right: 0;
   top: 0;
-  padding: 70px 0 30px;
+  padding: 90px 0 30px;
   width: 100%;
   color: #006848;
   font-size: 36px;
@@ -426,7 +448,7 @@ export default {
   .arrow-back {
     position: absolute;
     left: 30px;
-    top: 70px;
+    top: 90px;
   }
 }
 
@@ -716,6 +738,15 @@ export default {
       /deep/ .u-button {
         height: 100%;
         width: 100%;
+      }
+      button {
+        background-color: #17aa7d;
+        color: #fff;
+        width: 190px;
+        height: 55px;
+        line-height: 55px;
+        border-radius: 32px;
+        font-size: 30px;
       }
     }
   }

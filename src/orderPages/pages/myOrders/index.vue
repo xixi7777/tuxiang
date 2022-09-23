@@ -7,7 +7,7 @@
             <view class="title-content">
                 <!-- 返回 -->
                 <view class="arrow-back" @click="navigateBack">
-                    <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
+                    <u-icon color="#006848" name="arrow-left" bold size="24"></u-icon>
                 </view>
                 <text>我的订单</text>
             </view>
@@ -254,20 +254,21 @@ export default {
 
     .title-content {
         padding-left: 70px;
-        margin-top: 100px;
+        margin-top: 120px;
+        text-align: center;
     }
 
     .arrow-back {
         position: absolute;
         left: 15px;
-        top: 110px;
+        top: 120px;
     }
 }
 
 .tabs-status {
     position: fixed;
     z-index: 10;
-    top: 160px;
+    top: 180px;
     left: 0;
     right: 0;
     padding-bottom: 20px;
@@ -282,7 +283,7 @@ export default {
 }
 
 .orders-container {
-    padding: 280px 30px 30px;
+    padding: 300px 30px 30px;
 
     .order-wrapper {
         position: relative;

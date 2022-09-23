@@ -6,7 +6,7 @@
       <view class="title-content">
         <!-- 返回 -->
         <view class="arrow-back" @click="navigateBack">
-            <u-icon color="#006848" name="arrow-left" size="20"></u-icon>
+            <u-icon color="#006848" name="arrow-left" bold size="24"></u-icon>
         </view>
         <text>信息编辑</text>
       </view>
@@ -167,7 +167,7 @@ export default {
   left: 0;
   right: 0;
   top: 0;
-  padding: 70px 0 30px;
+  padding: 120px 0 30px;
   width: 100%;
   color: #006848;
   font-size: 36px;
@@ -181,7 +181,7 @@ export default {
   .arrow-back {
     position: absolute;
     left: 15px;
-    top: 70px;
+    top: 120px;
   }
 }
 
@@ -205,7 +205,7 @@ export default {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    padding: 155px 30px 50px;
+    padding: 220px 30px 50px;
 
     .form {
       background: linear-gradient(335deg,

@@ -319,17 +319,17 @@ export default {
 
 <style lang="scss" scoped>
 /deep/ .top {
-  padding: 70px 30px 60px 30px !important;
+  padding: 120px 30px 60px 30px !important;
   border-radius: 0px 0px 0px 50px;
   .back-icon {
-    top: 70px !important;
+    top: 120px !important;
   }
 }
 .activity-container {
   .form-wrapper {
     box-sizing: border-box;
     width: 100%;
-    padding: 155px 30px 200px 30px;
+    padding: 200px 30px 200px 30px;
     background: linear-gradient(
       335deg,
       rgba(255, 255, 255, 0) 0%,

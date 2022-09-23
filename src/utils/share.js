@@ -16,7 +16,7 @@ export default {
         if (options.cpbh) {
             this.shareProduct($page.fullPath, options.cpbh, imageUrl)
         }
-
+        console.log(from, target)
         if (from == 'button') {
             if (target.id && target.id == 'product_share') {
                 const cpbh = options.cpbh || target.dataset.cpbh
@@ -25,9 +25,11 @@ export default {
                 this.shareProduct(path, cpbh, image)
             }
             if (target.id && target.id == 'invite_team') {
+                
                 const teamCode = target.dataset.teamCode
                 const image = target.dataset.image || imageUrl
                 const path = `/teamsPages/pages/myTeam/index?teamCode=${teamCode}`
+
                 return {
                     title: '途享旅程',
                     path,
@@ -39,6 +41,7 @@ export default {
                 const teamCode = target.dataset.teamCode
                 const image = target.dataset.image || imageUrl
                 const path = `/teamsPages/pages/myTeam/index?teamCode=${teamCode}&activityId=${activityId}`
+
                 return {
                     title: '途享旅程',
                     path,

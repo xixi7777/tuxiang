@@ -210,9 +210,9 @@ export default {
     };
   },
   onLoad(option) {
-    const { teamCode } = option
-    if (teamCode) {
-      this.getTeamInfo(teamCode)
+    const { id } = option
+    if (id) {
+      this.getTeamInfo(id)
     }
   },
   computed: {
@@ -225,8 +225,8 @@ export default {
     }
   },
   methods: {
-    getTeamInfo(teamCode) {
-      this.$api.teamDetail({ teamCode }).then(res => {
+    getTeamInfo(id) {
+      this.$api.teamDetail({ id }).then(res => {
         this.teamInfo = res.data
       })
     },
