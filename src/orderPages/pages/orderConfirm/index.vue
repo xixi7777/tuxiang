@@ -234,7 +234,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['cxrList', 'orderProduct', 'orderInfo', 'cxrSelectedList']),
+        ...mapGetters(['orderProduct', 'orderInfo', 'cxrSelectedList']),
         productName() {
             return _.get(this.orderProduct, ['cpmc'])
         },
@@ -307,7 +307,6 @@ export default {
     },
     methods: {
         moment,
-        ...mapMutations(['setCxrSelectedList', 'setContact', 'setOrderInfo', 'setCxrList']),
         toOrder() {
             uni.navigateTo({ url: '/orderPages/pages/myOrders/index' })
         },
@@ -322,7 +321,6 @@ export default {
                 lxrdh: this.formContact.lxrdh,
                 appletcfd: this.formContact.appletcfd
             }
-            this.setContact(contact)
             uni.setStorageSync('contact', JSON.stringify(contact));
         },
         confirmCity(selector) {
@@ -331,7 +329,7 @@ export default {
         },
         submit() {
             this.$refs.contactForm.validate().then(res => {
-                const cxrList = this.travelers.filter(item => !!item.zjhm)
+                const cxrList = this.cxrSelectedList.filter(item => !!item.zjhm)
                 if (!cxrList.length) {
                     uni.$u.toast('请添加出行人！')
                     return
@@ -359,8 +357,6 @@ export default {
                 this.$api.addOrder(params).then(res => {
                     this.cxrIds = ''
                     this.payment(res.data)
-                    this.setCxrSelectedList([])
-                    this.setCxrList([])
                 })
             })
         },

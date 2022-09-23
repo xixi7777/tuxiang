@@ -18,25 +18,13 @@ export default {
     setOrderInfo(state, orderInfo) {
         state.orderInfo = orderInfo
     },
-    setCxrList(state, cxrList) {
-        state.cxrList = cxrList
-    },
     setOrderStatus(state, orderStatus) {
         state.orderStatus = orderStatus
-    },
-    setZjlxOptions(state, zjlxOptions) {
-        state.zjlxOptions = zjlxOptions
-    },
-    setCxlxOptions(state, cxlxOptions) {
-        state.cxlxOptions = cxlxOptions
     },
     setUserInfo(state, userInfo) {
         state.userInfo = userInfo
     },
     setIndividual(state, individual) {
         state.isIndividual = individual
-    },
-    setContact(state, contact) {
-        state.contact = contact
     }
 }

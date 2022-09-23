@@ -106,6 +106,8 @@ export default {
             cxrIds: [],
             count: 0,
             selectedCount: 0,
+            cxlxOptions: [],
+            zjlxOptions: [],
             form: {
                 xm: '',
                 lxdh: '',
@@ -142,7 +144,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['cxrSelectedList', 'cxrList', 'cxlxOptions', 'zjlxOptions', 'orderInfo']),
+        ...mapGetters(['cxrSelectedList', 'orderInfo']),
         cxlxText() {
             let label = ''
             this.cxlxOptions.forEach(item => {
@@ -179,30 +181,37 @@ export default {
             this.selectedCount = this.cxrIds.length
         }
     },
+    created() {
+        this.getCxrList()
+        this.getCxlx()
+        this.getZjlx()
+    },
     methods: {
-        ...mapMutations(['setCxrSelectedList', 'setCxrList', 'setCxlxOptions', 'setZjlxOptions']),
+        ...mapMutations(['setCxrSelectedList']),
         getCxrList() {
             this.$api.cxrList({
                 openid: uni.getStorageSync('openid')
             }).then(res => {
-                if (res.data.length) {
-                    this.travelerList = res.data
-                    if (this.cxrIds.length) {
-                        this.checkboxGroupChange(this.cxrIds)
-                    } else {
-                        this.setCxrList(this.travelerList)
+                this.travelerList = res.data
+                const ids = this.travelerList.map(item => item.zjhm)
+                this.cxrIds.forEach((item, index) => {
+                    if (!ids.includes(item)) {
+                        this.cxrIds.splice(index, 1)
                     }
+                })
+                if (this.cxrIds.length) {
+                    this.checkboxGroupChange(this.cxrIds)
                 }
             })
         },
         getCxlx() {
             this.$api.orderConfigType({ code: 'mall_order_people' }).then(res => {
-                this.setCxlxOptions(res.data)
+                this.cxlxOptions = res.data
             })
         },
         getZjlx() {
             this.$api.orderConfigType({ code: 'mall_order_docment' }).then(res => {
-                this.setZjlxOptions(res.data)
+                this.zjlxOptions = res.data
             })
         },
         checkboxChange(item) {
@@ -211,8 +220,8 @@ export default {
             }
             item.checked = !item.checked
             let checkeds = this.travelerList.filter(i => i.checked)
+            this.cxrIds = checkeds.map(item => item.zjhm)
             this.selectedCount = checkeds.length
-            this.setCxrList(this.travelerList)
         },
         checkboxGroupChange(values) {
             this.cxrIds = values
@@ -227,7 +236,6 @@ export default {
                 })
             })
             this.selectedCount = values.length
-            this.setCxrList(this.travelerList)
         },
         confirm() {
             const selectedList = this.travelerList.filter(item => item.checked)
@@ -275,9 +283,9 @@ export default {
         },
         resetForm() {
             this.form = {
+                ...this.form,
                 xm: '',
                 lxdh: '',
-                zjlx: '',
                 zjhm: '',
                 cxlx: '',
                 bz: ''
@@ -354,39 +362,22 @@ export default {
                 }
             }
         },
-        cxrList: {
+        cxrIds: {
             immediate: true,
             deep: true,
             handler(n) {
-                if (n.length) {
-                    this.travelerList = this.cxrList
-                } else {
-                    this.getCxrList()
-                }
-            }
-        },
-        cxlxOptions: {
-            immediate: true,
-            deep: true,
-            handler(n) {
-                if (!n.length) {
-                    this.getCxlx()
-                }
+                this.selectedCount = n.length
             }
         },
         zjlxOptions: {
             immediate: true,
             deep: true,
             handler(n) {
-                if (!n.length) {
-                    this.getZjlx()
-                } else {
-                    n.forEach(item => {
-                        if (item.label.includes('身份证')) {
-                            this.$set(this.form, 'zjlx', item.value)
-                        }
-                    })
-                }
+                n.forEach(item => {
+                    if (item.label.includes('身份证')) {
+                        this.$set(this.form, 'zjlx', item.value)
+                    }
+                })
             }
         }
     }

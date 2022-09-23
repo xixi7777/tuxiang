@@ -205,7 +205,6 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(['setCxrSelectedList', 'setCxrList']),
         getPhoneNumber() {
             this.$api.getSysConfigCache({ key: 'mall.system.phone' }).then(res => {
                 this.phoneNumber = res.data['mall.system.phone']

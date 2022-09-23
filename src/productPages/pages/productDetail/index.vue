@@ -144,7 +144,6 @@ export default {
     },
     created() {
         this.setCxrSelectedList([])
-        this.setCxrList([])
         this.setOrderInfo({})
     },
     data() {
@@ -216,7 +215,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(['setOrderProduct', 'setIndividual', 'setCxrSelectedList', 'setOrderInfo', 'setCxrList']),
+        ...mapMutations(['setOrderProduct', 'setIndividual', 'setCxrSelectedList', 'setOrderInfo']),
         moment,
         isSelected(item) {
             return this.defaultSelected.id == item.id

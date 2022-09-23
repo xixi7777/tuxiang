@@ -14,7 +14,7 @@
             </view>
         </view>
 
-        <view class="project-group">
+        <view class="project-group" id="skuList">
             <view class="project-group__item" v-for="p in skuggList" :key="p.id">
                 <view class="project-title"><text>{{ p.ggmc }}</text></view>
                 <view class="project-list">
@@ -100,6 +100,7 @@ export default {
             selectedSku: {},
             orderCount: [],
             orderExtra: [],
+            cxlxOptions: [],
             productStockParam: {
                 cpbh: '',
                 skubh: '',
@@ -117,7 +118,7 @@ export default {
         this.activityId = option.activityId
     },
     computed: {
-        ...mapGetters(['orderProduct', 'isIndividual', 'cxlxOptions']),
+        ...mapGetters(['orderProduct', 'isIndividual']),
         fjfwOptions() {
             return _.get(this.orderProduct, ['fjfwOptions']) || []
         },
@@ -178,10 +179,10 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(['setOrderInfo', 'setCxlxOptions']),
+        ...mapMutations(['setOrderInfo']),
         getCxlxOptions() {
             this.$api.orderConfigType({ code: 'mall_order_people' }).then(res => {
-                this.setCxlxOptions(res.data)
+                this.cxlxOptions = res.data
             })
         },
         countMax(key) {
@@ -198,9 +199,9 @@ export default {
             else if (this.skuXm[p.id] == c.id) {
                 this.skuXm[p.id] = ''
             }
-            if (Object.values(this.skuXm).every(Boolean)) {
-                this.productStockParam.skubh = Object.values(this.skuXm).join('_')
-            }
+            let values = Object.values(this.skuXm)
+            values = values.filter(item => !!item)
+            this.productStockParam.skubh = values.join('_')
         },
         setSkuParentId() {
             let skus = []
@@ -226,6 +227,15 @@ export default {
                 this.setSkuParentId()
             })
         },
+        pageScroll($el) {
+            uni.createSelectorQuery().select($el).boundingClientRect((res)=>{
+                const scrollH = res.top
+                uni.pageScrollTo({
+                    duration: 100,
+                    scrollTop: scrollH,
+                })
+            }).exec()
+        },
         selectProductStock: _.debounce(function() {
             this.$api.selectProductStock(this.productStockParam).then(res => {
                 this.skuList = res.data
@@ -239,6 +249,10 @@ export default {
             })
         }, 300),
         confirmOrder() {
+            if (!this.productStockParam.skubh) {
+                this.pageScroll('#skuList')
+                return
+            }
             this.setOrderInfo({
                 product: this.orderProduct,
                 orderCount: this.orderCount,
@@ -320,15 +334,7 @@ export default {
                         this.$set(item, 'yhj', this.$fixedPrice(this.etyhj))
                     }
                 })
-
-                uni.createSelectorQuery().select('#quantity').boundingClientRect((res)=>{
-                    console.log(res)
-                    const scrollH = res.top
-                    uni.pageScrollTo({
-                        duration: 100,
-                        scrollTop: scrollH,
-                    })
-                }).exec()
+                this.pageScroll('#quantity')
             }
         }
     }

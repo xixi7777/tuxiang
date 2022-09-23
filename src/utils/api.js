@@ -506,10 +506,10 @@ export default {
     removeCxr: data => {
         return request({
             url: '/wechat/order/removeCxr',
-            method: 'POST',
+            method: 'GET',
             data,
             header: {
-                'content-type': 'multipart/form-data'
+                'content-type': 'application/json'
             }
         })
     },
