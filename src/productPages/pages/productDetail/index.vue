@@ -135,16 +135,16 @@ export default {
         this.getProductDetail(cpbh, dltid)
 
         this.cpbh = cpbh
-        this.individualCxrq = cxrq || ''
-        this.teamId = teamId || ''
-        this.activityId = activityId || ''
-        this.activityDate = activityDate || ''
+        this.individualCxrq = cxrq ?? ''
+        this.teamId = teamId ?? ''
+        this.activityId = activityId ?? ''
+        this.activityDate = activityDate ?? ''
         const disabled = !!dltid || !!teamId || !!activityId
         this.setIndividual(disabled || false)
     },
     created() {
         this.setCxrSelectedList([])
-        this.setOrderInfo({})
+        // this.setOrderInfo({})
     },
     data() {
         return {
@@ -228,8 +228,10 @@ export default {
             this.toSelectDate()
         },
         toSelectDate() {
+            let skubh = this.defaultSelected.skubh ?? ''
+            let kcrq = this.defaultSelected.kcrq ?? ''
             uni.navigateTo({
-                url: `/productPages/pages/selectDate/index?skubh=${this.defaultSelected.skubh}&kcrq=${this.defaultSelected.kcrq}&teamId=${this.teamId}&activityId=${this.activityId}`
+                url: `/productPages/pages/selectDate/index?cpbh=${this.cpbh}&skubh=${skubh}&kcrq=${kcrq}&teamId=${this.teamId}&activityId=${this.activityId}`
             })
         },
         getProductDetail(cpbh, dltid = '') {

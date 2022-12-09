@@ -7,7 +7,7 @@
             <view class="title-content">
                 <!-- 返回 -->
                 <view class="arrow-back" @click="navigateBack">
-                    <u-icon color="#006848" name="arrow-left" size="24"></u-icon>
+                    <u-icon color="#006848" name="arrow-left" bold size="24"></u-icon>
                 </view>
                 <text>订单确认</text>
             </view>

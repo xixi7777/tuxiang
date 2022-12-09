@@ -33,8 +33,8 @@
                     ]"
                     @click="selectDate(item)">
                         <view class="date-num">{{ item.date }}</view>
-                        <view class="date-price" v-if="crhdj">{{ $fixedPrice(crhdj) }}</view>
-                        <view class="date-price" v-else>{{ item.crj ? `￥${$fixedPrice(item.crj)}`: ' ' }}</view>
+                        <!-- <view class="date-price" v-if="crhdj">{{ $fixedPrice(crhdj) }}</view> -->
+                        <view class="date-price" v-if="item.crj">{{ crhdj ? $fixedPrice(crhdj) : `￥${$fixedPrice(item.crj)}` }}</view>
                     </view>
                 </view>
             </view>
@@ -80,7 +80,6 @@ export default {
     },
     created() {
         this.setMonths()
-        // this.dates = this.monthDay(this.year, this.month)
     },
     computed: {
         weekDay() {
@@ -112,10 +111,6 @@ export default {
         // 获取当前月及一年后的月份
         setMonths() {
             this.months = []
-            // this.months.push({
-            //     y: this.year,
-            //     m: this.month-1
-            // })
             for (let i = 0, j = 0; i < 12; i++) {
                 if (this.month+i >= 13) {
                     this.months.push({
@@ -133,13 +128,15 @@ export default {
         },
         // 获取选中月份数据
         monthDay(y, m) {
+            y *= 1
+            m *= 1
             let dates = []
             // 当月第一天周几
             let firstDayOfMonth = new Date(y, m-1, 1).getDay()
             // 当月最后一天
-            let lastDayOfMonth = new Date(y, m-1, 0).getDate()
+            let lastDayOfMonth = new Date(y, m, 0).getDate()
             // 上一个月的最后一天
-            let lastDayOfMonthLastMonth = new Date(y, m-2, 0).getDate()
+            let lastDayOfMonthLastMonth = new Date(y, m-1, 0).getDate()
             let weekstart = this.weekstart === 7 ? 0 : this.weekstart
             let startDay = (() => {
                 // 周初有几天是上个月的
@@ -192,10 +189,11 @@ export default {
                         skuDate = sku.kcrq.split(' ')
                         skuDate = skuDate[0].split('-')
                     }
+                    
                     if (skuDate[0] == date.year 
                         && skuDate[1] == date.month 
                         && skuDate[2] == date.date) {
-                        temp = { ...temp, ... sku }
+                            temp = { ...temp, ... sku }
                     }
                 })
                 if (temp.year == this.choose.year
@@ -205,10 +203,12 @@ export default {
                 }
                 skuDates.push(temp)
             })
-            
             return skuDates
         },
         isSelected(y, m, d) {
+            if (this.disabled) {
+                return false
+            }
             return y == this.choose.year && m == this.choose.month && d == this.choose.date
         },
         selectDate(date) {
@@ -223,30 +223,28 @@ export default {
         defaultSelectDate: {
             immediate: true,
             handler(n) {
-                if (n) {
-                    let strDate = n.split(' ')
-                    strDate = strDate[0].split('-')
-                    this.choose = {
-                        year: strDate[0],
-                        month: strDate[1],
-                        date: strDate[2]
-                    }
-                    this.currentMonth = { y: strDate[0], m: strDate[1] }
-                    // this.dates = this.monthDay(this.currentMonth.y, this.currentMonth.m)
-                } else {
-                    this.choose = this.today
+                const date = n ? n : uni.$u.timeFormat(new Date(), 'yyyy-mm-dd')
+                let strDate = date.split(' ')
+                strDate = strDate[0].split('-')
+                this.choose = {
+                    year: strDate[0],
+                    month: strDate[1],
+                    date: strDate[2]
                 }
+                this.currentMonth = { y: strDate[0], m: strDate[1] }
             }
         },
         skuList: {
             immediate: true,
             deep: true,
             handler(n) {
-                if (n.length) {
-                    this.dates = this.setDateStock()
-                } else {
-                    this.dates = this.monthDay(this.year, this.month)
-                }
+                setTimeout(() => {
+                    if (n.length) {
+                        this.dates = this.setDateStock()
+                    } else {
+                        this.dates = this.monthDay(this.currentMonth.y, this.currentMonth.m)
+                    }
+                }, 300)
             }
         }
     }
@@ -322,7 +320,8 @@ export default {
         .day {
             width: 100%;
             text-align: center;
-            padding: 6px auto;
+            // padding: 6px auto;
+            height: 76px;
             .date-num {
                 font-size: 32px;
                 font-weight: 500;

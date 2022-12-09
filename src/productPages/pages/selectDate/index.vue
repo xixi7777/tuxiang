@@ -101,6 +101,7 @@ export default {
             orderCount: [],
             orderExtra: [],
             cxlxOptions: [],
+            cpbh: '',
             productStockParam: {
                 cpbh: '',
                 skubh: '',
@@ -110,12 +111,13 @@ export default {
         }
     },
     onLoad(option) {
-        let { skubh, kcrq } = option
-        this.defaultSkubh = skubh || ''
-        this.calendarDefaultDate = kcrq || ''
+        let { skubh, kcrq, cpbh, teamId, activityId } = option
+        this.defaultSkubh = skubh ?? ''
+        this.calendarDefaultDate = kcrq ?? ''
         this.productStockParam.skubh = skubh
-        this.teamId = option.teamId || ''
-        this.activityId = option.activityId
+        this.cpbh = cpbh
+        this.teamId = teamId ?? ''
+        this.activityId = activityId ?? ''
     },
     computed: {
         ...mapGetters(['orderProduct', 'isIndividual']),
@@ -208,11 +210,12 @@ export default {
             if (this.defaultSkubh) {
                 skus = this.defaultSkubh.split('_')
             }
+            skus = skus.map(i => i*1)
             this.skuggList.forEach(item => {
                 this.$set(this.skuXm, item.id, '')
                 item.childList.forEach(sub => {
-                    if (skus.includes(sub.id)) {
-                        this.skuXm[item.id] = sub.id
+                    if (skus.includes(sub.id*1)) {
+                        this.skuXm[item.id] = sub.id*1
                     }
                 })
             })
@@ -275,16 +278,16 @@ export default {
                 this.selectProductStock()
             }
         },
-        orderProduct: {
+        cpbh: {
             immediate: true,
             deep: true,
             handler(n) {
-                if (n.cpbh) {
-                    this.getProductSku(n.cpbh)
+                if (n) {
+                    this.getProductSku(n)
                     this.productStockParam = {
                         ...this.productStockParam,
                         skubh: this.defaultSkubh,
-                        cpbh: n.cpbh
+                        cpbh: n
                     }
                 }
             }

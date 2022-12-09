@@ -35,10 +35,12 @@
                                         </view>
                                         <view class="desc-footer">
                                             <view class="footer-icon">
-                                                <u-icon v-if="item.gys_dictLabel" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dianpu.png"></u-icon>
-                                                <text v-if="item.gys_dictLabel">{{ item.gys_dictLabel }}</text>
+                                                <template v-if="showgys">
+                                                    <u-icon v-if="item.gys_dictLabel" name="//mall-lyxcx.oss-cn-hangzhou.aliyuncs.com/front_end/icon/dianpu.png"></u-icon>
+                                                    <text v-if="item.gys_dictLabel">{{ item.gys_dictLabel }}</text>
+                                                </template>
                                             </view>
-                                            <view><text v-if="item.isShowNum" class="sold-text">已售{{ item.stock || 0 }}</text></view>
+                                            <view><text v-if="isShowNum" class="sold-text">已售{{ item.stock || 0 }}</text></view>
                                         </view>
                                     </view>
                                 </view>
@@ -63,6 +65,8 @@ export default {
             info: {},
             list: [],
             total: 0,
+            showgys: 0,
+            isShowNum: 0,
             query: {
                 pageNum: 1,
                 pageSize: 10,
@@ -124,6 +128,8 @@ export default {
             }).then(res => {
                 this.list = [...this.list, ...res.rows]
                 this.total = res.total
+                this.isShowNum = res.isShowNum*1
+                this.showgys = res.showgys*1
             })
         }, 300),
         toProductDetail(product) {
