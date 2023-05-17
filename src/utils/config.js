@@ -1,6 +1,6 @@
 
 export default {
-	httpUrl: 'https://tuxiang.heszkj.com/prod-api',
+	httpUrl: 'https://tuxianglvcheng.com/prod-api',
 	whiteList: [
         '/pages/tabBar/home/index',
         '/pages/tabBar/personal/index',

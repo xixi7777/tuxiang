@@ -29,6 +29,7 @@
                 id="invite_team" 
                 :data-team-code="team.teamCode"
                 :data-image="team.logo">邀请</button>
+                <button @click="checkIn(team)" :class="[hasCheckIn && 'disabled']">{{ hasCheckIn?'已签':'签到' }}</button>
                 <button @click="quitTeam(team)">退团</button>
               </view>
             </view>
@@ -175,6 +176,7 @@ export default {
       teams: [],
       defaultTeam: {},
       userInfo: {},
+      hasCheckIn: false,
       joinParams: {
         teamCode: null,
         activityId: null,
@@ -186,6 +188,7 @@ export default {
     this.getMyTeam()
     let info = uni.getStorageSync('userInfo')
     this.userInfo = info ? JSON.parse(info) : {}
+    this.getCheckInState()
   },
   onPullDownRefresh() {
     wx.stopPullDownRefresh();
@@ -284,32 +287,43 @@ export default {
       uni.navigateTo({ url: `/activityPages/pages/enroll/index?activityId=${activityId}` })
     },
     quitTeam(team) {
-      uni.showModal({
-        title: '温馨提示',
-        content: '确定要退出团队吗？',
-        success: res => {
-          if (res.confirm) {
-            let hasDis = 0
-            let msg = '你已成功退出团队'
-            if (this.userInfo.id == team.dzid) {
-              hasDis = 1
-              msg = '你已解散该团队'
+      let hasDis = 0
+      if (this.userInfo.id == team.dzid) {
+        hasDis = 1
+        uni.showModal({
+          title: '温馨提示',
+          content: team.zrs > 1 ? '团队中尚有成员，是否继续解散团队？' : '确定解散团队吗？',
+          success: res => {
+            if (res.confirm) {
+              this.submitQuit(team, '您已解散该团队', hasDis)
             }
-            this.$api.quitTeam({
-              loginUserId: this.userInfo.id,
-              teamId: team.id,
-              hasDis
-            }).then(res => {
-              uni.showToast({
-								icon: 'none',
-								title: msg,
-                mask: true,
-                duration: 2000
-							})
-              this.getMyTeam()
-            })
           }
-        }
+        })
+      } else {
+        uni.showModal({
+          title: '温馨提示',
+          content: '退团将清零您的积分，确定要退出团队吗？',
+          success: res => {
+            if (res.confirm) {
+              this.submitQuit(team, '您已成功退出团队', hasDis)
+            }
+          }
+        })
+      }
+    },
+    submitQuit(team, msg, hasDis) {
+      this.$api.quitTeam({
+        loginUserId: this.userInfo.id,
+        teamId: team.id,
+        hasDis
+      }).then(res => {
+        uni.showToast({
+          icon: 'none',
+          title: msg,
+          mask: true,
+          duration: 2000
+        })
+        this.getMyTeam()
       })
     },
     joinActivitySubmit(teamId, activityId) {
@@ -405,6 +419,16 @@ export default {
               }
           }
       })
+    },
+    checkIn(team) {
+      uni.navigateTo({ url: `/teamsPages/pages/checkIn/index?teamId=${team.id}&userId=${this.userInfo.id}` })
+    },
+    getCheckInState() {
+      this.$api.hasCheckIn({
+        userId: this.userInfo.id
+      }).then(res => {
+        this.hasCheckIn = res.data
+      })
     }
   }
 };
@@ -484,7 +508,7 @@ export default {
           display: inline-block;
           height: 66px;
           line-height: 60px;
-          padding: 0 25px 0 30px;
+          padding: 0 20px 0 25px;
           font-size: 28px;
           color: #f2fcfa;
           letter-spacing: 10px;
@@ -498,9 +522,17 @@ export default {
           }
 
           &:nth-child(2) {
+            background: rgba(34, 96, 230, 0.8);
+            box-shadow: 0px 7px 25px 0px #54adf6;
+            margin-left: 20px;
+            &.disabled {
+              background: rgb(121, 159, 235);
+            }
+          }
+          &:nth-child(3) {
             background: rgba(163, 158, 153, 0.8);
             box-shadow: 0px 7px 25px 0px #b3b1ac;
-            margin-left: 50px;
+            margin-left: 20px;
           }
         }
       }

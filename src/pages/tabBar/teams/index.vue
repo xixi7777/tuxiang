@@ -124,6 +124,7 @@ export default {
     searchConfirm(search) {
       this.query.title = search
       this.query.pageNum = 1
+      this.teams = []
       this.getTeams()
     },
     getTeams() {

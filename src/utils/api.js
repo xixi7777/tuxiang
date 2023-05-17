@@ -555,5 +555,42 @@ export default {
                 'content-type': 'application/json'
             }
         })
+    },
+
+
+    // 签到信息
+    signInData: data => {
+      return request({
+        url: '/wechat/signIn/count',
+        method: 'POST',
+        data,
+        header: {
+          'content-type': 'application/json'
+        }
+      })
+    },
+
+    // 签到
+    checkIn: data => {
+      return request({
+        url: '/wechat/signIn/sign',
+        method: 'POST',
+        data,
+        header: {
+          'content-type': 'application/json'
+        }
+      })
+    },
+
+    // 是否签到
+    hasCheckIn: data => {
+      return request({
+        url: '/wechat/signIn/hasSign',
+        method: 'POST',
+        data,
+        header: {
+          'content-type': 'application/json'
+        }
+      })
     }
 }

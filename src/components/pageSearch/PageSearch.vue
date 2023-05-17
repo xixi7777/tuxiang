@@ -7,7 +7,6 @@
         class="input"
         v-model="inputVal" 
         @confirm="confirm"
-        @blur="confirm"
         placeholder="请输入你想要的内容" />
     </view>
 </template>

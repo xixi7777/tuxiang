@@ -178,6 +178,14 @@
 						"navigationStyle": "custom",
 						"enablePullDownRefresh": true
 					}
+				},
+        {
+					"path": "pages/checkIn/index",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
 				}
 			]
 		},

@@ -4,7 +4,6 @@
     <search className="mt-90" @confirm="searchConfirm" />
 
     <view class="member-wrap">
-      <scroll-view scroll-y="true" show-scrollbar="true">
         <view class="list">
           <view class="list-title">
             <view class="left"><text class="text">成员列表</text></view>
@@ -14,21 +13,26 @@
             <view class="item item-title">
               <view class="text__wrapper"><text>姓名</text></view>
               <view class="text__wrapper"><text>职位</text></view>
+              <view class="text__wrapper"><text>签到积分</text></view>
               <view class="actions"></view>
             </view>
-            <view class="item item-con" v-for="(item, index) in list" :key="index">
-              <view class="text__wrapper text-ellipsis"><text class="left">{{ item.nickName }}</text></view>
-              <view class="text__wrapper"><text>{{ item.positionId_dictLabel }}</text></view>
-              <view class="actions">
-                <template v-if="dzid == loginUserId || loginUserId == item.userId">
-                  <u-icon name="trash" color="#fa3534" size="22" @click="remove(item, index)"></u-icon>
-                  <u-icon name="edit-pen" color="#2979ff" size="22" @click="update(item, index)"></u-icon>
-                </template>
-              </view>
+            <view class="scroll-wrapper">
+              <scroll-view scroll-y="true" show-scrollbar="true" class="scroll">
+                <view class="item item-con" v-for="(item, index) in list" :key="index">
+                  <view class="text__wrapper text-ellipsis"><text class="left">{{ item.nickName }}</text></view>
+                  <view class="text__wrapper text-ellipsis"><text>{{ item.positionId_dictLabel }}</text></view>
+                  <view class="text__wrapper"><text>{{ item.jf ? item.jf : 0 }}</text></view>
+                  <view class="actions">
+                    <template v-if="dzid == loginUserId || loginUserId == item.userId">
+                      <u-icon name="trash" color="#fa3534" size="22" @click="remove(item, index)"></u-icon>
+                      <u-icon name="edit-pen" color="#2979ff" size="22" @click="update(item, index)"></u-icon>
+                    </template>
+                  </view>
+                </view>
+              </scroll-view>
             </view>
           </view>
         </view>
-      </scroll-view>
     </view>
 
     <u-modal 
@@ -144,7 +148,10 @@ export default {
   },
   methods: {
     getMembers() {
-      this.$api.memberList(this.query).then(res => {
+      this.$api.memberList({
+        openid: uni.getStorageSync('openid'),
+        ...this.query
+      }).then(res => {
         this.list = res.rows
       })
     },
@@ -242,13 +249,28 @@ export default {
   top: 300px;
   bottom: 50px;
   z-index: 100;
-  padding: 30px;
+  // padding: 30px;
   background: linear-gradient(335deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
   box-shadow: 0px 17px 23px 0px rgba(138, 131, 168, 0.1);
   border-radius: 20px;
 
-  .scroll-view {
+  .list {
     height: 100%;
+  }
+  .list-content {
+    height: calc(100% - 60px);
+  }
+}
+.scroll-wrapper {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  height: calc(100% - 80px);
+  box-sizing: border-box;
+  .scroll {
+    height: 100%;
+    box-sizing: border-box;
+    padding-bottom: 80px;
   }
 }
 
@@ -263,6 +285,7 @@ export default {
 
 .list-title {
   margin-bottom: 25px;
+  padding: 40px 40px 0;
 
   .left {
     background-color: rgba(23, 170, 125, 0.1);
@@ -292,14 +315,19 @@ export default {
 
 .list-content {
   .item {
-    // height: 80px;
-    padding: 10px 0;
+    padding: 10px 40px;
     align-items: center;
     .text__wrapper {
       text-align: left;
       line-height: 50px;
       &:nth-of-type(1) {
-        width: 45%;
+        flex: 1;
+      }
+      &:nth-of-type(2) {
+        width: 130px;
+      }
+      &:nth-of-type(3) {
+        width: 120px;
       }
       &.text-right {
         text-align: right;
@@ -335,5 +363,4 @@ export default {
 .picker-input {
   padding-left: 20px;
 }
-
 </style>

@@ -245,7 +245,7 @@ export default {
     left: 0;
     right: 0;
     top: 0;
-    height: 160px;
+    height: 180px;
     width: 100%;
     color: #006848;
     font-size: 36px;

@@ -104,7 +104,7 @@ export default {
         /* 授权登录弹框 */
         getUserProfile() {
             return new Promise((resolve, reject) => {
-                uni.getUserProfile({
+                wx.getUserProfile({
                     lang: 'zh_CN',
                     desc: '获取你的昵称、头像、地区及性别',
                     success: (res) => {
@@ -175,6 +175,7 @@ export default {
                 
                 this.jsCode = code
                 this.userInfo = userInfo
+                uni.setStorageSync('userInfo', JSON.stringify(userInfo))
                 this.showGetPhoneModal()
             })
         }

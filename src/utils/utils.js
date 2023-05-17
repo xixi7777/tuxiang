@@ -15,7 +15,7 @@ let showToasts = (txt, time = 2000, icon, mask, handle) => {
         duration: time,
         success() {
             setTimeout(() => {
-                handle && hideToast(handle);
+                handle && wx.hideToast(handle);
             }, time)
         }
     })
